@@ -733,7 +733,7 @@ function App() {
           </div>
 
           {/* Character Card Container */}
-          <div className="grid lg:grid-cols-3 gap-6 items-stretch max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-stretch max-w-7xl mx-auto px-4">
             {/* Left Column: Character Portrait */}
             <div className="col-span-1">
               <div className="relative w-full h-full perspective-1000">
@@ -771,7 +771,7 @@ function App() {
                       {/* Image takes 90% of the card height */}
                       <div className="h-[85%]">
                         <img
-                          src="./public/Profile_pic.jpeg"
+                          src="/Profile_Pic.jpeg"
                           alt="Character Portrait"
                           className="w-full h-full object-cover"
                         />
@@ -1058,7 +1058,7 @@ function App() {
                   </div>
                 )}
               </div>
-              <div className="w-[400px] bg-yellow-900/80 border-2 border-yellow-400 rounded-lg p-6">
+              <div className="w-full max-w-md mx-auto bg-yellow-900/80 border-2 border-yellow-400 rounded-lg p-4 md:p-6">
                 <div className="text-center mb-4">
                   <div className="flex justify-center mb-4">
                     <LockKeyholeOpen className="w-12 h-12 text-orange-400" />
@@ -1089,13 +1089,13 @@ function App() {
               </div>
             </div>
           ) : (
-            <div className="flex justify-center items-center mt-8 space-x-12 w-full">
+            <div className="flex justify-center items-center mt-8 w-full px-4">
               {/* Custom Carousel for Progression Path */}
               <div className="w-full flex flex-col items-center justify-center mt-8 min-h-[420px]">
                 <div className="relative w-full max-w-3xl flex flex-col items-center">
                   {/* Carousel Card */}
                   <div
-                    className="bg-yellow-900/80 border-2 border-yellow-400 rounded-lg w-full min-h-[400px] flex flex-col items-center justify-start p-8 transition-all duration-500"
+                    className="bg-yellow-900/80 border-2 border-yellow-400 rounded-lg w-full min-h-[400px] flex flex-col items-center justify-start p-4 md:p-8 transition-all duration-500"
                     data-card={
                       carouselIndex === 1
                         ? "work-experience"
@@ -1404,7 +1404,7 @@ function App() {
                   </div>
                   {/* Carousel Navigation - Arrows on Sides */}
                   <button
-                    className="absolute left-[-48px] top-1/2 -translate-y-1/2 text-4xl text-yellow-300 hover:text-white px-2 py-1 disabled:opacity-40 z-10"
+                    className="absolute left-2 md:left-[-48px] top-1/2 -translate-y-1/2 text-2xl md:text-4xl text-yellow-300 hover:text-white px-2 py-1 disabled:opacity-40 z-10 bg-black/50 rounded-full w-10 h-10 md:w-auto md:h-auto flex items-center justify-center"
                     onClick={() => {
                       const newIndex = Math.max(0, carouselIndex - 1);
                       setCarouselIndex(newIndex);
@@ -1416,7 +1416,7 @@ function App() {
                     &#8592;
                   </button>
                   <button
-                    className="absolute right-[-48px] top-1/2 -translate-y-1/2 text-4xl text-yellow-300 hover:text-white px-2 py-1 disabled:opacity-40 z-10"
+                    className="absolute right-2 md:right-[-48px] top-1/2 -translate-y-1/2 text-2xl md:text-4xl text-yellow-300 hover:text-white px-2 py-1 disabled:opacity-40 z-10 bg-black/50 rounded-full w-10 h-10 md:w-auto md:h-auto flex items-center justify-center"
                     onClick={() => {
                       const newIndex = Math.min(2, carouselIndex + 1);
                       setCarouselIndex(newIndex);
