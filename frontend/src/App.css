@@ -1,0 +1,128 @@
+/* Custom styles for the portfolio */
+
+/* Gradient text utility */
+.bg-gradient-text {
+  /* Neutralize gradient text to default color */
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: inherit;
+  background-clip: initial;
+  color: inherit;
+}
+
+/* Custom scrollbar - Vertical only */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 0px; /* Hide horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  /* Default/neutral track */
+  background: transparent;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  /* Neutral thumb color */
+  background: #666;
+  border-radius: 5px;
+  border: none;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  box-shadow: none;
+}
+
+/* Hide horizontal scrollbar completely */
+::-webkit-scrollbar:horizontal {
+  display: none;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Achievement popup animation */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* 3D Card Flip Animation */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Expanding container animation for typing effect */
+@keyframes expandWidth {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Custom focus styles */
+.focus-ring:focus {
+  outline: auto;
+  outline-offset: 2px;
+}
+
+/* Responsive text utilities */
+.text-responsive {
+  font-size: clamp(1rem, 4vw, 2rem);
+}
+
+.text-responsive-lg {
+  font-size: clamp(1.5rem, 6vw, 3rem);
+}
+
+.text-responsive-xl {
+  font-size: clamp(2rem, 8vw, 4rem);
+}
