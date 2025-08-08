@@ -1042,16 +1042,16 @@ function App() {
           {!careerProgressionUnlocked ? (
             <div className="flex justify-center items-center mt-8 relative">
               {/* Flying Hint */}
-              <div className="absolute -top-8 right-0 animate-bounce">
+              <div className="absolute -top-8 right-2 md:right-0 animate-bounce">
                 <button
                   onClick={handleHintClick}
-                  className="bg-yellow-600 hover:bg-yellow-500 border-2 border-yellow-400 rounded-full px-4 py-2 text-white font-pressstart2p text-sm transition-all duration-300 hover:scale-110 flex items-center gap-2"
+                  className="bg-yellow-600 hover:bg-yellow-500 border-2 border-yellow-400 rounded-full px-2 md:px-4 py-2 text-white font-pressstart2p text-xs md:text-sm transition-all duration-300 hover:scale-110 flex items-center gap-1 md:gap-2"
                 >
-                  <Lightbulb className="w-4 h-4" />
-                  HINT
+                  <Lightbulb className="w-3 h-3 md:w-4 md:h-4" />
+                  <span className="hidden sm:inline">HINT</span>
                 </button>
                 {showHint && (
-                  <div className="absolute top-12 right-0 bg-black/90 border-2 border-yellow-400 rounded-lg p-4 text-white font-pixellari text-sm max-w-xs">
+                  <div className="absolute top-12 right-0 bg-black/90 border-2 border-yellow-400 rounded-lg p-4 text-white font-pixellari text-sm max-w-xs z-20">
                     <p className="text-yellow-300">
                       Think backwards... what's my name in reverse?
                     </p>
