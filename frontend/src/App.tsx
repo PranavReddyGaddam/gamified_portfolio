@@ -771,7 +771,7 @@ function App() {
                       {/* Image takes 90% of the card height */}
                       <div className="h-[85%]">
                         <img
-                          src="/Profile_pic.jpeg"
+                          src="/Profile_Pic.jpeg"
                           alt="Character Portrait"
                           className="w-full h-full object-cover"
                         />
