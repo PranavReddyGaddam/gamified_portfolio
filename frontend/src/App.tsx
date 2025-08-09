@@ -2481,7 +2481,7 @@ function App() {
               LEVEL 6: PLAYER LOUNGE
             </h2>
             <p className="font-pressstart2p text-white text-sm mt-4">
-              SEND A MESSAGE TO COMPLETE THE GAME
+              GET TO KNOW ME SOME MORE
             </p>
           </div>
 
@@ -2586,7 +2586,7 @@ function App() {
             </div>
 
             {/* Social Dock (compact version) */}
-            <div className="col-span-2 w-60 bg-black/80 border border-teal-400 rounded-lg p-1 transition-all duration-300 hover:border-teal-300 items-center">
+            <div className="md:col-span-2 w-60 bg-black/80 border border-teal-400 rounded-lg p-1 transition-all duration-300 hover:border-teal-300 mx-auto justify-self-center">
               <div className="text-center mb-1">
                 <h3 className="font-pressstart2p text-white text-sm">
                   SOCIALS
@@ -2634,6 +2634,15 @@ function App() {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="relative z-10 bg-gradient-to-r from-black via-black/80 to-black border-t-2 border-yellow-400 mt-12">
+        <div className="max-w-6xl mx-auto px-4 py-4 text-center">
+          <p className="font-pixellari text-yellow-300 text-sm">
+            Crafted with curiosity and caffeine — © {new Date().getFullYear()} Pranav Reddy Gaddam
+          </p>
+        </div>
+      </footer>
 
       {/* Achievement Popups */}
       <AchievementPopup
