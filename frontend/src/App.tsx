@@ -10,8 +10,6 @@ import {
   ShieldUser,
   BookOpenText,
   ChartColumnIncreasing,
-  LockKeyholeOpen,
-  Lightbulb,
   Instagram,
 } from "lucide-react";
 import { RiTwitterXFill } from "react-icons/ri";
@@ -164,10 +162,6 @@ function App() {
   const [unlockedProjects, setUnlockedProjects] = useState<Set<string>>(
     new Set()
   );
-  const [careerProgressionUnlocked, setCareerProgressionUnlocked] =
-    useState(false);
-  const [progressionAnswer, setProgressionAnswer] = useState("");
-  const [showHint, setShowHint] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
 
   // Achievements modal visibility
@@ -198,9 +192,7 @@ function App() {
   const [showPowerUnleashed, setShowPowerUnleashed] = useState(false);
   const [unlockedSection2Achievements] = useState<Set<string>>(new Set());
 
-  // Section 3 Achievements
-  const [showGatebreaker, setShowGatebreaker] = useState(false);
-  const [showSeekersInsight, setShowSeekersInsight] = useState(false);
+  // Section 3 Achievements (only carousel navigation achievements remain)
   const [showGuildExplorer, setShowGuildExplorer] = useState(false);
   const [showGrandmastersPath, setShowGrandmastersPath] = useState(false);
   const [unlockedSection3Achievements] = useState<Set<string>>(new Set());
@@ -270,9 +262,7 @@ function App() {
       face_of_hero: 150,
       keeper_of_stories: 100,
       power_unleashed: 75,
-      // Section 3 specific
-      gatebreaker: 250,
-      seekers_insight: 50,
+      // Section 3 specific (hint/password achievements removed)
       guild_explorer: 75,
       grandmasters_path: 90,
       // Section 4 specific
@@ -306,42 +296,140 @@ function App() {
   };
 
   // List of all achievements with display names and XP
-  const allAchievements: { id: string; title: string; xp: number; section: string }[] = [
+  const allAchievements: {
+    id: string;
+    title: string;
+    xp: number;
+    section: string;
+  }[] = [
     // Generic/game flow
-    { id: "quest-initiator", title: "Quest Initiator", xp: 50, section: "Intro" },
-    { id: "rulebook-raider", title: "Rulebook Raider", xp: 30, section: "Intro" },
+    {
+      id: "quest-initiator",
+      title: "Quest Initiator",
+      xp: 50,
+      section: "Intro",
+    },
+    {
+      id: "rulebook-raider",
+      title: "Rulebook Raider",
+      xp: 30,
+      section: "Intro",
+    },
     { id: "scroll-seeker", title: "Scroll Seeker", xp: 20, section: "Intro" },
     // Section unlock-on-scroll
-    { id: "identity_unlocked", title: "Identity Unlocked", xp: 100, section: "Level 2" },
+    {
+      id: "identity_unlocked",
+      title: "Identity Unlocked",
+      xp: 100,
+      section: "Level 2",
+    },
     { id: "pathfinder", title: "Pathfinder", xp: 100, section: "Level 3" },
-    { id: "skill_mastery", title: "Skill Mastery", xp: 100, section: "Level 4" },
-    { id: "quest_conqueror", title: "Quest Conqueror", xp: 100, section: "Level 5" },
-    { id: "social_link_established", title: "Social Link", xp: 100, section: "Level 6" },
+    {
+      id: "skill_mastery",
+      title: "Skill Mastery",
+      xp: 100,
+      section: "Level 4",
+    },
+    {
+      id: "quest_conqueror",
+      title: "Quest Conqueror",
+      xp: 100,
+      section: "Level 5",
+    },
+    {
+      id: "social_link_established",
+      title: "Social Link",
+      xp: 100,
+      section: "Level 6",
+    },
     // Section 2 specifics
-    { id: "face_of_hero", title: "Face of the Hero", xp: 150, section: "Level 2" },
-    { id: "keeper_of_stories", title: "Keeper of Stories", xp: 100, section: "Level 2" },
-    { id: "power_unleashed", title: "Power Unleashed", xp: 75, section: "Level 2" },
-    // Section 3 specifics
-    { id: "gatebreaker", title: "Gatebreaker", xp: 250, section: "Level 3" },
-    { id: "seekers_insight", title: "Seeker's Insight", xp: 50, section: "Level 3" },
-    { id: "guild_explorer", title: "Guild Explorer", xp: 75, section: "Level 3" },
-    { id: "grandmasters_path", title: "Grandmaster's Path", xp: 90, section: "Level 3" },
+    {
+      id: "face_of_hero",
+      title: "Face of the Hero",
+      xp: 150,
+      section: "Level 2",
+    },
+    {
+      id: "keeper_of_stories",
+      title: "Keeper of Stories",
+      xp: 100,
+      section: "Level 2",
+    },
+    {
+      id: "power_unleashed",
+      title: "Power Unleashed",
+      xp: 75,
+      section: "Level 2",
+    },
+    // Section 3 specifics (hint/password achievements removed)
+    {
+      id: "guild_explorer",
+      title: "Guild Explorer",
+      xp: 75,
+      section: "Level 3",
+    },
+    {
+      id: "grandmasters_path",
+      title: "Grandmaster's Path",
+      xp: 90,
+      section: "Level 3",
+    },
     // Section 4 specifics
     { id: "pixel_perfect", title: "Pixel Perfect", xp: 50, section: "Level 4" },
     { id: "server_sensei", title: "Server Sensei", xp: 50, section: "Level 4" },
     { id: "data_tamer", title: "Data Tamer", xp: 50, section: "Level 4" },
     { id: "pipeline_pro", title: "Pipeline Pro", xp: 50, section: "Level 4" },
     { id: "model_maker", title: "Model Maker", xp: 50, section: "Level 4" },
-    { id: "utility_wizard", title: "Utility Wizard", xp: 50, section: "Level 4" },
+    {
+      id: "utility_wizard",
+      title: "Utility Wizard",
+      xp: 50,
+      section: "Level 4",
+    },
     // Section 5 specifics
-    { id: "code_cartographer", title: "Code Cartographer", xp: 75, section: "Level 5" },
-    { id: "quizmaster_crafter", title: "Quizmaster Crafter", xp: 75, section: "Level 5" },
-    { id: "community_architect", title: "Community Architect", xp: 75, section: "Level 5" },
-    { id: "emotion_decoder", title: "Emotion Decoder", xp: 75, section: "Level 5" },
-    { id: "suggestion_sage", title: "Suggestion Sage", xp: 75, section: "Level 5" },
-    { id: "digital_persona_builder", title: "Digital Persona Builder", xp: 75, section: "Level 5" },
+    {
+      id: "code_cartographer",
+      title: "Code Cartographer",
+      xp: 75,
+      section: "Level 5",
+    },
+    {
+      id: "quizmaster_crafter",
+      title: "Quizmaster Crafter",
+      xp: 75,
+      section: "Level 5",
+    },
+    {
+      id: "community_architect",
+      title: "Community Architect",
+      xp: 75,
+      section: "Level 5",
+    },
+    {
+      id: "emotion_decoder",
+      title: "Emotion Decoder",
+      xp: 75,
+      section: "Level 5",
+    },
+    {
+      id: "suggestion_sage",
+      title: "Suggestion Sage",
+      xp: 75,
+      section: "Level 5",
+    },
+    {
+      id: "digital_persona_builder",
+      title: "Digital Persona Builder",
+      xp: 75,
+      section: "Level 5",
+    },
     // Section 6
-    { id: "alliance_formed", title: "Alliance Formed", xp: 100, section: "Level 6" },
+    {
+      id: "alliance_formed",
+      title: "Alliance Formed",
+      xp: 100,
+      section: "Level 6",
+    },
   ];
 
   // Unlock achievements when sections enter viewport
@@ -432,13 +520,7 @@ function App() {
     }
   };
 
-  // Section 3 Achievement Handlers
-  const handleHintClick = () => {
-    setShowHint(!showHint);
-    if (!unlockedSection3Achievements.has("seekers_insight")) {
-      showAchievement("seekers_insight", setShowSeekersInsight);
-    }
-  };
+  // Section 3 Achievement Handlers (none for hint/password anymore)
 
   // Observe which section is in view and update level indicator
   useEffect(() => {
@@ -568,18 +650,7 @@ function App() {
     }
   };
 
-  const handleCareerProgressionUnlock = () => {
-    if (progressionAnswer.toLowerCase() === "vanarp") {
-      setCareerProgressionUnlocked(true);
-      setProgressionAnswer("");
-      if (!unlockedSection3Achievements.has("gatebreaker")) {
-        showAchievement("gatebreaker", setShowGatebreaker);
-      }
-    } else {
-      alert("Incorrect answer! Try again.");
-      setProgressionAnswer("");
-    }
-  };
+  // Removed: career progression unlock handler (no longer gated)
 
   // Handle collaboration form submit (Section 6)
   const handleCollabSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -1038,57 +1109,8 @@ function App() {
             </p>
           </div>
 
-          {/* Career Progression Unlock */}
-          {!careerProgressionUnlocked ? (
-            <div className="flex justify-center items-center mt-8 relative">
-              {/* Flying Hint */}
-              <div className="absolute -top-8 right-2 md:right-0 animate-bounce">
-                <button
-                  onClick={handleHintClick}
-                  className="bg-yellow-600 hover:bg-yellow-500 border-2 border-yellow-400 rounded-full px-2 md:px-4 py-2 text-white font-pressstart2p text-xs md:text-sm transition-all duration-300 hover:scale-110 flex items-center gap-1 md:gap-2"
-                >
-                  <Lightbulb className="w-3 h-3 md:w-4 md:h-4" />
-                  <span className="hidden sm:inline">HINT</span>
-                </button>
-                {showHint && (
-                  <div className="absolute top-12 right-0 bg-black/90 border-2 border-yellow-400 rounded-lg p-4 text-white font-pixellari text-sm max-w-xs z-20">
-                    <p className="text-yellow-300">
-                      Think backwards... what's my name in reverse?
-                    </p>
-                  </div>
-                )}
-              </div>
-              <div className="w-full max-w-md mx-auto bg-yellow-900/80 border-2 border-yellow-400 rounded-lg p-4 md:p-6">
-                <div className="text-center mb-4">
-                  <div className="flex justify-center mb-4">
-                    <LockKeyholeOpen className="w-12 h-12 text-orange-400" />
-                  </div>
-                  <h3 className="font-pressstart2p text-white text-xl mb-2">
-                    Unlock Career Progression
-                  </h3>
-                  <p className="font-pixellari text-yellow-300 text-sm mb-4">
-                    Enter the secret code to reveal my journey
-                  </p>
-                </div>
-                <div className="flex flex-col space-y-4">
-                  <input
-                    type="text"
-                    value={progressionAnswer}
-                    onChange={(e) => setProgressionAnswer(e.target.value)}
-                    placeholder="Enter your answer..."
-                    className="w-full px-4 py-3 bg-black/50 border-2 border-yellow-400 rounded-lg text-white font-pixellari placeholder-yellow-300/50 focus:outline-none focus:border-yellow-300 focus:bg-black/70 transition-all duration-300"
-                    style={{ fontFamily: "Pixellari, monospace" }}
-                  />
-                  <button
-                    onClick={handleCareerProgressionUnlock}
-                    className="w-full px-6 py-3 bg-yellow-600 hover:bg-yellow-500 border-2 border-yellow-400 rounded-lg text-white font-pressstart2p transition-all duration-300 hover:scale-105 active:scale-95"
-                  >
-                    UNLOCK PROGRESSION
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : (
+          {/* Career Progression Carousel (always visible) */}
+          {
             <div className="flex justify-center items-center mt-8 w-full px-4">
               {/* Custom Carousel for Progression Path */}
               <div className="w-full flex flex-col items-center justify-center mt-8 min-h-[420px]">
@@ -1118,7 +1140,7 @@ function App() {
                                     Quest Title
                                   </h4>
                                   <p className="font-pixellari text-white text-lg">
-                                    B. Tech in Computer Science
+                                    Bachelor's in Computer Science
                                   </p>
                                 </div>
                                 <div className="text-center">
@@ -1142,7 +1164,7 @@ function App() {
                                     Skill Unlocks
                                   </h4>
                                   <p className="font-pixellari text-white text-base">
-                                    DBMS, Machine Learning, Data Mining
+                                    DBMS, Machine Learning, Data Mining, DSA
                                   </p>
                                 </div>
                                 <div className="text-center">
@@ -1217,7 +1239,7 @@ function App() {
                                       Rank Achieved:
                                     </span>
                                     <span className="font-pixellari text-white text-sm ml-2">
-                                      Level 7 Data Engineer
+                                      Data Engineer
                                     </span>
                                   </div>
                                 </div>
@@ -1233,7 +1255,7 @@ function App() {
                                   <h4 className="font-pressstart2p text-yellow-400 text-base mb-1">
                                     Loot Collected
                                   </h4>
-                                  <ul className="list-disc list-inside font-pixellari text-white text-xs space-y-1 pl-2">
+                                  <ul className="list-disc list-inside font-pixellari text-white text-sm space-y-1 pl-2">
                                     <li>
                                       <span className="text-yellow-300">
                                         Redshift Relic
@@ -1280,7 +1302,7 @@ function App() {
                                   <h4 className="font-pressstart2p text-yellow-400 text-base mb-1">
                                     Skills Unlocked
                                   </h4>
-                                  <p className="font-pixellari text-white text-xs">
+                                  <p className="font-pixellari text-white text-sm">
                                     SQL, Apache Kafka, Apache Airflow, Redshift,
                                     PySpark, Pipeline Optimization, Data QA
                                     Automation, Cost Optimization
@@ -1443,7 +1465,7 @@ function App() {
                 </div>
               </div>
             </div>
-          )}
+          }
         </div>
       </section>
 
@@ -2341,7 +2363,7 @@ function App() {
                     </div>
                     {/* Action Button */}
                     <button
-                      onClick={() => handleProjectLink("mealmepal-2")}
+                      onClick={() => handleProjectLink("movierecommendation")}
                       className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2"
                     >
                       <span className="text-lg">📄</span>
@@ -2400,7 +2422,8 @@ function App() {
                 ) : (
                   <>
                     <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      A gamified portfolio website built on Vite and Tailwind CSS.
+                      A gamified portfolio website built on Vite and Tailwind
+                      CSS.
                     </p>
                     {/* Technology Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
@@ -2438,7 +2461,7 @@ function App() {
       {/* Section 6: Player Lounge */}
       <section
         data-level={6}
-        className="relative z-10 min-h-screen bg-gradient-to-b from-black via-teal-900/10 to-teal-900/30 px-4 py-16"
+        className="relative z-10 min-h-screen bg-gradient-to-b from-black via-teal-900/10 to-teal-900/30 px-3 py-12"
       >
         {/* Squares Background */}
         <div className="absolute inset-0 z-0">
@@ -2451,7 +2474,7 @@ function App() {
           />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto">
+        <div className="relative z-10 max-w-5xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
             <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-teal-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
@@ -2463,24 +2486,24 @@ function App() {
           </div>
 
           {/* Contact Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Email Card */}
-            <div className="bg-black/80 border border-teal-400 rounded-lg p-6 transition-all duration-300 hover:border-teal-300">
-              <form onSubmit={handleCollabSubmit} className="space-y-4">
-                <h3 className="font-pressstart2p text-white text-lg text-center">
+            <div className="bg-black/80 border border-teal-400 rounded-lg p-4 md:p-5 transition-all duration-300 hover:border-teal-300">
+              <form onSubmit={handleCollabSubmit} className="space-y-3">
+                <h3 className="font-pressstart2p text-white text-base md:text-lg text-center">
                   Collaborate
                 </h3>
-                <p className="font-pixellari text-teal-300 text-xs text-center -mt-2">
+                <p className="font-pixellari text-teal-300 text-[10px] md:text-xs text-center -mt-1">
                   Tell me about your project and let's build together
                 </p>
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   <input
                     aria-label="Your name"
                     type="text"
                     value={collabName}
                     onChange={(e) => setCollabName(e.target.value)}
                     placeholder="Your name (optional)"
-                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-3 py-2 text-white placeholder:text-teal-300/60 font-pixellari"
+                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari"
                   />
                   <input
                     aria-label="Your email"
@@ -2489,7 +2512,7 @@ function App() {
                     onChange={(e) => setCollabEmail(e.target.value)}
                     placeholder="Your email"
                     required
-                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-3 py-2 text-white placeholder:text-teal-300/60 font-pixellari"
+                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari"
                   />
                   <textarea
                     aria-label="Project details"
@@ -2498,12 +2521,12 @@ function App() {
                     placeholder="Briefly describe the project / idea"
                     required
                     rows={3}
-                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-3 py-2 text-white placeholder:text-teal-300/60 font-pixellari"
+                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full font-pressstart2p bg-teal-600 hover:bg-teal-700 text-white px-4 py-3 rounded border border-teal-400 transition-colors"
+                  className="w-full font-pressstart2p bg-teal-600 hover:bg-teal-700 text-white px-3 py-2 rounded border border-teal-400 transition-colors text-sm"
                 >
                   SEND REQUEST
                 </button>
@@ -2514,14 +2537,14 @@ function App() {
             </div>
 
             {/* LinkedIn Card */}
-            <div className="bg-black/80 border border-teal-400 rounded-lg p-6 transition-all duration-300 hover:border-teal-300">
+            <div className="bg-black/80 border border-teal-400 rounded-lg p-4 md:p-5 transition-all duration-300 hover:border-teal-300">
               <div className="text-center mb-4">
-                <h3 className="font-pressstart2p text-white text-lg">
+                <h3 className="font-pressstart2p text-white text-base md:text-lg">
                   SIDE QUESTS
                 </h3>
               </div>
-              <ul className="list-disc list-inside space-y-3 text-left px-2">
-                <li className="font-pixellari text-teal-300">
+              <ul className="list-disc list-inside space-y-2 text-left px-2">
+                <li className="font-pixellari text-teal-300 text-sm md:text-base">
                   <span className="text-teal-300 font-pressstart2p">
                     Cinephile's Marathon
                   </span>
@@ -2531,7 +2554,7 @@ function App() {
                     gems.
                   </span>
                 </li>
-                <li className="font-pixellari text-teal-300">
+                <li className="font-pixellari text-teal-300 text-sm md:text-base">
                   <span className="text-teal-300 font-pressstart2p">
                     Arena Watcher
                   </span>
@@ -2540,7 +2563,7 @@ function App() {
                     – Track epic matches across cricket, basketball, and beyond.
                   </span>
                 </li>
-                <li className="font-pixellari text-teal-300">
+                <li className="font-pixellari text-teal-300 text-sm md:text-base">
                   <span className="text-teal-300 font-pressstart2p">
                     The City Rider
                   </span>
@@ -2549,7 +2572,7 @@ function App() {
                     – Cycle through bustling streets and scenic trails.
                   </span>
                 </li>
-                <li className="font-pixellari text-teal-300">
+                <li className="font-pixellari text-teal-300 text-sm md:text-base">
                   <span className="text-teal-300 font-pressstart2p">
                     Explorer's Odyssey
                   </span>
@@ -2562,27 +2585,51 @@ function App() {
               </ul>
             </div>
 
-            {/* GitHub Card */}
-            <div className="bg-black/80 border border-teal-400 rounded-lg p-6 transition-all duration-300 hover:border-teal-300">
-              <div className="flex flex-col h-full">
-                <div className="text-center mb-4">
-                  <h3 className="font-pressstart2p text-white text-lg">SOCIALS</h3>
-                </div>
-                <div className="flex-1 flex flex-col items-center justify-evenly gap-4">
-                  <a href="https://github.com/PranavReddyGaddam" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-teal-300 hover:text-white transition-colors">
-                    <Github className="w-10 h-10" />
-                  </a>
-                  <a href="https://www.linkedin.com/in/pranav-reddy-gaddam-69338321b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-teal-300 hover:text-white transition-colors">
-                    <Linkedin className="w-10 h-10" />
-                  </a>
-                  <a href="https://www.instagram.com/__pranav.reddy__" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-teal-300 hover:text-white transition-colors">
-                    <Instagram className="w-10 h-10" />
-                  </a>
-                  <a href="https://twitter.com/Pranav_2801" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="text-teal-300 hover:text-white transition-colors">
-                    <RiTwitterXFill className="w-10 h-10" />
-                  </a>
-                </div>
+            {/* Social Dock (compact version) */}
+            <div className="col-span-2 w-60 bg-black/80 border border-teal-400 rounded-lg p-1 transition-all duration-300 hover:border-teal-300 items-center">
+              <div className="text-center mb-1">
+                <h3 className="font-pressstart2p text-white text-sm">
+                  SOCIALS
+                </h3>
               </div>
+              <nav className="flex items-center justify-center gap-3 sm:gap-4 md:gap-5 flex-wrap py-0.5">
+                <a
+                  href="https://github.com/PranavReddyGaddam"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  className="text-teal-300 hover:text-white transition-colors"
+                >
+                  <Github className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/pranav-reddy-gaddam-69338321b/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  className="text-teal-300 hover:text-white transition-colors"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://www.instagram.com/__pranav.reddy__"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="text-teal-300 hover:text-white transition-colors"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://twitter.com/Pranav_2801"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Twitter"
+                  className="text-teal-300 hover:text-white transition-colors"
+                >
+                  <RiTwitterXFill className="w-5 h-5" />
+                </a>
+              </nav>
             </div>
           </div>
         </div>
@@ -2658,18 +2705,6 @@ function App() {
         theme="green"
       />
       {/* Section 3 Achievement Popups */}
-      <AchievementPopup
-        title="Gatebreaker"
-        xp={250}
-        isVisible={showGatebreaker}
-        theme="yellow"
-      />
-      <AchievementPopup
-        title="Seeker's Insight"
-        xp={50}
-        isVisible={showSeekersInsight}
-        theme="yellow"
-      />
       <AchievementPopup
         title="Guild Explorer"
         xp={75}
@@ -2776,7 +2811,9 @@ function App() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="bg-black border-2 border-yellow-400 rounded-lg p-6 max-w-3xl w-full shadow-lg">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-pressstart2p text-yellow-400 text-xl">ACHIEVEMENTS</h2>
+              <h2 className="font-pressstart2p text-yellow-400 text-xl">
+                ACHIEVEMENTS
+              </h2>
               <button
                 onClick={() => setShowAchievementsModal(false)}
                 className="font-pressstart2p bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded border border-yellow-400"
@@ -2786,7 +2823,9 @@ function App() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[70vh] overflow-y-auto pr-1">
               {allAchievements.map((a) => {
-                const isUnlocked = unlockedAchievements.has(a.id) || unlockedAchievementsRef.current.has(a.id);
+                const isUnlocked =
+                  unlockedAchievements.has(a.id) ||
+                  unlockedAchievementsRef.current.has(a.id);
                 return (
                   <div
                     key={a.id}
@@ -2797,13 +2836,31 @@ function App() {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <span className={isUnlocked ? "text-green-400" : "text-gray-400"}>🏆</span>
+                      <span
+                        className={
+                          isUnlocked ? "text-green-400" : "text-gray-400"
+                        }
+                      >
+                        🏆
+                      </span>
                       <div>
-                        <div className={`font-pressstart2p text-sm ${isUnlocked ? "text-white" : "text-gray-400"}`}>{a.title}</div>
-                        <div className="font-pixellari text-xs text-gray-300/80">{a.section} • +{a.xp} XP</div>
+                        <div
+                          className={`font-pressstart2p text-sm ${
+                            isUnlocked ? "text-white" : "text-gray-400"
+                          }`}
+                        >
+                          {a.title}
+                        </div>
+                        <div className="font-pixellari text-xs text-gray-300/80">
+                          {a.section} • +{a.xp} XP
+                        </div>
                       </div>
                     </div>
-                    <span className={`font-pressstart2p text-xs ${isUnlocked ? "text-green-400" : "text-gray-400"}`}>
+                    <span
+                      className={`font-pressstart2p text-xs ${
+                        isUnlocked ? "text-green-400" : "text-gray-400"
+                      }`}
+                    >
                       {isUnlocked ? "UNLOCKED" : "LOCKED"}
                     </span>
                   </div>
