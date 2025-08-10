@@ -13,6 +13,10 @@ import {
   Instagram,
 } from "lucide-react";
 import { RiTwitterXFill } from "react-icons/ri";
+import { BsRobot, BsTools, BsDatabaseAdd } from "react-icons/bs";
+import { RxGear } from "react-icons/rx";
+import { FaDocker } from "react-icons/fa";
+import { GoTrophy } from "react-icons/go";
 
 // Achievement popup component
 const AchievementPopup: React.FC<{
@@ -20,7 +24,8 @@ const AchievementPopup: React.FC<{
   xp: number;
   isVisible: boolean;
   theme: "purple" | "blue" | "yellow" | "green" | "red" | "teal";
-}> = ({ title, xp, isVisible, theme }) => {
+  index?: number;
+}> = ({ title, xp, isVisible, theme, index = 0 }) => {
   const getThemeColors = () => {
     switch (theme) {
       case "purple":
@@ -80,12 +85,18 @@ const AchievementPopup: React.FC<{
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 animate-fade-in">
+    <div
+      className="fixed right-6 z-50 animate-fade-in transition-all duration-300"
+      style={{
+        bottom: index === 0 ? "1.5rem" : `${1.5 + index * 5}rem`,
+        zIndex: 50 + index,
+      }}
+    >
       <div
         className={`border-2 ${colors.border} ${colors.bg} backdrop-blur-sm px-6 py-4 rounded-lg shadow-lg`}
       >
         <div className="flex items-center gap-3">
-          <span className={`text-2xl ${colors.icon}`}>🏆</span>
+          <span className={`text-2xl ${colors.icon}`}><GoTrophy /></span>
           <div>
             <h3 className="font-pressstart2p text-white text-lg">{title}</h3>
             <p className={`font-pixellari text-sm ${colors.text}`}>+{xp} XP</p>
@@ -173,6 +184,9 @@ function App() {
   );
   const unlockedAchievementsRef = useRef<Set<string>>(new Set());
 
+  // Achievement stacking state
+  const [visibleAchievements, setVisibleAchievements] = useState<string[]>([]);
+
   // Achievement popup states
   const [showQuestInitiator, setShowQuestInitiator] = useState(false);
   const [showRulebookRaider, setShowRulebookRaider] = useState(false);
@@ -248,9 +262,18 @@ function App() {
     unlockedAchievementsRef.current.add(achievementId);
     setUnlockedAchievements((prev) => new Set(prev).add(achievementId));
 
+    // Add to visible achievements for stacking
+    setVisibleAchievements((prev) => [...prev, achievementId]);
+
     // Show the popup
     setter(true);
-    setTimeout(() => setter(false), 5000);
+    setTimeout(() => {
+      setter(false);
+      // Remove from visible achievements after hiding
+      setVisibleAchievements((prev) =>
+        prev.filter((id) => id !== achievementId)
+      );
+    }, 5000);
 
     // Score increments per achievement
     const xpMap: Record<string, number> = {
@@ -292,6 +315,65 @@ function App() {
     const gained = xpMap[achievementId] ?? 0;
     if (gained > 0) {
       setScore((prev) => prev + gained);
+    }
+  };
+
+  // Helper function to get achievement index for stacking
+  const getAchievementIndex = (achievementId: string) => {
+    return visibleAchievements.indexOf(achievementId);
+  };
+
+  // Mapping of achievement IDs to their corresponding section levels
+  const achievementToSectionMap: Record<string, number> = {
+    // Intro achievements
+    "quest-initiator": 1,
+    "rulebook-raider": 1,
+    "scroll-seeker": 1,
+    // Section unlock achievements
+    "identity_unlocked": 2,
+    "pathfinder": 3,
+    "skill_mastery": 4,
+    "quest_conqueror": 5,
+    "social_link_established": 6,
+    // Section 2 achievements
+    "face_of_hero": 2,
+    "keeper_of_stories": 2,
+    "power_unleashed": 2,
+    // Section 3 achievements
+    "guild_explorer": 3,
+    "grandmasters_path": 3,
+    // Section 4 achievements
+    "pixel_perfect": 4,
+    "server_sensei": 4,
+    "data_tamer": 4,
+    "pipeline_pro": 4,
+    "model_maker": 4,
+    "utility_wizard": 4,
+    // Section 5 achievements
+    "code_cartographer": 5,
+    "quizmaster_crafter": 5,
+    "community_architect": 5,
+    "emotion_decoder": 5,
+    "suggestion_sage": 5,
+    "digital_persona_builder": 5,
+    // Section 6 achievements
+    "alliance_formed": 6,
+  };
+
+  // Function to navigate to a specific section
+  const navigateToSection = (sectionLevel: number) => {
+    const sectionElement = document.querySelector(`[data-level="${sectionLevel}"]`);
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: "smooth" });
+      setShowAchievementsModal(false);
+    }
+  };
+
+  // Function to handle achievement click
+  const handleAchievementClick = (achievementId: string) => {
+    const sectionLevel = achievementToSectionMap[achievementId];
+    if (sectionLevel) {
+      navigateToSection(sectionLevel);
     }
   };
 
@@ -804,10 +886,10 @@ function App() {
           </div>
 
           {/* Character Card Container */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-stretch max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-stretch max-w-7xl mx-auto px-2 md:px-4">
             {/* Left Column: Character Portrait */}
             <div className="col-span-1">
-              <div className="relative w-full h-full perspective-1000">
+              <div className="relative w-full min-h-[360px] md:h-full perspective-1000">
                 <div
                   className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
                     isCardFlipped ? "rotate-y-180" : ""
@@ -839,8 +921,8 @@ function App() {
                   {/* Card Front (Character Portrait) */}
                   <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
                     <div className="bg-blue-900/80 border border-blue-400 rounded-lg overflow-hidden h-full flex flex-col">
-                      {/* Image takes 90% of the card height */}
-                      <div className="h-[85%]">
+                      {/* Image area */}
+                      <div className="h-64 md:h-[85%]">
                         <img
                           src="/Profile_Pic.jpeg"
                           alt="Character Portrait"
@@ -848,8 +930,8 @@ function App() {
                         />
                       </div>
 
-                      {/* Bottom stats section takes 10% */}
-                      <div className="h-[15%] p-3 bg-blue-900/90 flex flex-col justify-center">
+                      {/* Bottom stats section */}
+                      <div className="h-auto md:h-[15%] p-3 bg-blue-900/90 flex flex-col justify-center">
                         {/* Name & Level */}
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="text-white font-pressstart2p text-xs">
@@ -891,7 +973,7 @@ function App() {
 
             {/* Middle Column: Character Info */}
             <div className="col-span-1">
-              <div className="relative w-full h-full perspective-1000">
+              <div className="relative w-full min-h-[320px] md:h-full perspective-1000">
                 <div
                   className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
                     isInfoCardFlipped ? "rotate-y-180" : ""
@@ -927,9 +1009,8 @@ function App() {
                         <h3 className="font-pressstart2p text-white text-base">
                           CHARACTER INFO
                         </h3>
-                        <span className="text-yellow-400">⭐</span>
                       </div>
-                      <div className="font-pressstart2p space-y-3 text-gray-300 text-[10px] text-justify leading-relaxed">
+                      <div className="font-pressstart2p space-y-3 text-gray-300 text-[10px] text-left leading-relaxed">
                         <p>
                           A creative builder and systems thinker who engineers
                           AI-powered applications using tools like Python,
@@ -955,7 +1036,7 @@ function App() {
 
             {/* Right Column: Attributes Panel with Flip */}
             <div className="col-span-1">
-              <div className="relative w-full h-[420px] perspective-1000">
+              <div className="relative w-full min-h-[360px] md:h-[420px] perspective-1000">
                 <div
                   className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
                     isAttributesCardFlipped ? "rotate-y-180" : ""
@@ -990,7 +1071,7 @@ function App() {
                       <h3 className="font-pressstart2p text-white text-base mb-3">
                         ATTRIBUTES
                       </h3>
-                      <div className="grid grid-cols-2 gap-3 mb-4 font-pixellari">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 font-pixellari">
                         {/* Attribute Cards */}
                         {[
                           {
@@ -1052,23 +1133,23 @@ function App() {
                         EQUIPPED SKILLS
                       </h3>
                       <ul className="space-y-3 text-xs text-gray-300 font-pressstart2p">
-                        <li className="flex items-center gap-2 whitespace-nowrap">
+                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
                           <span className="text-yellow-400">⚡</span>
                           FastAPI Mastery
                         </li>
-                        <li className="flex items-center gap-2 whitespace-nowrap">
+                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
                           <span className="text-green-400">🛠</span>
                           LLM Prompt Tuning
                         </li>
-                        <li className="flex items-center gap-2 whitespace-nowrap">
+                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
                           <span className="text-cyan-400">☁️</span>
                           AWS & Cloud Deployments
                         </li>
-                        <li className="flex items-center gap-2 whitespace-nowrap">
+                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
                           <span className="text-pink-400">🌉</span>
                           GitBridge Voice AI
                         </li>
-                        <li className="flex items-center gap-2 whitespace-nowrap">
+                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
                           <span className="text-indigo-400">📊</span>
                           QuizForge Analytics
                         </li>
@@ -1593,7 +1674,7 @@ function App() {
                     unlockedSkills.backend ? "text-cyan-400" : "text-white"
                   }`}
                 >
-                  ⚙️
+                  <RxGear />
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">
                   Backend
@@ -1666,7 +1747,7 @@ function App() {
                     unlockedSkills.database ? "text-green-400" : "text-white"
                   }`}
                 >
-                  🗄️
+                  <BsDatabaseAdd />
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">
                   Database
@@ -1743,7 +1824,7 @@ function App() {
                     unlockedSkills.devops ? "text-yellow-400" : "text-white"
                   }`}
                 >
-                  &gt;_
+                  <FaDocker />
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">DevOps</h3>
                 {unlockedSkills.devops && (
@@ -1818,7 +1899,7 @@ function App() {
                     unlockedSkills.ai ? "text-purple-400" : "text-white"
                   }`}
                 >
-                  🤖
+                  <BsRobot />
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">AI/ML</h3>
                 {unlockedSkills.ai && (
@@ -1893,7 +1974,7 @@ function App() {
                     unlockedSkills.tools ? "text-pink-400" : "text-white"
                   }`}
                 >
-                  🛠️
+                  <BsTools />
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">Tools</h3>
                 {unlockedSkills.tools && (
@@ -1988,8 +2069,8 @@ function App() {
                   <div className="text-4xl">🌍✈️</div>
                 </div>
                 {/* Difficulty Badge */}
-                <div className="absolute top-2 right-2 bg-orange-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
-                  Hard
+                <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
+                  Expert
                 </div>
                 {/* Lock Overlay */}
                 {!unlockedProjects.has("gitbridge") && (
@@ -2148,8 +2229,8 @@ function App() {
                   <div className="text-4xl">📊</div>
                 </div>
                 {/* Difficulty Badge */}
-                <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
-                  Expert
+                <div className="absolute top-2 right-2 bg-orange-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
+                  Hard
                 </div>
                 {/* Lock Overlay */}
                 {!unlockedProjects.has("isowebsite") && (
@@ -2192,16 +2273,13 @@ function App() {
                     {/* Technology Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        AWS
+                        React
                       </span>
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        DynamoDB
+                        Tailwind CSS
                       </span>
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Typescript
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Next.js
+                        MongoDB
                       </span>
                     </div>
                     {/* Action Button */}
@@ -2224,7 +2302,11 @@ function App() {
               {/* Project Image */}
               <div className="relative h-48 bg-gray-800">
                 <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-pink-500/20 flex items-center justify-center">
-                  <div className="text-4xl">🌍✈️</div>
+                  <img 
+                    src="/X_logo.jpg" 
+                    alt="Sentiment Analysis" 
+                    className="w-24 h-[300px] object-contain"
+                  />
                 </div>
                 {/* Difficulty Badge */}
                 <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
@@ -2270,16 +2352,16 @@ function App() {
                     {/* Technology Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        React
+                        Python
                       </span>
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        FastAPI
+                        Twitter API
                       </span>
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        AWS
+                        Macine Learning
                       </span>
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        GCP
+                        Streamlit
                       </span>
                     </div>
                     {/* Action Button */}
@@ -2297,12 +2379,16 @@ function App() {
               </div>
             </div>
 
-            {/* My Meal Pal Project - Row 2 */}
+            {/* Recommendation System */}
             <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer hover:border-red-300">
               {/* Project Image */}
               <div className="relative h-48 bg-gray-800">
                 <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center">
-                  <div className="text-4xl">🍽️</div>
+                  <img 
+                    src="/Netflix_logo.jpg" 
+                    alt="Netflix Logo" 
+                    className="w-96 h-96 object-contain"
+                  />
                 </div>
                 {/* Difficulty Badge */}
                 <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
@@ -2352,13 +2438,13 @@ function App() {
                         Next.js
                       </span>
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        JavaScript
+                        TMDB API
                       </span>
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Tailwind CSS
+                        Vector Database
                       </span>
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        MongoDB
+                        Cross Filtering
                       </span>
                     </div>
                     {/* Action Button */}
@@ -2428,16 +2514,13 @@ function App() {
                     {/* Technology Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        AWS
+                        Vite
                       </span>
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        DynamoDB
+                        Tailwind CSS
                       </span>
                       <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Typescript
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Next.js
+                        React
                       </span>
                     </div>
                     {/* Action Button */}
@@ -2636,10 +2719,11 @@ function App() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 bg-gradient-to-r from-black via-black/80 to-black border-t-2 border-yellow-400 mt-12">
+      <footer className="relative z-10 bg-gradient-to-r from-black via-black/80 to-black border-t-2 border-teal-400">
         <div className="max-w-6xl mx-auto px-4 py-4 text-center">
-          <p className="font-pixellari text-yellow-300 text-sm">
-            Crafted with curiosity and caffeine — © {new Date().getFullYear()} Pranav Reddy Gaddam
+          <p className="font-pixellari text-teal-300 text-sm">
+            Crafted with curiosity and caffeine — © {new Date().getFullYear()}{" "}
+            Pranav Reddy Gaddam
           </p>
         </div>
       </footer>
@@ -2650,6 +2734,7 @@ function App() {
         xp={50}
         isVisible={showQuestInitiator}
         theme="purple"
+        index={getAchievementIndex("quest-initiator")}
       />
       {/* Section unlock-on-scroll Achievement Popups */}
       <AchievementPopup
@@ -2657,42 +2742,49 @@ function App() {
         xp={100}
         isVisible={showIdentityUnlocked}
         theme="blue"
+        index={getAchievementIndex("identity_unlocked")}
       />
       <AchievementPopup
         title="Pathfinder"
         xp={100}
         isVisible={showPathfinder}
         theme="yellow"
+        index={getAchievementIndex("pathfinder")}
       />
       <AchievementPopup
         title="Skill Mastery"
         xp={100}
         isVisible={showSkillMastery}
         theme="green"
+        index={getAchievementIndex("skill_mastery")}
       />
       <AchievementPopup
         title="Quest Conqueror"
         xp={100}
         isVisible={showQuestConqueror}
         theme="red"
+        index={getAchievementIndex("quest_conqueror")}
       />
       <AchievementPopup
         title="Social Link"
         xp={100}
         isVisible={showSocialLinkEstablished}
         theme="teal"
+        index={getAchievementIndex("social_link_established")}
       />
       <AchievementPopup
         title="Rulebook Raider"
         xp={30}
         isVisible={showRulebookRaider}
         theme="blue"
+        index={getAchievementIndex("rulebook-raider")}
       />
       <AchievementPopup
         title="Scroll Seeker"
         xp={20}
         isVisible={showScrollSeeker}
         theme="yellow"
+        index={getAchievementIndex("scroll-seeker")}
       />
       {/* Section 2 Achievement Popups */}
       <AchievementPopup
@@ -2700,18 +2792,21 @@ function App() {
         xp={150}
         isVisible={showFaceOfHero}
         theme="blue"
+        index={getAchievementIndex("face_of_hero")}
       />
       <AchievementPopup
         title="Keeper of Stories"
         xp={100}
         isVisible={showKeeperOfStories}
         theme="yellow"
+        index={getAchievementIndex("keeper_of_stories")}
       />
       <AchievementPopup
         title="Power Unleashed"
         xp={75}
         isVisible={showPowerUnleashed}
         theme="green"
+        index={getAchievementIndex("power_unleashed")}
       />
       {/* Section 3 Achievement Popups */}
       <AchievementPopup
@@ -2719,12 +2814,14 @@ function App() {
         xp={75}
         isVisible={showGuildExplorer}
         theme="green"
+        index={getAchievementIndex("guild_explorer")}
       />
       <AchievementPopup
         title="Grandmaster's Path"
         xp={90}
         isVisible={showGrandmastersPath}
         theme="purple"
+        index={getAchievementIndex("grandmasters_path")}
       />
       {/* Section 4 Achievement Popups */}
       <AchievementPopup
@@ -2732,36 +2829,42 @@ function App() {
         xp={50}
         isVisible={showPixelPerfect}
         theme="blue"
+        index={getAchievementIndex("pixel_perfect")}
       />
       <AchievementPopup
         title="Server Sensei"
         xp={50}
         isVisible={showServerSensei}
         theme="green"
+        index={getAchievementIndex("server_sensei")}
       />
       <AchievementPopup
         title="Data Tamer"
         xp={50}
         isVisible={showDataTamer}
         theme="purple"
+        index={getAchievementIndex("data_tamer")}
       />
       <AchievementPopup
         title="Pipeline Pro"
         xp={50}
         isVisible={showPipelinePro}
         theme="yellow"
+        index={getAchievementIndex("pipeline_pro")}
       />
       <AchievementPopup
         title="Model Maker"
         xp={50}
         isVisible={showModelMaker}
         theme="red"
+        index={getAchievementIndex("model_maker")}
       />
       <AchievementPopup
         title="Utility Wizard"
         xp={50}
         isVisible={showUtilityWizard}
         theme="teal"
+        index={getAchievementIndex("utility_wizard")}
       />
       {/* Section 5 Achievement Popups */}
       <AchievementPopup
@@ -2769,36 +2872,42 @@ function App() {
         xp={75}
         isVisible={showCodeCartographer}
         theme="blue"
+        index={getAchievementIndex("code_cartographer")}
       />
       <AchievementPopup
         title="Quizmaster Crafter"
         xp={75}
         isVisible={showQuizmasterCrafter}
         theme="purple"
+        index={getAchievementIndex("quizmaster_crafter")}
       />
       <AchievementPopup
         title="Community Architect"
         xp={75}
         isVisible={showCommunityArchitect}
         theme="green"
+        index={getAchievementIndex("community_architect")}
       />
       <AchievementPopup
         title="Emotion Decoder"
         xp={75}
         isVisible={showEmotionDecoder}
         theme="red"
+        index={getAchievementIndex("emotion_decoder")}
       />
       <AchievementPopup
         title="Suggestion Sage"
         xp={75}
         isVisible={showSuggestionSage}
         theme="yellow"
+        index={getAchievementIndex("suggestion_sage")}
       />
       <AchievementPopup
         title="Digital Persona Builder"
         xp={75}
         isVisible={showDigitalPersonaBuilder}
         theme="teal"
+        index={getAchievementIndex("digital_persona_builder")}
       />
 
       {/* Section 6 Achievement Popup */}
@@ -2807,6 +2916,7 @@ function App() {
         xp={100}
         isVisible={showAllianceFormed}
         theme="teal"
+        index={getAchievementIndex("alliance_formed")}
       />
 
       {/* Game Instructions Modal */}
@@ -2830,48 +2940,70 @@ function App() {
                 CLOSE
               </button>
             </div>
+            <div className="mb-4 p-3 bg-yellow-900/20 border border-yellow-400/50 rounded-lg">
+              <p className="font-pixellari text-yellow-300 text-sm">
+                💡 Click on locked achievements to navigate to where you can unlock them!
+              </p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[70vh] overflow-y-auto pr-1">
               {allAchievements.map((a) => {
                 const isUnlocked =
                   unlockedAchievements.has(a.id) ||
                   unlockedAchievementsRef.current.has(a.id);
+                const sectionLevel = achievementToSectionMap[a.id];
+                const isClickable = sectionLevel !== undefined;
+                
                 return (
                   <div
                     key={a.id}
-                    className={`flex items-center justify-between border-2 rounded-lg px-4 py-3 ${
+                    onClick={() => isClickable && handleAchievementClick(a.id)}
+                    className={`flex items-center justify-between border-2 rounded-lg px-4 py-3 transition-all duration-200 h-20 ${
                       isUnlocked
                         ? "border-green-400 bg-green-900/30"
                         : "border-gray-600 bg-black/40"
+                    } ${
+                      isClickable 
+                        ? "cursor-pointer hover:border-yellow-400 hover:bg-yellow-900/20 hover:scale-105" 
+                        : "cursor-default"
                     }`}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
                       <span
-                        className={
+                        className={`flex-shrink-0 ${
                           isUnlocked ? "text-green-400" : "text-gray-400"
-                        }
+                        }`}
                       >
-                        🏆
+                        <GoTrophy />
                       </span>
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <div
-                          className={`font-pressstart2p text-sm ${
+                          className={`font-pressstart2p text-sm truncate ${
                             isUnlocked ? "text-white" : "text-gray-400"
                           }`}
+                          title={a.title}
                         >
                           {a.title}
                         </div>
-                        <div className="font-pixellari text-xs text-gray-300/80">
+                        <div className="font-pixellari text-xs text-gray-300/80 truncate">
                           {a.section} • +{a.xp} XP
+                          {isClickable && !isUnlocked && (
+                            <span className="text-yellow-400 ml-2">(Click to navigate)</span>
+                          )}
                         </div>
                       </div>
                     </div>
-                    <span
-                      className={`font-pressstart2p text-xs ${
-                        isUnlocked ? "text-green-400" : "text-gray-400"
-                      }`}
-                    >
-                      {isUnlocked ? "UNLOCKED" : "LOCKED"}
-                    </span>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {isClickable && !isUnlocked && (
+                        <span className="text-yellow-400 text-xs">→</span>
+                      )}
+                      <span
+                        className={`font-pressstart2p text-xs ${
+                          isUnlocked ? "text-green-400" : "text-gray-400"
+                        }`}
+                      >
+                        {isUnlocked ? "UNLOCKED" : "LOCKED"}
+                      </span>
+                    </div>
                   </div>
                 );
               })}

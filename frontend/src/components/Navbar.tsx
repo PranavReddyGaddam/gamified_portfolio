@@ -1,4 +1,7 @@
 import React from "react";
+import { BiSolidJoystick } from "react-icons/bi";
+import { GoTrophy } from "react-icons/go";
+import { GrScorecard } from "react-icons/gr";
 
 type NavbarProps = {
   currentLevel: number;
@@ -19,7 +22,7 @@ const Navbar: React.FC<NavbarProps> = ({
         {/* Level Indicator */}
         <div className="border border-blue-400 bg-black/50 backdrop-blur-sm px-2.5 py-1.5 md:px-4 md:py-2 rounded-md min-w-fit">
           <div className="flex items-center gap-1.5 md:gap-2">
-            <span className="text-blue-400 text-sm md:text-base">🎮</span>
+            <span className="text-blue-400 text-sm md:text-base"><BiSolidJoystick /></span>
             <span className="font-pressstart2p text-[10px] md:text-sm text-white">
               {`LEVEL ${currentLevel}/${totalLevels}`}
             </span>
@@ -29,14 +32,14 @@ const Navbar: React.FC<NavbarProps> = ({
         {/* Score */}
         <div className="border border-yellow-400 bg-black/50 backdrop-blur-sm px-2.5 py-1.5 md:px-4 md:py-2 rounded-md min-w-fit">
           <div className="flex items-center gap-1.5 md:gap-2">
-            <span className="text-yellow-400 text-sm md:text-base">⭐</span>
+            <span className="text-yellow-400 text-sm md:text-base"><GrScorecard /></span>
             <span className="font-pressstart2p text-[10px] md:text-sm text-white">{`SCORE: ${score}`}</span>
           </div>
         </div>
 
         {/* Achievements */}
         <div
-          className="border border-yellow-400 bg-black/50 backdrop-blur-sm px-2.5 py-1.5 md:px-4 md:py-2 rounded-md cursor-pointer select-none active:scale-[0.98] transition-transform min-w-fit"
+          className="border border-green-400 bg-black/50 backdrop-blur-sm px-2.5 py-1.5 md:px-4 md:py-2 rounded-md cursor-pointer select-none active:scale-[0.98] transition-transform min-w-fit"
           role="button"
           tabIndex={0}
           onClick={onOpenAchievements}
@@ -45,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({
           }}
         >
           <div className="flex items-center gap-1.5 md:gap-2">
-            <span className="text-yellow-400 text-sm md:text-base">🏆</span>
+            <span className="text-green-400 text-sm md:text-base"><GoTrophy /></span>
             <span className="font-pressstart2p text-[10px] md:text-sm text-white"><span className="hidden sm:inline">ACHIEVEMENTS</span></span>
           </div>
         </div>
