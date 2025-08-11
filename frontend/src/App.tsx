@@ -1202,7 +1202,7 @@ function App() {
                     data-card={
                       carouselIndex === 1
                         ? "work-experience"
-                        : carouselIndex === 2
+                        : carouselIndex === 0
                         ? "masters"
                         : ""
                     }
@@ -1212,62 +1212,106 @@ function App() {
                         case 0:
                           return (
                             <>
-                              <h3 className="font-pressstart2p text-white text-3xl mb-6">
-                                Bachelor's
+                              <h3 className="font-pressstart2p text-white text-3xl mb-2 text-center">
+                                Master's
                               </h3>
-                              <div className="flex-1 w-full space-y-3">
-                                <div className="text-center">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-2">
+                              <div className="flex-1 w-full space-y-3 overflow-y-auto px-1">
+                                {/* Main Quest */}
+                                <div className="text-center mb-1">
+                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
                                     Quest Title
                                   </h4>
                                   <p className="font-pixellari text-white text-lg">
-                                    Bachelor's in Computer Science
+                                    Master's in Data Analytics
                                   </p>
                                 </div>
-                                <div className="text-center">
-                                  <h5 className="font-pressstart2p text-yellow-400 text-lg mb-1">
-                                    Training Grounds
-                                  </h5>
-                                  <p className="font-pixellari text-white text-base">
-                                    St. Martin's Engineering College
-                                  </p>
+                                {/* Training Grounds & Duration */}
+                                <div className="flex flex-col justify-start items-start mb-1 gap-2">
+                                  <div className="text-left md:text-md">
+                                    <span className="font-pressstart2p text-yellow-400 text-md">
+                                      Training Grounds:
+                                    </span>
+
+                                    <span className="font-pixellari text-white text-base ml-2">
+                                      San Jose State University
+                                    </span>
+                                  </div>
+                                  <div className="text-right md:text-md">
+                                    <span className="font-pressstart2p text-yellow-400 text-md">
+                                      Campaign Duration:
+                                    </span>
+                                    <span className="font-pixellari text-white text-base ml-2">
+                                      Aug 2024 – May 2026
+                                    </span>
+                                  </div>
                                 </div>
-                                <div className="text-center">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
-                                    Campaign Duration
+                                {/* Stats */}
+                                <div className="flex flex-row items-center mb-2">
+                                  <span className="font-pressstart2p text-yellow-400 text-md mr-2">
+                                    Stats:
+                                  </span>
+                                  <span className="font-pixellari text-white text-base">
+                                    CGPA 3.8 / 4.0
+                                  </span>
+                                </div>
+                                {/* Skills Unlocked */}
+                                <div className="mb-1">
+                                  <h4 className="font-pressstart2p text-yellow-400 text-md mb-1">
+                                    Skills Unlocked
                                   </h4>
-                                  <p className="font-pixellari text-white text-base">
-                                    Aug 2019 – May 2023
-                                  </p>
+                                  <ul className="columns-1 sm:columns-2 gap-x-6 list-disc list-inside font-pixellari text-white text-sm space-y-1 pl-4">
+                                    <li>Big Data, Machine Learning</li>
+                                    <li>Data Warehousing & Pipelines</li>
+                                    <li>
+                                      Applied Statistics, Analytics Strategy
+                                    </li>
+                                    <li>Data-Driven Decision Making</li>
+                                  </ul>
                                 </div>
-                                <div className="text-center">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
-                                    Skill Unlocks
+
+                                {/* Achievements */}
+                                <div className="mb-1">
+                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-1">
+                                    Achievements
                                   </h4>
-                                  <p className="font-pixellari text-white text-base">
-                                    DBMS, Machine Learning, Data Mining, DSA
-                                  </p>
+                                  <ul className="columns-1 sm:columns-2 gap-x-6 list-disc list-inside font-pixellari text-white text-sm space-y-1 pl-4">
+                                    <li>
+                                      Winner – SpartUp Spring Hackathon 2025
+                                      (Hosted by Cisco & SJSU)
+                                    </li>
+                                    <li>
+                                      Participated in 8+ hackathons focused on
+                                      AI/ML and Cloud
+                                    </li>
+                                  </ul>
                                 </div>
-                                <div className="text-center">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
-                                    Lore Unlocked
+
+                                {/* Power-Ups */}
+                                <div className="mb-1">
+                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-1">
+                                    Power-Ups
                                   </h4>
-                                  <p className="font-pixellari text-white text-base">
-                                    Patent – ML Techniques for Hate Speech
-                                    Detection
-                                  </p>
-                                  <p className="font-pixellari text-white text-base">
-                                    Publication – Feature Extraction for Student
-                                    Classification
-                                  </p>
+                                  <ul className="columns-1 sm:columns-2 gap-x-6 list-disc list-inside font-pixellari text-white text-sm space-y-1 pl-4">
+                                    <li>Snowflake Mastery</li>
+                                    <li>dbt Workflow Architect</li>
+                                    <li>
+                                      AWS Certified (Cloud + AI Practitioner)
+                                    </li>
+                                    <li>Vespa-powered Search Systems</li>
+                                    <li>
+                                      HuggingFace Transformers Integration
+                                    </li>
+                                  </ul>
                                 </div>
-                                <div className="text-center">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
+
+                                {/* Side Quests */}
+                                <div>
+                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-1">
                                     Side Quests
                                   </h4>
-                                  <p className="font-pixellari text-white text-base">
-                                    SMEC Technology Awareness Month Director of
-                                    Operations
+                                  <p className="font-pixellari text-white text-sm">
+                                    Tech Team Lead – Indian Student Organization
+                                    (2025)
                                   </p>
                                 </div>
                               </div>
@@ -1395,106 +1439,62 @@ function App() {
                         case 2:
                           return (
                             <>
-                              <h3 className="font-pressstart2p text-white text-3xl mb-2 text-center">
-                                Master's
+                              <h3 className="font-pressstart2p text-white text-3xl mb-6">
+                                Bachelor's
                               </h3>
-                              <div className="flex-1 w-full space-y-3 overflow-y-auto px-1">
-                                {/* Main Quest */}
-                                <div className="text-center mb-1">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
+                              <div className="flex-1 w-full space-y-3">
+                                <div className="text-center">
+                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-2">
                                     Quest Title
                                   </h4>
                                   <p className="font-pixellari text-white text-lg">
-                                    Master's in Data Analytics
+                                    Bachelor's in Computer Science
                                   </p>
                                 </div>
-                                {/* Training Grounds & Duration */}
-                                <div className="flex flex-col justify-start items-start mb-1 gap-2">
-                                  <div className="text-left md:text-md">
-                                    <span className="font-pressstart2p text-yellow-400 text-md">
-                                      Training Grounds:
-                                    </span>
-
-                                    <span className="font-pixellari text-white text-base ml-2">
-                                      San Jose State University
-                                    </span>
-                                  </div>
-                                  <div className="text-right md:text-md">
-                                    <span className="font-pressstart2p text-yellow-400 text-md">
-                                      Campaign Duration:
-                                    </span>
-                                    <span className="font-pixellari text-white text-base ml-2">
-                                      Aug 2024 – May 2026
-                                    </span>
-                                  </div>
+                                <div className="text-center">
+                                  <h5 className="font-pressstart2p text-yellow-400 text-lg mb-1">
+                                    Training Grounds
+                                  </h5>
+                                  <p className="font-pixellari text-white text-base">
+                                    St. Martin's Engineering College
+                                  </p>
                                 </div>
-                                {/* Stats */}
-                                <div className="flex flex-row items-center mb-2">
-                                  <span className="font-pressstart2p text-yellow-400 text-md mr-2">
-                                    Stats:
-                                  </span>
-                                  <span className="font-pixellari text-white text-base">
-                                    CGPA 3.8 / 4.0
-                                  </span>
-                                </div>
-                                {/* Skills Unlocked */}
-                                <div className="mb-1">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-md mb-1">
-                                    Skills Unlocked
+                                <div className="text-center">
+                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
+                                    Campaign Duration
                                   </h4>
-                                  <ul className="columns-1 sm:columns-2 gap-x-6 list-disc list-inside font-pixellari text-white text-sm space-y-1 pl-4">
-                                    <li>Big Data, Machine Learning</li>
-                                    <li>Data Warehousing & Pipelines</li>
-                                    <li>
-                                      Applied Statistics, Analytics Strategy
-                                    </li>
-                                    <li>Data-Driven Decision Making</li>
-                                  </ul>
+                                  <p className="font-pixellari text-white text-base">
+                                    Aug 2019 – May 2023
+                                  </p>
                                 </div>
-
-                                {/* Achievements */}
-                                <div className="mb-1">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-1">
-                                    Achievements
+                                <div className="text-center">
+                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
+                                    Skill Unlocks
                                   </h4>
-                                  <ul className="columns-1 sm:columns-2 gap-x-6 list-disc list-inside font-pixellari text-white text-sm space-y-1 pl-4">
-                                    <li>
-                                      Winner – SpartUp Spring Hackathon 2025
-                                      (Hosted by Cisco & SJSU)
-                                    </li>
-                                    <li>
-                                      Participated in 8+ hackathons focused on
-                                      AI/ML and Cloud
-                                    </li>
-                                  </ul>
+                                  <p className="font-pixellari text-white text-base">
+                                    DBMS, Machine Learning, Data Mining, DSA
+                                  </p>
                                 </div>
-
-                                {/* Power-Ups */}
-                                <div className="mb-1">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-1">
-                                    Power-Ups
+                                <div className="text-center">
+                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
+                                    Lore Unlocked
                                   </h4>
-                                  <ul className="columns-1 sm:columns-2 gap-x-6 list-disc list-inside font-pixellari text-white text-sm space-y-1 pl-4">
-                                    <li>Snowflake Mastery</li>
-                                    <li>dbt Workflow Architect</li>
-                                    <li>
-                                      AWS Certified (Cloud + AI Practitioner)
-                                    </li>
-                                    <li>Vespa-powered Search Systems</li>
-                                    <li>
-                                      HuggingFace Transformers Integration
-                                    </li>
-                                  </ul>
+                                  <p className="font-pixellari text-white text-base">
+                                    Patent – ML Techniques for Hate Speech
+                                    Detection
+                                  </p>
+                                  <p className="font-pixellari text-white text-base">
+                                    Publication – Feature Extraction for Student
+                                    Classification
+                                  </p>
                                 </div>
-
-                                {/* Side Quests */}
-                                <div>
-                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-1">
+                                <div className="text-center">
+                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
                                     Side Quests
                                   </h4>
-                                  <p className="font-pixellari text-white text-sm">
-                                    Tech Team Lead – Indian Student Organization
-                                    (2025)
+                                  <p className="font-pixellari text-white text-base">
+                                    SMEC Technology Awareness Month Director of
+                                    Operations
                                   </p>
                                 </div>
                               </div>
