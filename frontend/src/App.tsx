@@ -159,9 +159,9 @@ const GameInstructionsModal: React.FC<{
 };
 
 // EmailJS configuration
-const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; // Replace with your EmailJS template ID
-const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; // Replace with your EmailJS public key
+const EMAILJS_SERVICE_ID = 'service_d0bwser';
+const EMAILJS_TEMPLATE_ID = 'template_4hg075h';
+const EMAILJS_PUBLIC_KEY = 'wRXZiwguBPiyEMvoX';
 
 function App() {
   const totalLevels = 6;
@@ -662,7 +662,7 @@ function App() {
     const projectUrls: { [key: string]: string } = {
       gitbridge: "https://github.com/pranavreddygaddam/gitbridge",
       quizforge: "https://github.com/pranavreddygaddam/quizforge",
-      isowebsite: "https://github.com/pranavreddygaddam/iso_website",
+      isowebsite: "https://iso-website-six.vercel.app/",
       sentimentanalysis:
         "https://github.com/PranavReddyGaddam/Network-Based-Social-Media-Sentiment-Analysis-on-Twitter",
       movierecommendation:
@@ -695,16 +695,21 @@ function App() {
     setSubmitStatus('idle');
 
     try {
+      // Check if EmailJS is properly configured
+      if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+        throw new Error('EmailJS configuration is missing. Please check your environment variables.');
+      }
+
       // Initialize EmailJS with your public key
       emailjs.init(EMAILJS_PUBLIC_KEY);
 
       // Prepare template parameters
       const templateParams = {
-        from_name: trimmedName || "Anonymous",
-        from_email: trimmedEmail,
+        name: trimmedName || "Anonymous",
+        email: trimmedEmail,
         message: trimmedMessage,
-        to_email: "reddy.pranav.gaddam@gmail.com",
-        subject: "Collaboration Request from Portfolio"
+        title: "Collaboration Request from Portfolio",
+        time: new Date().toLocaleString()
       };
 
       // Send email using EmailJS
@@ -2037,23 +2042,9 @@ function App() {
         <div className="relative z-10 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <div className="relative inline-block">
-              <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-red-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
-                LEVEL 5: PROJECT QUESTS
-              </h2>
-              
-              {/* Unlock All Button - Only show when at least one project is unlocked */}
-              {unlockedProjects.size > 0 && (
-                <button
-                  onClick={handleUnlockAllProjects}
-                  className="absolute -top-2 -right-2 sm:-top-1 sm:-right-1 md:top-1 md:right-1 font-pressstart2p text-xs sm:text-sm md:text-base text-red-400 hover:text-white bg-black/70 border border-red-400 hover:border-red-300 px-2 py-1 sm:px-3 sm:py-2 md:px-4 md:py-2 rounded-lg transition-all duration-300 hover:bg-red-900/20 hover:scale-105 whitespace-nowrap z-10"
-                  title="Unlock all projects at once"
-                >
-                  <span className="hidden sm:inline">UNLOCK ALL</span>
-                  <span className="sm:hidden">ALL</span>
-                </button>
-              )}
-            </div>
+            <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-red-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
+              LEVEL 5: PROJECT QUESTS
+            </h2>
             <p className="font-pressstart2p text-white text-sm mt-4">
               UNLOCK PROJECTS TO VIEW DETAILS AND EARN REWARDS
             </p>
@@ -2289,7 +2280,7 @@ function App() {
                     >
                       <span className="text-lg">📄</span>
                       <span className="font-pressstart2p text-sm">
-                        View Code
+                        View Website
                       </span>
                     </button>
                   </>
