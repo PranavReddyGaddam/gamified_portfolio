@@ -3,6 +3,7 @@ import "./App.css";
 import Galaxy from "./backgrounds/Backgrounds/Galaxy";
 import Squares from "./backgrounds/Backgrounds/Squares";
 import TextType from "./backgrounds/TextAnimations/TextType/TextType";
+import emailjs from '@emailjs/browser';
 import Navbar from "./components/Navbar";
 import {
   Linkedin,
@@ -157,6 +158,11 @@ const GameInstructionsModal: React.FC<{
   );
 };
 
+// EmailJS configuration
+const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
+const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; // Replace with your EmailJS template ID
+const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; // Replace with your EmailJS public key
+
 function App() {
   const totalLevels = 6;
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -220,22 +226,11 @@ function App() {
     useState(false);
 
   // Section 4 Achievements
-  const [showPixelPerfect, setShowPixelPerfect] = useState(false);
-  const [showServerSensei, setShowServerSensei] = useState(false);
-  const [showDataTamer, setShowDataTamer] = useState(false);
-  const [showPipelinePro, setShowPipelinePro] = useState(false);
-  const [showModelMaker, setShowModelMaker] = useState(false);
-  const [showUtilityWizard, setShowUtilityWizard] = useState(false);
+  const [showSkillTreeMaster, setShowSkillTreeMaster] = useState(false);
   const [unlockedSection4Achievements] = useState<Set<string>>(new Set());
 
   // Section 5 Achievements
-  const [showCodeCartographer, setShowCodeCartographer] = useState(false);
-  const [showQuizmasterCrafter, setShowQuizmasterCrafter] = useState(false);
-  const [showCommunityArchitect, setShowCommunityArchitect] = useState(false);
-  const [showEmotionDecoder, setShowEmotionDecoder] = useState(false);
-  const [showSuggestionSage, setShowSuggestionSage] = useState(false);
-  const [showDigitalPersonaBuilder, setShowDigitalPersonaBuilder] =
-    useState(false);
+  const [showProjectMaster, setShowProjectMaster] = useState(false);
   const [unlockedSection5Achievements] = useState<Set<string>>(new Set());
 
   // Section 6 Achievement
@@ -247,6 +242,8 @@ function App() {
   const [collabName, setCollabName] = useState("");
   const [collabEmail, setCollabEmail] = useState("");
   const [collabMessage, setCollabMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   // Achievement popup handlers
   const showAchievement = (
@@ -456,55 +453,10 @@ function App() {
       xp: 90,
       section: "Level 3",
     },
-    // Section 4 specifics
-    { id: "pixel_perfect", title: "Pixel Perfect", xp: 50, section: "Level 4" },
-    { id: "server_sensei", title: "Server Sensei", xp: 50, section: "Level 4" },
-    { id: "data_tamer", title: "Data Tamer", xp: 50, section: "Level 4" },
-    { id: "pipeline_pro", title: "Pipeline Pro", xp: 50, section: "Level 4" },
-    { id: "model_maker", title: "Model Maker", xp: 50, section: "Level 4" },
-    {
-      id: "utility_wizard",
-      title: "Utility Wizard",
-      xp: 50,
-      section: "Level 4",
-    },
-    // Section 5 specifics
-    {
-      id: "code_cartographer",
-      title: "Code Cartographer",
-      xp: 75,
-      section: "Level 5",
-    },
-    {
-      id: "quizmaster_crafter",
-      title: "Quizmaster Crafter",
-      xp: 75,
-      section: "Level 5",
-    },
-    {
-      id: "community_architect",
-      title: "Community Architect",
-      xp: 75,
-      section: "Level 5",
-    },
-    {
-      id: "emotion_decoder",
-      title: "Emotion Decoder",
-      xp: 75,
-      section: "Level 5",
-    },
-    {
-      id: "suggestion_sage",
-      title: "Suggestion Sage",
-      xp: 75,
-      section: "Level 5",
-    },
-    {
-      id: "digital_persona_builder",
-      title: "Digital Persona Builder",
-      xp: 75,
-      section: "Level 5",
-    },
+    // Section 4 completion
+    { id: "skill_tree_master", title: "Skill Tree Master", xp: 200, section: "Level 4" },
+    // Section 5 completion
+    { id: "project_master", title: "Project Master", xp: 300, section: "Level 5" },
     // Section 6
     {
       id: "alliance_formed",
@@ -580,6 +532,16 @@ function App() {
     nextSectionRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleUnlockAllProjects = () => {
+    const allProjectIds = ["gitbridge", "quizforge", "isowebsite", "sentimentanalysis", "movierecommendation", "personalwebsite"];
+    setUnlockedProjects(new Set(allProjectIds));
+
+    // Trigger section completion achievement
+    if (!unlockedSection5Achievements.has("project_master")) {
+      showAchievement("project_master", setShowProjectMaster);
+    }
+  };
+
   // Section 2 Achievement Handlers
   const handleRevealAvatar = () => {
     setIsCardFlipped(true);
@@ -648,70 +610,52 @@ function App() {
   };
 
   const handleSkillClick = (skillName: string) => {
-    setUnlockedSkills((prev) => ({
-      ...prev,
-      [skillName]: true, // Once unlocked, stays unlocked
-    }));
+    setUnlockedSkills((prev) => {
+      const newSkills = {
+        ...prev,
+        [skillName]: true, // Once unlocked, stays unlocked
+      };
+      
+      // Check if all skills are now unlocked
+      const allSkillsUnlocked = Object.values(newSkills).every(skill => skill);
+      if (allSkillsUnlocked && !unlockedSection4Achievements.has("skill_tree_master")) {
+        showAchievement("skill_tree_master", setShowSkillTreeMaster);
+      }
+      
+      return newSkills;
+    });
+  };
 
-    // Trigger skill-specific achievements
-    const skillAchievements = {
-      frontend: { achievementId: "pixel_perfect", setter: setShowPixelPerfect },
-      backend: { achievementId: "server_sensei", setter: setShowServerSensei },
-      database: { achievementId: "data_tamer", setter: setShowDataTamer },
-      devops: { achievementId: "pipeline_pro", setter: setShowPipelinePro },
-      ai: { achievementId: "model_maker", setter: setShowModelMaker },
-      tools: { achievementId: "utility_wizard", setter: setShowUtilityWizard },
-    };
+  const handleUnlockAllSkills = () => {
+    setUnlockedSkills({
+      frontend: true,
+      backend: true,
+      database: true,
+      devops: true,
+      ai: true,
+      tools: true,
+    });
 
-    const achievement =
-      skillAchievements[skillName as keyof typeof skillAchievements];
-    if (
-      achievement &&
-      !unlockedSection4Achievements.has(achievement.achievementId)
-    ) {
-      showAchievement(achievement.achievementId, achievement.setter);
+    // Trigger section completion achievement
+    if (!unlockedSection4Achievements.has("skill_tree_master")) {
+      showAchievement("skill_tree_master", setShowSkillTreeMaster);
     }
   };
 
   const handleProjectUnlock = (projectId: string) => {
-    setUnlockedProjects((prev) => new Set(Array.from(prev).concat(projectId)));
-
-    // Trigger project-specific achievements
-    const projectAchievements = {
-      gitbridge: {
-        achievementId: "code_cartographer",
-        setter: setShowCodeCartographer,
-      },
-      quizforge: {
-        achievementId: "quizmaster_crafter",
-        setter: setShowQuizmasterCrafter,
-      },
-      isowebsite: {
-        achievementId: "community_architect",
-        setter: setShowCommunityArchitect,
-      },
-      sentimentanalysis: {
-        achievementId: "emotion_decoder",
-        setter: setShowEmotionDecoder,
-      },
-      movierecommendation: {
-        achievementId: "suggestion_sage",
-        setter: setShowSuggestionSage,
-      },
-      personalwebsite: {
-        achievementId: "digital_persona_builder",
-        setter: setShowDigitalPersonaBuilder,
-      },
-    };
-
-    const achievement =
-      projectAchievements[projectId as keyof typeof projectAchievements];
-    if (
-      achievement &&
-      !unlockedSection5Achievements.has(achievement.achievementId)
-    ) {
-      showAchievement(achievement.achievementId, achievement.setter);
-    }
+    setUnlockedProjects((prev) => {
+      const newProjects = new Set(Array.from(prev).concat(projectId));
+      
+      // Check if all projects are now unlocked
+      const allProjectIds = ["gitbridge", "quizforge", "isowebsite", "sentimentanalysis", "movierecommendation", "personalwebsite"];
+      const allProjectsUnlocked = allProjectIds.every(id => newProjects.has(id));
+      
+      if (allProjectsUnlocked && !unlockedSection5Achievements.has("project_master")) {
+        showAchievement("project_master", setShowProjectMaster);
+      }
+      
+      return newProjects;
+    });
   };
 
   const handleProjectLink = (projectId: string) => {
@@ -735,7 +679,7 @@ function App() {
   // Removed: career progression unlock handler (no longer gated)
 
   // Handle collaboration form submit (Section 6)
-  const handleCollabSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleCollabSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const trimmedName = collabName.trim();
@@ -747,17 +691,47 @@ function App() {
       return;
     }
 
-    const subject = encodeURIComponent("Collaboration Request");
-    const body = encodeURIComponent(
-      `Name: ${
-        trimmedName || "(not provided)"
-      }\nEmail: ${trimmedEmail}\n\nMessage:\n${trimmedMessage}`
-    );
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
 
-    window.location.href = `mailto:reddy.pranav.gaddam@gmail.com?subject=${subject}&body=${body}`;
+    try {
+      // Initialize EmailJS with your public key
+      emailjs.init(EMAILJS_PUBLIC_KEY);
 
-    // Trigger Section 6 achievement on successful submit intent
-    showAchievement("alliance_formed", setShowAllianceFormed);
+      // Prepare template parameters
+      const templateParams = {
+        from_name: trimmedName || "Anonymous",
+        from_email: trimmedEmail,
+        message: trimmedMessage,
+        to_email: "reddy.pranav.gaddam@gmail.com",
+        subject: "Collaboration Request from Portfolio"
+      };
+
+      // Send email using EmailJS
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams
+      );
+
+      if (response.status === 200) {
+        setSubmitStatus('success');
+        // Clear form
+        setCollabName("");
+        setCollabEmail("");
+        setCollabMessage("");
+        
+        // Trigger Section 6 achievement on successful submit
+        showAchievement("alliance_formed", setShowAllianceFormed);
+      } else {
+        throw new Error('Email sending failed');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -792,7 +766,7 @@ function App() {
         <div className="relative z-10 border-2 border-white bg-black p-8 rounded-lg max-w-2xl w-full text-center mb-16">
           {/* Start Prompt */}
           <p className="font-pressstart2p text-purple-400 text-lg mb-6">
-            PRESS START TO BEGIN
+            PRANAV REDDY GADDAM'S
           </p>
 
           {/* Main Title with Typing Effect */}
@@ -886,10 +860,10 @@ function App() {
           </div>
 
           {/* Character Card Container */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-stretch max-w-7xl mx-auto px-2 md:px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-6 items-stretch max-w-7xl mx-auto px-4 md:px-4">
             {/* Left Column: Character Portrait */}
-            <div className="col-span-1">
-              <div className="relative w-full min-h-[360px] md:h-full perspective-1000">
+            <div className="col-span-1 flex">
+              <div className="relative w-full min-h-[400px] perspective-1000 flex-1">
                 <div
                   className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
                     isCardFlipped ? "rotate-y-180" : ""
@@ -902,15 +876,15 @@ function App() {
                         <div className="flex justify-center mb-4">
                           <ShieldUser className="w-16 h-16 text-blue-400" />
                         </div>
-                        <h3 className="font-pressstart2p text-white text-lg mb-4">
+                        <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
                           HIDDEN CHARACTER
                         </h3>
-                        <p className="font-pixellari text-blue-300 text-sm mb-6">
+                        <p className="font-pixellari text-blue-300 text-xs md:text-sm mb-6">
                           Click to reveal the character
                         </p>
                         <button
                           onClick={handleRevealAvatar}
-                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded border border-blue-400 transition-colors"
+                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-blue-400 transition-colors text-xs md:text-sm"
                         >
                           REVEAL AVATAR
                         </button>
@@ -922,16 +896,16 @@ function App() {
                   <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
                     <div className="bg-blue-900/80 border border-blue-400 rounded-lg overflow-hidden h-full flex flex-col">
                       {/* Image area */}
-                      <div className="h-64 md:h-[85%]">
+                      <div className="flex-1 min-h-0">
                         <img
-                          src="/Profile_Pic.jpeg"
+                          src="/Pranav.jpeg"
                           alt="Character Portrait"
                           className="w-full h-full object-cover"
                         />
                       </div>
 
                       {/* Bottom stats section */}
-                      <div className="h-auto md:h-[15%] p-3 bg-blue-900/90 flex flex-col justify-center">
+                      <div className="flex-shrink-0 p-3 bg-blue-900/90 flex flex-col justify-center">
                         {/* Name & Level */}
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="text-white font-pressstart2p text-xs">
@@ -943,13 +917,13 @@ function App() {
                         </div>
 
                         {/* HP & MP side by side */}
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2 md:gap-4">
                           {/* HP */}
                           <div className="flex items-center gap-1">
                             <span className="text-green-400 text-xs font-pressstart2p">
                               HP
                             </span>
-                            <div className="w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
+                            <div className="w-16 md:w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
                               <div className="w-4/5 h-full bg-green-500 rounded-full"></div>
                             </div>
                           </div>
@@ -959,7 +933,7 @@ function App() {
                             <span className="text-cyan-400 text-xs font-pressstart2p">
                               MP
                             </span>
-                            <div className="w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
+                            <div className="w-16 md:w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
                               <div className="w-2/3 h-full bg-cyan-500 rounded-full"></div>
                             </div>
                           </div>
@@ -972,8 +946,8 @@ function App() {
             </div>
 
             {/* Middle Column: Character Info */}
-            <div className="col-span-1">
-              <div className="relative w-full min-h-[320px] md:h-full perspective-1000">
+            <div className="col-span-1 flex">
+              <div className="relative w-full min-h-[400px] perspective-1000 flex-1">
                 <div
                   className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
                     isInfoCardFlipped ? "rotate-y-180" : ""
@@ -986,15 +960,15 @@ function App() {
                         <div className="flex justify-center mb-4">
                           <BookOpenText className="w-16 h-16 text-blue-400" />
                         </div>
-                        <h3 className="font-pressstart2p text-white text-lg mb-4">
+                        <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
                           CHARACTER LORE
                         </h3>
-                        <p className="font-pixellari text-blue-300 text-sm mb-6">
+                        <p className="font-pixellari text-blue-300 text-xs md:text-sm mb-6">
                           Uncover backstory
                         </p>
                         <button
                           onClick={handleUnlockLore}
-                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded border border-blue-400 transition-colors"
+                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-blue-400 transition-colors text-xs md:text-sm"
                         >
                           UNLOCK LORE
                         </button>
@@ -1004,14 +978,14 @@ function App() {
 
                   {/* Card Front (Character Info) */}
                   <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                    <div className="bg-blue-900/80 border border-blue-400 rounded-lg p-4 h-full">
-                      <div className="flex items-center gap-2 mb-3">
+                    <div className="bg-blue-900/80 border border-blue-400 rounded-lg p-4 h-full flex flex-col">
+                      <div className="flex items-center gap-2 mb-3 flex-shrink-0">
                         <h3 className="font-pressstart2p text-white text-base">
                           CHARACTER INFO
                         </h3>
                       </div>
-                      <div className="font-pressstart2p space-y-3 text-gray-300 text-[10px] text-left leading-relaxed">
-                        <p>
+                      <div className="font-pressstart2p space-y-3 text-gray-300 text-xs md:text-[10px] text-left leading-relaxed overflow-y-auto flex-1 min-h-0">
+                        <p className="break-words">
                           A creative builder and systems thinker who engineers
                           AI-powered applications using tools like Python,
                           FastAPI, MongoDB, and Next.js. Currently pursuing a
@@ -1020,7 +994,7 @@ function App() {
                           QuizForge (an adaptive learning platform), and
                           scalable cloud-first ML pipelines.
                         </p>
-                        <p>
+                        <p className="break-words">
                           An active hackathon participant and backend
                           specialist, with hands-on experience in AWS and LLM
                           integration. Passionate about designing resilient
@@ -1035,8 +1009,8 @@ function App() {
             </div>
 
             {/* Right Column: Attributes Panel with Flip */}
-            <div className="col-span-1">
-              <div className="relative w-full min-h-[360px] md:h-[420px] perspective-1000">
+            <div className="col-span-1 flex">
+              <div className="relative w-full min-h-[400px] perspective-1000 flex-1">
                 <div
                   className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
                     isAttributesCardFlipped ? "rotate-y-180" : ""
@@ -1049,15 +1023,15 @@ function App() {
                         <div className="flex justify-center mb-4">
                           <ChartColumnIncreasing className="w-16 h-16 text-blue-400" />
                         </div>
-                        <h3 className="font-pressstart2p text-white text-lg mb-4">
+                        <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
                           POWER METRICS
                         </h3>
-                        <p className="font-pixellari text-blue-300 text-sm mb-6">
+                        <p className="font-pixellari text-blue-300 text-xs md:text-sm mb-6">
                           See True Power
                         </p>
                         <button
                           onClick={handleUnlockMetrics}
-                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded border border-blue-400 transition-colors"
+                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-blue-400 transition-colors text-xs md:text-sm"
                         >
                           UNLOCK METRICS
                         </button>
@@ -1068,10 +1042,10 @@ function App() {
                   {/* Card Front (Attributes) */}
                   <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
                     <div className="bg-blue-900/80 border border-blue-400 rounded-lg p-4 h-full flex flex-col">
-                      <h3 className="font-pressstart2p text-white text-base mb-3">
+                      <h3 className="font-pressstart2p text-white text-base mb-3 flex-shrink-0">
                         ATTRIBUTES
                       </h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 font-pixellari">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 mb-4 font-pixellari flex-shrink-0">
                         {/* Attribute Cards */}
                         {[
                           {
@@ -1129,10 +1103,10 @@ function App() {
                       </div>
 
                       {/* Equipped Skills Panel */}
-                      <h3 className="font-pressstart2p text-white text-base mb-3">
+                      <h3 className="font-pressstart2p text-white text-sm md:text-base mb-3 flex-shrink-0">
                         EQUIPPED SKILLS
                       </h3>
-                      <ul className="space-y-3 text-xs text-gray-300 font-pressstart2p">
+                      <ul className="space-y-2 md:space-y-3 text-xs text-gray-300 font-pressstart2p overflow-y-auto flex-1 min-h-0">
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
                           <span className="text-yellow-400">⚡</span>
                           FastAPI Mastery
@@ -1183,7 +1157,7 @@ function App() {
           {/* Section Header */}
           <div className="text-center mb-12">
             <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-yellow-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
-              LEVEL 3: PROGRESSION PATH
+              LEVEL 3: CAREER PATH
             </h2>
             <p className="font-pressstart2p text-white text-sm mt-4">
               ACADEMIC ACHIEVEMENTS AND PROFESSIONAL JOURNEY
@@ -1574,13 +1548,25 @@ function App() {
 
         <div className="relative z-10 max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 relative">
             <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-green-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
               LEVEL 4: SKILL TREE
             </h2>
             <p className="font-pressstart2p text-white text-sm mt-4">
               CLICK ON SKILLS TO UNLOCK THEM AND EARN EXPERIENCE POINTS
             </p>
+            
+            {/* Unlock All Button - Only show when at least one skill is unlocked */}
+            {Object.values(unlockedSkills).some(skill => skill) && (
+              <button
+                onClick={handleUnlockAllSkills}
+                className="absolute top-0 right-0 font-pressstart2p text-xs sm:text-sm md:text-base text-green-400 hover:text-white bg-black/70 border border-green-400 hover:border-green-300 px-2 py-1 sm:px-3 sm:py-2 md:px-4 md:py-2 rounded-lg transition-all duration-300 hover:bg-green-900/20 hover:scale-105 whitespace-nowrap"
+                title="Unlock all skills at once"
+              >
+                <span className="hidden sm:inline">UNLOCK ALL</span>
+                <span className="sm:hidden">ALL</span>
+              </button>
+            )}
           </div>
 
           {/* Skill Grid */}
@@ -2051,9 +2037,23 @@ function App() {
         <div className="relative z-10 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-red-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
-              LEVEL 5: PROJECT QUESTS
-            </h2>
+            <div className="relative inline-block">
+              <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-red-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
+                LEVEL 5: PROJECT QUESTS
+              </h2>
+              
+              {/* Unlock All Button - Only show when at least one project is unlocked */}
+              {unlockedProjects.size > 0 && (
+                <button
+                  onClick={handleUnlockAllProjects}
+                  className="absolute -top-2 -right-2 sm:-top-1 sm:-right-1 md:top-1 md:right-1 font-pressstart2p text-xs sm:text-sm md:text-base text-red-400 hover:text-white bg-black/70 border border-red-400 hover:border-red-300 px-2 py-1 sm:px-3 sm:py-2 md:px-4 md:py-2 rounded-lg transition-all duration-300 hover:bg-red-900/20 hover:scale-105 whitespace-nowrap z-10"
+                  title="Unlock all projects at once"
+                >
+                  <span className="hidden sm:inline">UNLOCK ALL</span>
+                  <span className="sm:hidden">ALL</span>
+                </button>
+              )}
+            </div>
             <p className="font-pressstart2p text-white text-sm mt-4">
               UNLOCK PROJECTS TO VIEW DETAILS AND EARN REWARDS
             </p>
@@ -2077,7 +2077,7 @@ function App() {
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                     <div className="text-center">
                       <div className="font-pressstart2p text-white text-sm">
-                        UNLOCK
+                        LOCKED
                       </div>
                     </div>
                   </div>
@@ -2157,7 +2157,7 @@ function App() {
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                     <div className="text-center">
                       <div className="font-pressstart2p text-white text-sm">
-                        UNLOCK
+                        LOCKED
                       </div>
                     </div>
                   </div>
@@ -2237,7 +2237,7 @@ function App() {
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                     <div className="text-center">
                       <div className="font-pressstart2p text-white text-sm">
-                        UNLOCK
+                        LOCKED
                       </div>
                     </div>
                   </div>
@@ -2317,7 +2317,7 @@ function App() {
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                     <div className="text-center">
                       <div className="font-pressstart2p text-white text-sm">
-                        UNLOCK
+                        LOCKED
                       </div>
                     </div>
                   </div>
@@ -2399,7 +2399,7 @@ function App() {
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                     <div className="text-center">
                       <div className="font-pressstart2p text-white text-sm">
-                        UNLOCK
+                        LOCKED
                       </div>
                     </div>
                   </div>
@@ -2478,7 +2478,7 @@ function App() {
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                     <div className="text-center">
                       <div className="font-pressstart2p text-white text-sm">
-                        UNLOCK
+                        LOCKED
                       </div>
                     </div>
                   </div>
@@ -2586,7 +2586,8 @@ function App() {
                     value={collabName}
                     onChange={(e) => setCollabName(e.target.value)}
                     placeholder="Your name (optional)"
-                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari"
+                    disabled={isSubmitting}
+                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                   <input
                     aria-label="Your email"
@@ -2595,7 +2596,8 @@ function App() {
                     onChange={(e) => setCollabEmail(e.target.value)}
                     placeholder="Your email"
                     required
-                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari"
+                    disabled={isSubmitting}
+                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                   <textarea
                     aria-label="Project details"
@@ -2604,17 +2606,37 @@ function App() {
                     placeholder="Briefly describe the project / idea"
                     required
                     rows={3}
-                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari"
+                    disabled={isSubmitting}
+                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
+                
+                {/* Status Messages */}
+                {submitStatus === 'success' && (
+                  <div className="bg-green-900/30 border border-green-400 rounded px-3 py-2">
+                    <p className="font-pixellari text-green-400 text-xs text-center">
+                      ✓ Message sent successfully! I'll get back to you soon.
+                    </p>
+                  </div>
+                )}
+                
+                {submitStatus === 'error' && (
+                  <div className="bg-red-900/30 border border-red-400 rounded px-3 py-2">
+                    <p className="font-pixellari text-red-400 text-xs text-center">
+                      ✗ Failed to send message. Please try again or contact me directly.
+                    </p>
+                  </div>
+                )}
+                
                 <button
                   type="submit"
-                  className="w-full font-pressstart2p bg-teal-600 hover:bg-teal-700 text-white px-3 py-2 rounded border border-teal-400 transition-colors text-sm"
+                  disabled={isSubmitting}
+                  className="w-full font-pressstart2p bg-teal-600 hover:bg-teal-700 disabled:bg-teal-800 disabled:cursor-not-allowed text-white px-3 py-2 rounded border border-teal-400 transition-colors text-sm"
                 >
-                  SEND REQUEST
+                  {isSubmitting ? "SENDING..." : "SEND REQUEST"}
                 </button>
                 <p className="font-pixellari text-teal-300 text-[10px] text-center">
-                  This will open your mail app with a pre-filled message
+                  {isSubmitting ? "Sending your message..." : "Your message will be sent directly to me"}
                 </p>
               </form>
             </div>
@@ -2825,89 +2847,19 @@ function App() {
       />
       {/* Section 4 Achievement Popups */}
       <AchievementPopup
-        title="Pixel Perfect"
-        xp={50}
-        isVisible={showPixelPerfect}
-        theme="blue"
-        index={getAchievementIndex("pixel_perfect")}
-      />
-      <AchievementPopup
-        title="Server Sensei"
-        xp={50}
-        isVisible={showServerSensei}
+        title="Skill Tree Master"
+        xp={200}
+        isVisible={showSkillTreeMaster}
         theme="green"
-        index={getAchievementIndex("server_sensei")}
-      />
-      <AchievementPopup
-        title="Data Tamer"
-        xp={50}
-        isVisible={showDataTamer}
-        theme="purple"
-        index={getAchievementIndex("data_tamer")}
-      />
-      <AchievementPopup
-        title="Pipeline Pro"
-        xp={50}
-        isVisible={showPipelinePro}
-        theme="yellow"
-        index={getAchievementIndex("pipeline_pro")}
-      />
-      <AchievementPopup
-        title="Model Maker"
-        xp={50}
-        isVisible={showModelMaker}
-        theme="red"
-        index={getAchievementIndex("model_maker")}
-      />
-      <AchievementPopup
-        title="Utility Wizard"
-        xp={50}
-        isVisible={showUtilityWizard}
-        theme="teal"
-        index={getAchievementIndex("utility_wizard")}
+        index={getAchievementIndex("skill_tree_master")}
       />
       {/* Section 5 Achievement Popups */}
       <AchievementPopup
-        title="Code Cartographer"
-        xp={75}
-        isVisible={showCodeCartographer}
-        theme="blue"
-        index={getAchievementIndex("code_cartographer")}
-      />
-      <AchievementPopup
-        title="Quizmaster Crafter"
-        xp={75}
-        isVisible={showQuizmasterCrafter}
-        theme="purple"
-        index={getAchievementIndex("quizmaster_crafter")}
-      />
-      <AchievementPopup
-        title="Community Architect"
-        xp={75}
-        isVisible={showCommunityArchitect}
-        theme="green"
-        index={getAchievementIndex("community_architect")}
-      />
-      <AchievementPopup
-        title="Emotion Decoder"
-        xp={75}
-        isVisible={showEmotionDecoder}
+        title="Project Master"
+        xp={300}
+        isVisible={showProjectMaster}
         theme="red"
-        index={getAchievementIndex("emotion_decoder")}
-      />
-      <AchievementPopup
-        title="Suggestion Sage"
-        xp={75}
-        isVisible={showSuggestionSage}
-        theme="yellow"
-        index={getAchievementIndex("suggestion_sage")}
-      />
-      <AchievementPopup
-        title="Digital Persona Builder"
-        xp={75}
-        isVisible={showDigitalPersonaBuilder}
-        theme="teal"
-        index={getAchievementIndex("digital_persona_builder")}
+        index={getAchievementIndex("project_master")}
       />
 
       {/* Section 6 Achievement Popup */}
