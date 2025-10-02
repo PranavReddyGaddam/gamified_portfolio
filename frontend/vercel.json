@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    {
+      "source": "/gitbridge",
+      "destination": "https://git-bridge.vercel.app/"
+    },
+    {
+      "source": "/gitbridge/:path*",
+      "destination": "https://git-bridge.vercel.app/:path*"
+    }
+  ]
+}
+
