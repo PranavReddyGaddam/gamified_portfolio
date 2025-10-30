@@ -41,43 +41,71 @@ async function handler(req, res) {
       headers.Authorization = `token ${githubToken}`;
     }
 
-    // Fetch repositories (simplified - use public endpoint to avoid auth issues)
+    // Fetch repositories - use authenticated endpoint if token available to include private repos
     let allRepos = [];
     let page = 1;
     let hasMore = true;
 
     while (hasMore && page <= 3) { // Limit to 3 pages to avoid timeout
       try {
-        const reposResponse = await fetch(
-          `https://api.github.com/users/${username}/repos?per_page=100&page=${page}&sort=updated`,
-          { headers }
-        );
+        let reposResponse;
+        
+        // Use authenticated endpoint if token available, otherwise use public endpoint
+        if (githubToken) {
+          reposResponse = await fetch(
+            `https://api.github.com/user/repos?per_page=100&page=${page}&sort=updated&affiliation=owner,collaborator`,
+            { headers }
+          );
+        } else {
+          // Use public repos endpoint when no token
+          reposResponse = await fetch(
+            `https://api.github.com/users/${username}/repos?per_page=100&page=${page}&sort=updated`,
+            { headers }
+          );
+        }
 
         if (!reposResponse.ok) {
-          if (reposResponse.status === 404) {
-            throw new Error(`User ${username} not found`);
+          // Fallback to public repos if authenticated endpoint fails
+          if (githubToken && (reposResponse.status === 404 || reposResponse.status === 403)) {
+            const publicReposResponse = await fetch(
+              `https://api.github.com/users/${username}/repos?per_page=100&page=${page}&sort=updated`,
+              { headers }
+            );
+            if (!publicReposResponse.ok) {
+              throw new Error(`GitHub API error: ${publicReposResponse.status}`);
+            }
+            const publicRepos = await publicReposResponse.json();
+            if (publicRepos.length === 0) {
+              hasMore = false;
+            } else {
+              allRepos = allRepos.concat(publicRepos);
+              page++;
+            }
+          } else {
+            if (reposResponse.status === 404) {
+              throw new Error(`User ${username} not found`);
+            }
+            if (reposResponse.status === 403) {
+              console.warn('Rate limit hit or access denied');
+              hasMore = false;
+              break;
+            }
+            throw new Error(`GitHub API error: ${reposResponse.status}`);
           }
-          if (reposResponse.status === 403) {
-            console.warn('Rate limit hit or access denied');
-            // Continue with empty repos rather than failing
-            hasMore = false;
-            break;
-          }
-          throw new Error(`GitHub API error: ${reposResponse.status}`);
-        }
-
-        const repos = await reposResponse.json();
-        if (!Array.isArray(repos)) {
-          throw new Error('Invalid response format from GitHub API');
-        }
-
-        if (repos.length === 0) {
-          hasMore = false;
         } else {
-          allRepos = allRepos.concat(repos);
-          page++;
-          if (repos.length < 100) {
+          const repos = await reposResponse.json();
+          if (!Array.isArray(repos)) {
+            throw new Error('Invalid response format from GitHub API');
+          }
+
+          if (repos.length === 0) {
             hasMore = false;
+          } else {
+            allRepos = allRepos.concat(repos);
+            page++;
+            if (repos.length < 100) {
+              hasMore = false;
+            }
           }
         }
       } catch (error) {
@@ -94,9 +122,9 @@ async function handler(req, res) {
 
     console.log(`Found ${allRepos.length} repositories`);
 
-    // Limit to first 10 repos to avoid timeout (Vercel has 10s timeout on hobby plan)
-    const reposToProcess = allRepos.slice(0, 10);
-    console.log(`Processing ${reposToProcess.length} repositories (limited to avoid timeout)`);
+    // Process ALL repositories (removed 10-repo limit to match local behavior)
+    const reposToProcess = allRepos;
+    console.log(`Processing ${reposToProcess.length} repositories`);
 
     // Step 2: Fetch commits from repositories with pagination
     const commitPromises = reposToProcess.map(async (repo) => {
