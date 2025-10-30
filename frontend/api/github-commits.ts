@@ -5,33 +5,35 @@ interface CommitData {
   count: number;
 }
 
-export default async function handler(
+async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   // Only allow GET requests
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Check if fetch is available
-  if (typeof fetch === 'undefined') {
-    return res.status(500).json({ 
-      error: 'Fetch API not available',
-      message: 'Please use Node.js 18+ or add node-fetch polyfill'
-    });
-  }
-
   const githubToken = process.env.GITHUB_TOKEN;
-  const username = req.query.username as string || 'PranavReddyGaddam';
+  const username = (req.query.username as string) || 'PranavReddyGaddam';
   
   // Note: GitHub token is optional but recommended for higher rate limits
   // Without token: 60 requests/hour per IP
   // With token: 5,000 requests/hour
 
   try {
-    // Step 1: Fetch ALL repositories for the user
-    const headers: HeadersInit = {
+    // Early return if fetch is not available (shouldn't happen on Node 18+)
+    if (typeof fetch === 'undefined') {
+      throw new Error('Fetch API not available - Node.js version may be too old');
+    }
+
+    // Step 1: Fetch repositories
+    const headers: Record<string, string> = {
       Accept: 'application/vnd.github.v3+json',
     };
     
@@ -40,68 +42,61 @@ export default async function handler(
       headers.Authorization = `token ${githubToken}`;
     }
 
-    // Fetch all repositories (including private ones if accessible)
+    // Fetch repositories (simplified - use public endpoint to avoid auth issues)
     let allRepos: any[] = [];
     let page = 1;
     let hasMore = true;
 
-    while (hasMore) {
-      let reposResponse: Response;
-      
-      // Use authenticated endpoint if token available, otherwise use public endpoint
-      if (githubToken) {
-        reposResponse = await fetch(
-          `https://api.github.com/user/repos?per_page=100&page=${page}&sort=updated&affiliation=owner,collaborator`,
-          { headers }
-        );
-      } else {
-        // Use public repos endpoint when no token
-        reposResponse = await fetch(
+    while (hasMore && page <= 3) { // Limit to 3 pages to avoid timeout
+      try {
+        const reposResponse = await fetch(
           `https://api.github.com/users/${username}/repos?per_page=100&page=${page}&sort=updated`,
           { headers }
         );
-      }
 
-      if (!reposResponse.ok) {
-        // Fallback to public repos if authenticated endpoint fails
-        if (githubToken && (reposResponse.status === 404 || reposResponse.status === 403)) {
-          const publicReposResponse = await fetch(
-            `https://api.github.com/users/${username}/repos?per_page=100&page=${page}&sort=updated`,
-            { headers }
-          );
-          if (!publicReposResponse.ok) {
-            throw new Error(`GitHub API error: ${publicReposResponse.status}`);
+        if (!reposResponse.ok) {
+          if (reposResponse.status === 404) {
+            throw new Error(`User ${username} not found`);
           }
-          const publicRepos = await publicReposResponse.json();
-          if (publicRepos.length === 0) {
+          if (reposResponse.status === 403) {
+            console.warn('Rate limit hit or access denied');
+            // Continue with empty repos rather than failing
             hasMore = false;
-          } else {
-            allRepos = allRepos.concat(publicRepos);
-            page++;
+            break;
           }
-        } else {
           throw new Error(`GitHub API error: ${reposResponse.status}`);
         }
-      } else {
+
         const repos = await reposResponse.json();
+        if (!Array.isArray(repos)) {
+          throw new Error('Invalid response format from GitHub API');
+        }
+
         if (repos.length === 0) {
           hasMore = false;
         } else {
           allRepos = allRepos.concat(repos);
           page++;
-          // GitHub API limits to 100 repos per page, so if we get less than 100, we're done
           if (repos.length < 100) {
             hasMore = false;
           }
         }
+      } catch (error) {
+        console.error(`Error fetching repos page ${page}:`, error);
+        hasMore = false;
+        // Continue with repos we've fetched so far
       }
+    }
+
+    if (allRepos.length === 0) {
+      console.warn('No repositories found');
+      return res.status(200).json([]);
     }
 
     console.log(`Found ${allRepos.length} repositories`);
 
-    // Limit to first 20 repos to avoid timeout (Vercel has 10s timeout on hobby plan)
-    // If you have more repos, they'll be included but commits won't be fetched for all
-    const reposToProcess = allRepos.slice(0, 20);
+    // Limit to first 10 repos to avoid timeout (Vercel has 10s timeout on hobby plan)
+    const reposToProcess = allRepos.slice(0, 10);
     console.log(`Processing ${reposToProcess.length} repositories (limited to avoid timeout)`);
 
     // Step 2: Fetch commits from repositories with pagination
@@ -112,9 +107,9 @@ export default async function handler(
         let commitPage = 1;
         let hasMoreCommits = true;
 
-        // Fetch commits with pagination (limit to first 5 pages = 500 commits per repo to avoid timeout)
-        while (hasMoreCommits && commitPage <= 5) {
-          const commitHeaders: HeadersInit = {
+        // Fetch commits with pagination (limit to first 3 pages = 300 commits per repo to avoid timeout)
+        while (hasMoreCommits && commitPage <= 3) {
+          const commitHeaders: Record<string, string> = {
             Accept: 'application/vnd.github.v3+json',
           };
           
@@ -167,8 +162,15 @@ export default async function handler(
       }
     });
 
-    const allCommits = await Promise.all(commitPromises);
-    const flattenedCommits = allCommits.flat();
+    // Wait for all commits with timeout protection
+    const allCommits = await Promise.allSettled(commitPromises);
+    const successfulCommits = allCommits
+      .filter((result) => result.status === 'fulfilled')
+      .map((result) => (result as PromiseFulfilledResult<any[]>).value)
+      .flat()
+      .flat();
+    
+    const flattenedCommits = successfulCommits;
 
     // Aggregate commits by date
     const commitMap = new Map<string, number>();
@@ -207,3 +209,5 @@ export default async function handler(
     });
   }
 }
+
+module.exports = handler;
