@@ -14,6 +14,14 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Check if fetch is available
+  if (typeof fetch === 'undefined') {
+    return res.status(500).json({ 
+      error: 'Fetch API not available',
+      message: 'Please use Node.js 18+ or add node-fetch polyfill'
+    });
+  }
+
   const githubToken = process.env.GITHUB_TOKEN;
   const username = req.query.username as string || 'PranavReddyGaddam';
   
@@ -91,16 +99,21 @@ export default async function handler(
 
     console.log(`Found ${allRepos.length} repositories`);
 
-    // Step 2: Fetch commits from all repositories with pagination
-    const commitPromises = allRepos.map(async (repo) => {
+    // Limit to first 20 repos to avoid timeout (Vercel has 10s timeout on hobby plan)
+    // If you have more repos, they'll be included but commits won't be fetched for all
+    const reposToProcess = allRepos.slice(0, 20);
+    console.log(`Processing ${reposToProcess.length} repositories (limited to avoid timeout)`);
+
+    // Step 2: Fetch commits from repositories with pagination
+    const commitPromises = reposToProcess.map(async (repo) => {
       try {
         const repoName = repo.full_name || `${repo.owner.login}/${repo.name}`;
         let allCommits: any[] = [];
         let commitPage = 1;
         let hasMoreCommits = true;
 
-        // Fetch all commits with pagination
-        while (hasMoreCommits) {
+        // Fetch commits with pagination (limit to first 5 pages = 500 commits per repo to avoid timeout)
+        while (hasMoreCommits && commitPage <= 5) {
           const commitHeaders: HeadersInit = {
             Accept: 'application/vnd.github.v3+json',
           };
@@ -181,9 +194,16 @@ export default async function handler(
     return res.status(200).json(filteredData);
   } catch (error) {
     console.error('Error fetching GitHub commits:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Full error details:', {
+      message: errorMessage,
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined,
+    });
     return res.status(500).json({ 
       error: 'Failed to fetch commit history',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : undefined) : undefined
     });
   }
 }
