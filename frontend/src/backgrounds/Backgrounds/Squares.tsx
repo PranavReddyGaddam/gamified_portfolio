@@ -17,6 +17,7 @@ interface SquaresProps {
   borderColor?: CanvasStrokeStyle;
   squareSize?: number;
   hoverFillColor?: CanvasStrokeStyle;
+  paused?: boolean;
 }
 
 const Squares: React.FC<SquaresProps> = ({
@@ -25,6 +26,7 @@ const Squares: React.FC<SquaresProps> = ({
   borderColor = "#999",
   squareSize = 40,
   hoverFillColor = "#222",
+  paused = false,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const requestRef = useRef<number | null>(null);
@@ -32,17 +34,28 @@ const Squares: React.FC<SquaresProps> = ({
   const numSquaresY = useRef<number>(0);
   const gridOffset = useRef<GridOffset>({ x: 0, y: 0 });
   const hoveredSquareRef = useRef<GridOffset | null>(null);
+  const lastSizeRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
+  const resizeRafRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
 
-    const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+    const applySize = () => {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      if (lastSizeRef.current.w === w && lastSizeRef.current.h === h) return;
+      lastSizeRef.current = { w, h };
+      canvas.width = w;
+      canvas.height = h;
       numSquaresX.current = Math.ceil(canvas.width / squareSize) + 1;
       numSquaresY.current = Math.ceil(canvas.height / squareSize) + 1;
+    };
+
+    const resizeCanvas = () => {
+      if (resizeRafRef.current) cancelAnimationFrame(resizeRafRef.current);
+      resizeRafRef.current = requestAnimationFrame(applySize);
     };
 
     window.addEventListener("resize", resizeCanvas);
@@ -92,6 +105,10 @@ const Squares: React.FC<SquaresProps> = ({
     };
 
     const updateAnimation = () => {
+      if (paused) {
+        requestRef.current = requestAnimationFrame(updateAnimation);
+        return;
+      }
       const effectiveSpeed = Math.max(speed, 0.1);
       switch (direction) {
         case "right":
@@ -159,10 +176,11 @@ const Squares: React.FC<SquaresProps> = ({
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (resizeRafRef.current) cancelAnimationFrame(resizeRafRef.current);
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [direction, speed, borderColor, hoverFillColor, squareSize]);
+  }, [direction, speed, borderColor, hoverFillColor, squareSize, paused]);
 
   return (
     <canvas

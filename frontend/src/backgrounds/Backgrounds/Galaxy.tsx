@@ -236,9 +236,17 @@ export default function Galaxy({
 
     let program: Program;
 
-    function resize() {
+    let lastW = 0;
+    let lastH = 0;
+    let resizeRaf: number | null = null;
+    function doResize() {
       const scale = 1;
-      renderer.setSize(ctn.offsetWidth * scale, ctn.offsetHeight * scale);
+      const w = ctn.offsetWidth * scale;
+      const h = ctn.offsetHeight * scale;
+      if (w === lastW && h === lastH) return;
+      lastW = w;
+      lastH = h;
+      renderer.setSize(w, h);
       if (program) {
         program.uniforms.uResolution.value = new Color(
           gl.canvas.width,
@@ -246,6 +254,10 @@ export default function Galaxy({
           gl.canvas.width / gl.canvas.height,
         );
       }
+    }
+    function resize() {
+      if (resizeRaf) cancelAnimationFrame(resizeRaf);
+      resizeRaf = requestAnimationFrame(doResize);
     }
     window.addEventListener("resize", resize, false);
     resize();
@@ -335,6 +347,7 @@ export default function Galaxy({
     return () => {
       cancelAnimationFrame(animateId);
       window.removeEventListener("resize", resize);
+      if (resizeRaf) cancelAnimationFrame(resizeRaf);
       if (mouseInteraction) {
         ctn.removeEventListener("mousemove", handleMouseMove);
         ctn.removeEventListener("mouseleave", handleMouseLeave);

@@ -5,6 +5,7 @@ import Squares from "./backgrounds/Backgrounds/Squares";
 import TextType from "./backgrounds/TextAnimations/TextType/TextType";
 import emailjs from '@emailjs/browser';
 import Navbar from "./components/Navbar";
+import GitHubCommitChart from "./components/GitHubCommitChart";
 import {
   Linkedin,
   Github,
@@ -16,7 +17,7 @@ import {
 import { RiTwitterXFill } from "react-icons/ri";
 import { BsRobot, BsTools, BsDatabaseAdd } from "react-icons/bs";
 import { RxGear } from "react-icons/rx";
-import { FaDocker } from "react-icons/fa";
+import { FaDocker, FaLock } from "react-icons/fa";
 import { GoTrophy } from "react-icons/go";
 
 // Achievement popup component
@@ -163,6 +164,9 @@ const EMAILJS_SERVICE_ID = 'service_d0bwser';
 const EMAILJS_TEMPLATE_ID = 'template_4hg075h';
 const EMAILJS_PUBLIC_KEY = 'wRXZiwguBPiyEMvoX';
 
+// Resume URL (place your PDF in public/ and update this path if needed)
+const RESUME_URL = '/frontend/public/Pranav_Reddy_Gaddam_Resume_FT_Google.pdf';
+
 function App() {
   const totalLevels = 6;
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -176,10 +180,16 @@ function App() {
     tools: false,
   });
 
+  // Project card flip states
+  const [flippedProjects, setFlippedProjects] = useState<Set<string>>(new Set());
+
   const [unlockedProjects, setUnlockedProjects] = useState<Set<string>>(
     new Set()
   );
   const [carouselIndex, setCarouselIndex] = useState(0);
+  
+  // Show more projects state
+  const [showMoreProjects, setShowMoreProjects] = useState(false);
 
   // Achievements modal visibility
   const [showAchievementsModal, setShowAchievementsModal] = useState(false);
@@ -235,6 +245,11 @@ function App() {
 
   // Section 6 Achievement
   const [showAllianceFormed, setShowAllianceFormed] = useState(false);
+
+  // Section visibility to control heavy backgrounds
+  const [isSection1Visible, setIsSection1Visible] = useState(true);
+  const [isSection2Visible, setIsSection2Visible] = useState(false);
+  const [isSection3Visible, setIsSection3Visible] = useState(false);
 
   const nextSectionRef = useRef<HTMLDivElement>(null);
 
@@ -527,6 +542,10 @@ function App() {
     showAchievement("rulebook-raider", setShowRulebookRaider);
   };
 
+  const handleOpenResume = () => {
+    window.open(RESUME_URL, '_blank');
+  };
+
   const handleScrollToContinue = () => {
     showAchievement("scroll-seeker", setShowScrollSeeker);
     nextSectionRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -583,13 +602,17 @@ function App() {
             const level = levelAttr ? parseInt(levelAttr, 10) : NaN;
             if (!Number.isNaN(level)) {
               setCurrentLevel(level);
+              // Control background visibility to avoid overlapping canvases
+              setIsSection1Visible(level === 1);
+              setIsSection2Visible(level === 2);
+              setIsSection3Visible(level === 3);
             }
           }
         });
       },
       {
         root: null,
-        threshold: 0.5,
+        threshold: 0.6,
       }
     );
 
@@ -656,6 +679,22 @@ function App() {
       
       return newProjects;
     });
+  };
+
+  const handleProjectFlip = (projectId: string) => {
+    setFlippedProjects((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(projectId)) {
+        newSet.delete(projectId);
+      } else {
+        newSet.add(projectId);
+      }
+      return newSet;
+    });
+    // Also unlock the project when flipped
+    if (!unlockedProjects.has(projectId)) {
+      handleProjectUnlock(projectId);
+    }
   };
 
   const handleProjectLink = (projectId: string) => {
@@ -756,6 +795,7 @@ function App() {
       >
         {/* Galaxy Background for Section 1 */}
         <div className="absolute inset-0 z-0">
+          {isSection1Visible && (
           <Galaxy
             density={1.5}
             starSpeed={0.7}
@@ -764,7 +804,9 @@ function App() {
             mouseInteraction={false}
             mouseRepulsion={false}
             transparent={true}
+            disableAnimation={!isSection1Visible}
           />
+          )}
           {/* Fade out overlay */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
         </div>
@@ -847,13 +889,16 @@ function App() {
       >
         {/* Squares Background */}
         <div className="absolute inset-0 z-0">
+          {isSection2Visible && (
           <Squares
             speed={0.3}
             squareSize={40}
             direction="diagonal"
             borderColor="rgba(255,255,255,0.25)"
             hoverFillColor="#222"
+            paused={!isSection2Visible}
           />
+          )}
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto">
@@ -1048,67 +1093,14 @@ function App() {
                   <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
                     <div className="bg-blue-900/80 border border-blue-400 rounded-lg p-4 h-full flex flex-col">
                       <h3 className="font-pressstart2p text-white text-base mb-3 flex-shrink-0">
-                        ATTRIBUTES
+                        COMMIT HISTORY
                       </h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 mb-4 font-pixellari flex-shrink-0">
-                        {/* Attribute Cards */}
-                        {[
-                          {
-                            label: "LOCATION",
-                            value: "San Jose, CA",
-                            color: "text-green-400",
-                          },
-                          {
-                            label: "CLASS",
-                            value: "Creative Builder",
-                            color: "text-cyan-400",
-                          },
-                        ].map((attr) => (
-                          <div
-                            key={attr.label}
-                            className="bg-blue-800/80 border border-blue-300 rounded-lg p-2"
-                          >
-                            <div className="flex items-center gap-1 mb-1">
-                              <span className={`${attr.color}`}>●</span>
-                              <span className="text-white text-xs">
-                                {attr.label}
-                              </span>
-                            </div>
-                            <p className="text-gray-300 text-xs">
-                              {attr.value}
-                            </p>
-                          </div>
-                        ))}
-
-                        {/* Intelligence Bar */}
-                        <div className="bg-blue-800/80 border border-blue-300 rounded-lg p-2">
-                          <div className="flex items-center gap-1 mb-1">
-                            <span className="text-yellow-400">●</span>
-                            <span className="text-white text-xs">
-                              INTELLIGENCE
-                            </span>
-                          </div>
-                          <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-                            <div className="w-4/5 h-full bg-yellow-500 rounded-full"></div>
-                          </div>
-                        </div>
-
-                        {/* Creativity Bar */}
-                        <div className="bg-blue-800/80 border border-blue-300 rounded-lg p-2">
-                          <div className="flex items-center gap-1 mb-1">
-                            <span className="text-cyan-400">●</span>
-                            <span className="text-white text-xs">
-                              CREATIVITY
-                            </span>
-                          </div>
-                          <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-                            <div className="w-4/5 h-full bg-cyan-500 rounded-full"></div>
-                          </div>
-                        </div>
+                      <div className="flex-1 min-h-0 overflow-x-auto overflow-y-visible">
+                        <GitHubCommitChart className="h-full" />
                       </div>
 
                       {/* Equipped Skills Panel */}
-                      <h3 className="font-pressstart2p text-white text-sm md:text-base mb-3 flex-shrink-0">
+                      <h3 className="font-pressstart2p text-white text-sm md:text-base mb-3 flex-shrink-0 mt-4">
                         EQUIPPED SKILLS
                       </h3>
                       <ul className="space-y-2 md:space-y-3 text-xs text-gray-300 font-pressstart2p overflow-y-auto flex-1 min-h-0">
@@ -1149,13 +1141,16 @@ function App() {
       >
         {/* Squares Background */}
         <div className="absolute inset-0 z-0">
+          {isSection3Visible && (
           <Squares
             speed={0.3}
             squareSize={40}
             direction="diagonal"
             borderColor="rgba(255,255,255,0.25)"
             hoverFillColor="#222"
+            paused={!isSection3Visible}
           />
+          )}
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto">
@@ -2053,486 +2048,792 @@ function App() {
           {/* Project Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* gitbridge AI Project */}
-            <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer hover:border-red-300">
-              {/* Project Image */}
-              <div className="relative h-48 bg-gray-800">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                  <div className="text-4xl">🌍✈️</div>
-                </div>
-                {/* Difficulty Badge */}
-                <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
-                  Expert
-                </div>
-                {/* Lock Overlay */}
-                {!unlockedProjects.has("gitbridge") && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+            <div className="relative w-full h-[450px] perspective-1000">
+              <div
+                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
+                  flippedProjects.has("gitbridge") ? "rotate-y-180" : ""
+                }`}
+              >
+                {/* Front Card - Locked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden">
+                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
                     <div className="text-center">
-                      <div className="font-pressstart2p text-white text-sm">
-                        LOCKED
+                      <div className="flex justify-center mb-4">
+                        <img
+                          src="/github-mark-white.png"
+                          alt="GitBridge"
+                          className="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90"
+                        />
                       </div>
+                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                        GitBridge
+                      </h3>
+                      <p className="font-pixellari text-red-300 text-xs md:text-sm mb-6">
+                        Click to reveal project
+                      </p>
+                      <button
+                        onClick={() => handleProjectFlip("gitbridge")}
+                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
+                      >
+                        UNLOCK PROJECT
+                      </button>
                     </div>
                   </div>
-                )}
-              </div>
-
-              {/* Project Content */}
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="font-pressstart2p text-white text-lg">
-                    GitBridge
-                  </h3>
                 </div>
 
-                {!unlockedProjects.has("gitbridge") ? (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      This project is locked. Unlock to view details.
-                    </p>
-                    <button
-                      onClick={() => handleProjectUnlock("gitbridge")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p"
-                    >
-                      <span>UNLOCK PROJECT</span>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      An AI-powered developer tool that transforms GitHub
-                      repositories into interactive diagrams, narrated
-                      explainers, and real-time conversational insights.
-                    </p>
-                    {/* Technology Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        ElevenLabs
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        FastAPI
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        AWS
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        MermaidJS
-                      </span>
+                {/* Back Card - Unlocked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
+                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
+                    {/* Project Name - Flexible Height */}
+                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30 relative">
+                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
+                        GitBridge
+                      </h3>
+                      {/* Difficulty Badge */}
+                      <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
+                        Expert
+                      </div>
                     </div>
-                    {/* Action Button */}
-                    <button
-                      onClick={() => handleProjectLink("gitbridge")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <span className="text-lg">📄</span>
-                      <span className="font-pressstart2p text-sm">
-                        View Code
-                      </span>
-                    </button>
-                  </>
-                )}
+
+                    {/* Project Details - Flexible Height */}
+                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
+                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
+                        AI-powered developer tool that transforms GitHub repositories into interactive diagrams and narrated explainers. Generates visual architecture diagrams, provides AI-narrated walkthroughs, and offers intelligent Q&A for codebase exploration. Built with FastAPI and AWS.
+                      </p>
+                      {/* Technology Tags */}
+                      <div className="flex flex-wrap gap-2 mt-auto">
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          ElevenLabs
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          FastAPI
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          AWS
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          MermaidJS
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* View Code Button - Fixed Bottom */}
+                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
+                      <button
+                        onClick={() => handleProjectLink("gitbridge")}
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                      >
+                        <span className="text-lg">📄</span>
+                        <span>View Code</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* My Meal Pal Project */}
-            <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer hover:border-red-300">
-              {/* Project Image */}
-              <div className="relative h-48 bg-gray-800">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-blue-500/20 flex items-center justify-center">
-                  <div className="text-4xl">🍽️</div>
-                </div>
-                {/* Difficulty Badge */}
-                <div className="absolute top-2 right-2 bg-orange-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
-                  Hard
-                </div>
-                {/* Lock Overlay */}
-                {!unlockedProjects.has("quizforge") && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+            {/* 2. Hirely */}
+            <div className="relative w-full h-[450px] perspective-1000">
+              <div
+                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
+                  flippedProjects.has("hirely") ? "rotate-y-180" : ""
+                }`}
+              >
+                {/* Front Card - Locked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden">
+                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
                     <div className="text-center">
-                      <div className="font-pressstart2p text-white text-sm">
-                        LOCKED
+                      <div className="flex justify-center mb-4">
+                        <img
+                          src="/Hirely.png"
+                          alt="Hirely"
+                          className="w-32 h-32 md:w-40 md:h-40 object-contain opacity-90"
+                        />
                       </div>
+                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                        Hirely
+                      </h3>
+                      <p className="font-pixellari text-red-300 text-xs md:text-sm mb-6">
+                        Click to reveal project
+                      </p>
+                      <button
+                        onClick={() => handleProjectFlip("hirely")}
+                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
+                      >
+                        UNLOCK PROJECT
+                      </button>
                     </div>
                   </div>
-                )}
-              </div>
-
-              {/* Project Content */}
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="font-pressstart2p text-white text-lg">
-                    QuizForge
-                  </h3>
                 </div>
 
-                {!unlockedProjects.has("quizforge") ? (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      This project is locked. Unlock to view details.
-                    </p>
-                    <button
-                      onClick={() => handleProjectUnlock("quizforge")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p"
-                    >
-                      <span>UNLOCK PROJECT</span>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      A comprehensive meal planning and recipe management app.
-                      Features include meal scheduling, grocery lists,
-                      nutritional tracking, and social sharing capabilities.
-                    </p>
-                    {/* Technology Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Next.js
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        JavaScript
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Qwen3 LLM
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        MongoDB
-                      </span>
+                {/* Back Card - Unlocked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
+                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
+                    {/* Project Name - Flexible Height */}
+                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30 relative">
+                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
+                        Hirely
+                      </h3>
+                      {/* Difficulty Badge */}
+                      <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
+                        Expert
+                      </div>
                     </div>
-                    {/* Action Button */}
-                    <button
-                      onClick={() => handleProjectLink("quizforge")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <span className="text-lg">📄</span>
-                      <span className="font-pressstart2p text-sm">
-                        View Code
-                      </span>
-                    </button>
-                  </>
-                )}
+
+                    {/* Project Details - Flexible Height */}
+                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
+                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
+                        AI-powered interview analysis and preparation platform that bridges real job market data with personalized training. Scrapes live job listings using BrightData MCP and Crawl4AI, performs skill analysis via Groq, and generates customized interview questions. Built with FastAPI, React, Supabase, and ChromaDB.
+                      </p>
+                      {/* Technology Tags */}
+                      <div className="flex flex-wrap gap-2 mt-auto">
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          FastAPI
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          React
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          Groq
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          Supabase
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          ChromaDB
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* View Code Button - Fixed Bottom */}
+                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
+                      <button
+                        onClick={() => handleProjectLink("hirely")}
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                      >
+                        <span className="text-lg">📄</span>
+                        <span>View Code</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/*ISO Website */}
-            <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer hover:border-red-300">
-              {/* Project Image */}
-              <div className="relative h-48 bg-gray-800">
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center">
-                  <div className="text-4xl">📊</div>
-                </div>
-                {/* Difficulty Badge */}
-                <div className="absolute top-2 right-2 bg-orange-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
-                  Hard
-                </div>
-                {/* Lock Overlay */}
-                {!unlockedProjects.has("isowebsite") && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+            {/* 3. Nexus */}
+            <div className="relative w-full h-[450px] perspective-1000">
+              <div
+                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
+                  flippedProjects.has("nexus") ? "rotate-y-180" : ""
+                }`}
+              >
+                {/* Front Card - Locked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden">
+                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
                     <div className="text-center">
-                      <div className="font-pressstart2p text-white text-sm">
-                        LOCKED
+                      <div className="flex justify-center mb-4">
+                        <img
+                          src="/market_research.png"
+                          alt="Nexus"
+                          className="w-32 h-32 md:w-40 md:h-40 object-contain opacity-90"
+                        />
                       </div>
+                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                        Nexus
+                      </h3>
+                      <p className="font-pixellari text-red-300 text-xs md:text-sm mb-6">
+                        Click to reveal project
+                      </p>
+                      <button
+                        onClick={() => handleProjectFlip("nexus")}
+                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
+                      >
+                        UNLOCK PROJECT
+                      </button>
                     </div>
                   </div>
-                )}
-              </div>
-
-              {/* Project Content */}
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="font-pressstart2p text-white text-lg">
-                    ISO Website
-                  </h3>
                 </div>
 
-                {!unlockedProjects.has("isowebsite") ? (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      This project is locked. Unlock to view details.
-                    </p>
-                    <button
-                      onClick={() => handleProjectUnlock("isowebsite")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p"
-                    >
-                      <span>UNLOCK PROJECT</span>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      A website for the Indian Student Organization at San Jose
-                      State University.
-                    </p>
-                    {/* Technology Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        React
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Tailwind CSS
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        MongoDB
-                      </span>
+                {/* Back Card - Unlocked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
+                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
+                    {/* Project Name - Flexible Height */}
+                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30 relative">
+                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
+                        Nexus
+                      </h3>
+                      {/* Difficulty Badge */}
+                      <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
+                        Hard
+                      </div>
                     </div>
-                    {/* Action Button */}
-                    <button
-                      onClick={() => handleProjectLink("isowebsite")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <span className="text-lg">📄</span>
-                      <span className="font-pressstart2p text-sm">
-                        View Website
-                      </span>
-                    </button>
-                  </>
-                )}
+
+                    {/* Project Details - Flexible Height */}
+                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
+                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
+                        AI-driven startup analysis platform that evaluates business ideas through simulated expert personas. Users visualize insights on an interactive 3D globe and receive market-specific feedback powered by LLMs. Features real-time analysis, file uploads, and WebSocket-based live updates. Built with React, Three.js, and FastAPI.
+                      </p>
+                      {/* Technology Tags */}
+                      <div className="flex flex-wrap gap-2 mt-auto">
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          React
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          Three.js
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          Tailwind CSS
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          FastAPI
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          OpenAI
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* View Code Button - Fixed Bottom */}
+                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
+                      <button
+                        onClick={() => handleProjectLink("nexus")}
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                      >
+                        <span className="text-lg">📄</span>
+                        <span>View Code</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Network Based Sentiment Analysis on Twitter*/}
-            <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer hover:border-red-300">
-              {/* Project Image */}
-              <div className="relative h-48 bg-gray-800">
-                <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-pink-500/20 flex items-center justify-center">
-                  <img 
-                    src="/X_logo.jpg" 
-                    alt="Sentiment Analysis" 
-                    className="w-24 h-[300px] object-contain"
-                  />
-                </div>
-                {/* Difficulty Badge */}
-                <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
-                  Hard
-                </div>
-                {/* Lock Overlay */}
-                {!unlockedProjects.has("sentimentanalysis") && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+            {/* 4. QuizForge */}
+            <div className="relative w-full h-[450px] perspective-1000">
+              <div
+                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
+                  flippedProjects.has("quizforge") ? "rotate-y-180" : ""
+                }`}
+              >
+                {/* Front Card - Locked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden">
+                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
                     <div className="text-center">
-                      <div className="font-pressstart2p text-white text-sm">
-                        LOCKED
+                      <div className="flex justify-center mb-4">
+                        <img
+                          src="/Quiz.png"
+                          alt="QuizForge"
+                          className="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90"
+                        />
                       </div>
+                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                        QuizForge
+                      </h3>
+                      <p className="font-pixellari text-red-300 text-xs md:text-sm mb-6">
+                        Click to reveal project
+                      </p>
+                      <button
+                        onClick={() => handleProjectFlip("quizforge")}
+                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
+                      >
+                        UNLOCK PROJECT
+                      </button>
                     </div>
                   </div>
-                )}
-              </div>
-
-              {/* Project Content */}
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="font-pressstart2p text-white text-lg">
-                    Sentiment Analysis
-                  </h3>
                 </div>
 
-                {!unlockedProjects.has("sentimentanalysis") ? (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      This project is locked. Unlock to view details.
-                    </p>
-                    <button
-                      onClick={() => handleProjectUnlock("sentimentanalysis")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p"
-                    >
-                      <span>UNLOCK PROJECT</span>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      Network Based Sentiment Analysis on Twitter.
-                    </p>
-                    {/* Technology Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Python
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Twitter API
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Macine Learning
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Streamlit
-                      </span>
+                {/* Back Card - Unlocked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
+                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
+                    {/* Project Name - Flexible Height */}
+                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30 relative">
+                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
+                        QuizForge
+                      </h3>
+                      {/* Difficulty Badge */}
+                      <div className="absolute top-2 right-2 bg-orange-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
+                        Hard
+                      </div>
                     </div>
-                    {/* Action Button */}
-                    <button
-                      onClick={() => handleProjectLink("sentimentanalysis")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <span className="text-lg">📄</span>
-                      <span className="font-pressstart2p text-sm">
-                        View Code
-                      </span>
-                    </button>
-                  </>
-                )}
+
+                    {/* Project Details - Flexible Height */}
+                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
+                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
+                        AI-powered quiz generation platform for educators. Generates custom quizzes from any topic using Qwen3 LLM with automatic question generation and performance analytics. Built with Next.js and MongoDB.
+                      </p>
+                      {/* Technology Tags */}
+                      <div className="flex flex-wrap gap-2 mt-auto">
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          Next.js
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          JavaScript
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          Qwen3 LLM
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          MongoDB
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* View Code Button - Fixed Bottom */}
+                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
+                      <button
+                        onClick={() => handleProjectLink("quizforge")}
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                      >
+                        <span className="text-lg">📄</span>
+                        <span>View Code</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Recommendation System */}
-            <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer hover:border-red-300">
-              {/* Project Image */}
-              <div className="relative h-48 bg-gray-800">
-                <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center">
-                  <img 
-                    src="/Netflix_logo.jpg" 
-                    alt="Netflix Logo" 
-                    className="w-96 h-96 object-contain"
-                  />
-                </div>
-                {/* Difficulty Badge */}
-                <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
-                  Hard
-                </div>
-                {/* Lock Overlay */}
-                {!unlockedProjects.has("movierecommendation") && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+            {/* 5. ISO Web App */}
+            <div className="relative w-full h-[450px] perspective-1000">
+              <div
+                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
+                  flippedProjects.has("isowebapp") ? "rotate-y-180" : ""
+                }`}
+              >
+                {/* Front Card - Locked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden">
+                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
                     <div className="text-center">
-                      <div className="font-pressstart2p text-white text-sm">
-                        LOCKED
+                      <div className="flex justify-center mb-4">
+                        <img
+                          src="/SJSU_Logo.webp"
+                          alt="ISO Web App"
+                          className="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90"
+                        />
                       </div>
+                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                        ISO Web App
+                      </h3>
+                      <p className="font-pixellari text-red-300 text-xs md:text-sm mb-6">
+                        Click to reveal project
+                      </p>
+                      <button
+                        onClick={() => handleProjectFlip("isowebapp")}
+                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
+                      >
+                        UNLOCK PROJECT
+                      </button>
                     </div>
                   </div>
-                )}
-              </div>
-
-              {/* Project Content */}
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="font-pressstart2p text-white text-lg">
-                    Recommendation System
-                  </h3>
                 </div>
 
-                {!unlockedProjects.has("movierecommendation") ? (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      This project is locked. Unlock to view details.
-                    </p>
-                    <button
-                      onClick={() => handleProjectUnlock("movierecommendation")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p"
-                    >
-                      <span>UNLOCK PROJECT</span>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      A movie recommendation system using collaborative
-                      filtering.
-                    </p>
-                    {/* Technology Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Next.js
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        TMDB API
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Vector Database
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Cross Filtering
-                      </span>
+                {/* Back Card - Unlocked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
+                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
+                    {/* Project Name - Flexible Height */}
+                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30 relative">
+                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
+                        ISO Web App
+                      </h3>
+                      {/* Difficulty Badge */}
+                      <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
+                        Hard
+                      </div>
                     </div>
-                    {/* Action Button */}
-                    <button
-                      onClick={() => handleProjectLink("movierecommendation")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <span className="text-lg">📄</span>
-                      <span className="font-pressstart2p text-sm">
-                        View Code
-                      </span>
-                    </button>
-                  </>
-                )}
+
+                    {/* Project Details - Flexible Height */}
+                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
+                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
+                        Comprehensive volunteer and event management system for university organizations. Includes role-based access, dynamic ticketing, QR check-in, and admin dashboard. Integrates Supabase for PostgreSQL storage, Gmail API for notifications, and FastAPI backend with Docker deployment. Built with React, Tailwind CSS, and FastAPI.
+                      </p>
+                      {/* Technology Tags */}
+                      <div className="flex flex-wrap gap-2 mt-auto">
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          FastAPI
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          React
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          Tailwind CSS
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          Supabase
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          Docker
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* View Code Button - Fixed Bottom */}
+                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
+                      <button
+                        onClick={() => handleProjectLink("isowebapp")}
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                      >
+                        <span className="text-lg">📄</span>
+                        <span>View Code</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* AWS Data Visualization Project - Row 2 */}
-            <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer hover:border-red-300">
-              {/* Project Image */}
-              <div className="relative h-48 bg-gray-800">
-                <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-yellow-500/20 flex items-center justify-center">
-                  <div className="text-4xl">📊</div>
-                </div>
-                {/* Difficulty Badge */}
-                <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p">
-                  Expert
-                </div>
-                {/* Lock Overlay */}
-                {!unlockedProjects.has("personalwebsite") && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+            {/* 6. Portfolio */}
+            <div className="relative w-full h-[450px] perspective-1000">
+              <div
+                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
+                  flippedProjects.has("personalwebsite") ? "rotate-y-180" : ""
+                }`}
+              >
+                {/* Front Card - Locked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden">
+                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
                     <div className="text-center">
-                      <div className="font-pressstart2p text-white text-sm">
-                        LOCKED
+                      <div className="flex justify-center mb-4">
+                        <img
+                          src="/mario_logo.png"
+                          alt="Personal Portfolio Website"
+                          className="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90"
+                        />
+                      </div>
+                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                        Personal Portfolio Website
+                      </h3>
+                      <p className="font-pixellari text-red-300 text-xs md:text-sm mb-6">
+                        Click to reveal project
+                      </p>
+                      <button
+                        onClick={() => handleProjectFlip("personalwebsite")}
+                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
+                      >
+                        UNLOCK PROJECT
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Back Card - Unlocked State */}
+                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
+                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
+                    {/* Project Name - Flexible Height */}
+                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30 relative">
+                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
+                        Personal Portfolio Website
+                      </h3>
+                      {/* Difficulty Badge */}
+                      <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
+                        Expert
+                      </div>
+                    </div>
+
+                    {/* Project Details - Flexible Height */}
+                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
+                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
+                        Gamified portfolio website with level progression, achievements, and scoring systems. Features WebGL backgrounds, flip card interactions, and smooth scroll-based reveals. Built with React 19, Vite, and Tailwind CSS.
+                      </p>
+                      {/* Technology Tags */}
+                      <div className="flex flex-wrap gap-2 mt-auto">
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          Vite
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          Tailwind CSS
+                        </span>
+                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                          React
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* View Code Button - Fixed Bottom */}
+                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
+                      <button
+                        onClick={() => handleProjectLink("personalwebsite")}
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                      >
+                        <span className="text-lg">📄</span>
+                        <span>View Code</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Show More Button */}
+            {!showMoreProjects && (
+              <div className="col-span-full flex justify-center mt-6">
+                <button
+                  onClick={() => setShowMoreProjects(true)}
+                  className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded border border-red-400 transition-colors text-sm md:text-base"
+                >
+                  VIEW MORE PROJECTS
+                </button>
+              </div>
+            )}
+
+            {/* Additional Projects - Shown when showMoreProjects is true */}
+            {showMoreProjects && (
+              <>
+                {/* 7. ISO Website */}
+                <div className="relative w-full h-[450px] perspective-1000">
+                  <div
+                    className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
+                      flippedProjects.has("isowebsite") ? "rotate-y-180" : ""
+                    }`}
+                  >
+                    {/* Front Card - Locked State */}
+                    <div className="absolute inset-0 w-full h-full backface-hidden">
+                      <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
+                        <div className="text-center">
+                          <div className="flex justify-center mb-4">
+                            <img
+                              src="/SJSU_Logo.webp"
+                              alt="ISO Website"
+                              className="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90"
+                            />
+                          </div>
+                          <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                            ISO Website
+                          </h3>
+                          <p className="font-pixellari text-red-300 text-xs md:text-sm mb-6">
+                            Click to reveal project
+                          </p>
+                          <button
+                            onClick={() => handleProjectFlip("isowebsite")}
+                            className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
+                          >
+                            UNLOCK PROJECT
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Back Card - Unlocked State */}
+                    <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
+                      <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
+                        {/* Project Name - Flexible Height */}
+                        <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30 relative">
+                          <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
+                            ISO Website
+                          </h3>
+                          {/* Difficulty Badge */}
+                          <div className="absolute top-2 right-2 bg-orange-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
+                            Hard
+                          </div>
+                        </div>
+
+                        {/* Project Details - Flexible Height */}
+                        <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
+                          <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
+                            Modern website for the Indian Student Organization at San Jose State University. Features event management, member registration, photo galleries, and real-time updates. Built with React, Tailwind CSS, and MongoDB.
+                          </p>
+                          {/* Technology Tags */}
+                          <div className="flex flex-wrap gap-2 mt-auto">
+                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                              React
+                            </span>
+                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                              Tailwind CSS
+                            </span>
+                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                              MongoDB
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* View Website Button - Fixed Bottom */}
+                        <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
+                          <button
+                            onClick={() => handleProjectLink("isowebsite")}
+                            className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                          >
+                            <span className="text-lg">📄</span>
+                            <span>View Website</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                )}
-              </div>
-
-              {/* Project Content */}
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="font-pressstart2p text-white text-lg">
-                    Personal Portfolio Website
-                  </h3>
                 </div>
 
-                {!unlockedProjects.has("personalwebsite") ? (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      This project is locked. Unlock to view details.
-                    </p>
-                    <button
-                      onClick={() => handleProjectUnlock("personalwebsite")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p"
-                    >
-                      <span>UNLOCK PROJECT</span>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-gray-300 font-pixellari text-xs mb-4">
-                      A gamified portfolio website built on Vite and Tailwind
-                      CSS.
-                    </p>
-                    {/* Technology Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Vite
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        Tailwind CSS
-                      </span>
-                      <span className="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs font-pixellari">
-                        React
-                      </span>
+                {/* 8. Sentiment Analysis */}
+                <div className="relative w-full h-[450px] perspective-1000">
+                  <div
+                    className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
+                      flippedProjects.has("sentimentanalysis") ? "rotate-y-180" : ""
+                    }`}
+                  >
+                    {/* Front Card - Locked State */}
+                    <div className="absolute inset-0 w-full h-full backface-hidden">
+                      <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
+                        <div className="text-center">
+                          <div className="flex justify-center mb-4">
+                            <img 
+                              src="/X_logo.png" 
+                              alt="Sentiment Analysis" 
+                              className="w-24 h-24 md:w-32 md:h-32 object-contain filter invert drop-shadow-lg"
+                            />
+                          </div>
+                          <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                            Sentiment Analysis
+                          </h3>
+                          <p className="font-pixellari text-red-300 text-xs md:text-sm mb-6">
+                            Click to reveal project
+                          </p>
+                          <button
+                            onClick={() => handleProjectFlip("sentimentanalysis")}
+                            className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
+                          >
+                            UNLOCK PROJECT
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    {/* Action Button */}
-                    <button
-                      onClick={() => handleProjectLink("personalwebsite")}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded border border-red-400 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <span className="text-lg">📄</span>
-                      <span className="font-pressstart2p text-sm">
-                        View Code
-                      </span>
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
+
+                    {/* Back Card - Unlocked State */}
+                    <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
+                      <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
+                        {/* Project Name - Flexible Height */}
+                        <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30 relative">
+                          <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
+                            Sentiment Analysis
+                          </h3>
+                          {/* Difficulty Badge */}
+                          <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
+                            Hard
+                          </div>
+                        </div>
+
+                        {/* Project Details - Flexible Height */}
+                        <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
+                          <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
+                            Network-based sentiment analysis system for Twitter data. Uses Python, Twitter API, and machine learning algorithms to classify sentiment and visualize public opinion trends. Built with Streamlit for interactive dashboards.
+                          </p>
+                          {/* Technology Tags */}
+                          <div className="flex flex-wrap gap-2 mt-auto">
+                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                              Python
+                            </span>
+                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                              Twitter API
+                            </span>
+                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                              Macine Learning
+                            </span>
+                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                              Streamlit
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* View Code Button - Fixed Bottom */}
+                        <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
+                          <button
+                            onClick={() => handleProjectLink("sentimentanalysis")}
+                            className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                          >
+                            <span className="text-lg">📄</span>
+                            <span>View Code</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 9. Movie Recommendation */}
+                <div className="relative w-full h-[450px] perspective-1000">
+                  <div
+                    className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
+                      flippedProjects.has("movierecommendation") ? "rotate-y-180" : ""
+                    }`}
+                  >
+                    {/* Front Card - Locked State */}
+                    <div className="absolute inset-0 w-full h-full backface-hidden">
+                      <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
+                        <div className="text-center">
+                          <div className="flex justify-center mb-4">
+                            <img 
+                              src="/Netflix_logo.png" 
+                              alt="Netflix Logo" 
+                              className="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-lg"
+                            />
+                          </div>
+                          <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                            Recommendation System
+                          </h3>
+                          <p className="font-pixellari text-red-300 text-xs md:text-sm mb-6">
+                            Click to reveal project
+                          </p>
+                          <button
+                            onClick={() => handleProjectFlip("movierecommendation")}
+                            className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
+                          >
+                            UNLOCK PROJECT
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Back Card - Unlocked State */}
+                    <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
+                      <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
+                        {/* Project Name - Flexible Height */}
+                        <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30 relative">
+                          <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
+                            Recommendation System
+                          </h3>
+                          {/* Difficulty Badge */}
+                          <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
+                            Hard
+                          </div>
+                        </div>
+
+                        {/* Project Details - Flexible Height */}
+                        <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
+                          <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
+                            Movie recommendation system using collaborative filtering and vector databases. Integrates with TMDB API and uses advanced algorithms to analyze user preferences for personalized suggestions. Built with Next.js.
+                          </p>
+                          {/* Technology Tags */}
+                          <div className="flex flex-wrap gap-2 mt-auto">
+                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                              Next.js
+                            </span>
+                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                              TMDB API
+                            </span>
+                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                              Vector Database
+                            </span>
+                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
+                              Cross Filtering
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* View Code Button - Fixed Bottom */}
+                        <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
+                          <button
+                            onClick={() => handleProjectLink("movierecommendation")}
+                            className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                          >
+                            <span className="text-lg">📄</span>
+                            <span>View Code</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
-
-      {/* Section 6: Player Lounge */}
       <section
         data-level={6}
         className="relative z-10 min-h-screen bg-gradient-to-b from-black via-teal-900/10 to-teal-900/30 px-3 py-12"

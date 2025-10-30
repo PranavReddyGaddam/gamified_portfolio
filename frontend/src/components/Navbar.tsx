@@ -18,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({
 }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 p-2 md:p-4 bg-transparent backdrop-blur-sm">
-      <div className="flex justify-between items-center max-w-6xl mx-auto gap-2">
+      <div className="flex justify-between items-center max-w-6xl mx-auto gap-3 md:gap-4">
         {/* Level Indicator */}
         <div className="border border-blue-400 bg-black/50 backdrop-blur-sm px-2.5 py-1.5 md:px-4 md:py-2 rounded-md min-w-fit">
           <div className="flex items-center gap-1.5 md:gap-2">
@@ -36,6 +36,16 @@ const Navbar: React.FC<NavbarProps> = ({
             <span className="font-pressstart2p text-[10px] md:text-sm text-white">{`SCORE: ${score}`}</span>
           </div>
         </div>
+
+        {/* Resume link - place as a direct child for equal spacing */}
+        <a
+          href="/Pranav_Reddy_Gaddam_Resume_FT_Google.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="border border-purple-400 bg-black/50 backdrop-blur-sm px-2.5 py-1.5 md:px-4 md:py-2 rounded-md min-w-fit active:scale-[0.98] transition-transform hover:bg-purple-600/20"
+        >
+          <span className="font-pressstart2p text-[10px] md:text-sm text-white">RESUME</span>
+        </a>
 
         {/* Achievements */}
         <div
