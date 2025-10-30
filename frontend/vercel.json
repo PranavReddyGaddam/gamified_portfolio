@@ -8,11 +8,6 @@
       "source": "/gitbridge/:path*",
       "destination": "https://git-bridge.vercel.app/:path*"
     }
-  ],
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  ]
 }
 
