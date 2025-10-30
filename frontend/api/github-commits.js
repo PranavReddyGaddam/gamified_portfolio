@@ -1,14 +1,13 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+/**
+ * @typedef {import('@vercel/node').VercelRequest} VercelRequest
+ * @typedef {import('@vercel/node').VercelResponse} VercelResponse
+ */
 
-interface CommitData {
-  date: string;
-  count: number;
-}
-
-async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+/**
+ * @param {VercelRequest} req
+ * @param {VercelResponse} res
+ */
+async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
@@ -20,7 +19,7 @@ async function handler(
   }
 
   const githubToken = process.env.GITHUB_TOKEN;
-  const username = (req.query.username as string) || 'PranavReddyGaddam';
+  const username = (req.query.username || 'PranavReddyGaddam');
   
   // Note: GitHub token is optional but recommended for higher rate limits
   // Without token: 60 requests/hour per IP
@@ -33,7 +32,7 @@ async function handler(
     }
 
     // Step 1: Fetch repositories
-    const headers: Record<string, string> = {
+    const headers = {
       Accept: 'application/vnd.github.v3+json',
     };
     
@@ -43,7 +42,7 @@ async function handler(
     }
 
     // Fetch repositories (simplified - use public endpoint to avoid auth issues)
-    let allRepos: any[] = [];
+    let allRepos = [];
     let page = 1;
     let hasMore = true;
 
@@ -103,13 +102,13 @@ async function handler(
     const commitPromises = reposToProcess.map(async (repo) => {
       try {
         const repoName = repo.full_name || `${repo.owner.login}/${repo.name}`;
-        let allCommits: any[] = [];
+        let allCommits = [];
         let commitPage = 1;
         let hasMoreCommits = true;
 
         // Fetch commits with pagination (limit to first 3 pages = 300 commits per repo to avoid timeout)
         while (hasMoreCommits && commitPage <= 3) {
-          const commitHeaders: Record<string, string> = {
+          const commitHeaders = {
             Accept: 'application/vnd.github.v3+json',
           };
           
@@ -153,7 +152,7 @@ async function handler(
           }
         }
 
-        return allCommits.map((commit: any) => ({
+        return allCommits.map((commit) => ({
           date: commit.commit.author.date.split('T')[0], // Extract YYYY-MM-DD
         }));
       } catch (error) {
@@ -166,21 +165,21 @@ async function handler(
     const allCommits = await Promise.allSettled(commitPromises);
     const successfulCommits = allCommits
       .filter((result) => result.status === 'fulfilled')
-      .map((result) => (result as PromiseFulfilledResult<any[]>).value)
+      .map((result) => result.value)
       .flat()
       .flat();
     
     const flattenedCommits = successfulCommits;
 
     // Aggregate commits by date
-    const commitMap = new Map<string, number>();
+    const commitMap = new Map();
     flattenedCommits.forEach((commit) => {
       const count = commitMap.get(commit.date) || 0;
       commitMap.set(commit.date, count + 1);
     });
 
     // Convert to array and sort by date
-    const commitData: CommitData[] = Array.from(commitMap.entries())
+    const commitData = Array.from(commitMap.entries())
       .map(([date, count]) => ({ date, count }))
       .sort((a, b) => a.date.localeCompare(b.date));
 
@@ -211,3 +210,4 @@ async function handler(
 }
 
 module.exports = handler;
+
