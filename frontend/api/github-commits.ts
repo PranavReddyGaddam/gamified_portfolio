@@ -17,19 +17,20 @@ export default async function handler(
   const githubToken = process.env.GITHUB_TOKEN;
   const username = req.query.username as string || 'PranavReddyGaddam';
   
-  if (!githubToken) {
-    return res.status(500).json({ 
-      error: 'GitHub token is required',
-      message: 'GITHUB_TOKEN environment variable is not set'
-    });
-  }
+  // Note: GitHub token is optional but recommended for higher rate limits
+  // Without token: 60 requests/hour per IP
+  // With token: 5,000 requests/hour
 
   try {
     // Step 1: Fetch ALL repositories for the user
     const headers: HeadersInit = {
       Accept: 'application/vnd.github.v3+json',
-      Authorization: `token ${githubToken}`,
     };
+    
+    // Only add Authorization header if token is available
+    if (githubToken) {
+      headers.Authorization = `token ${githubToken}`;
+    }
 
     // Fetch all repositories (including private ones if accessible)
     let allRepos: any[] = [];
@@ -37,14 +38,25 @@ export default async function handler(
     let hasMore = true;
 
     while (hasMore) {
-      const reposResponse = await fetch(
-        `https://api.github.com/user/repos?per_page=100&page=${page}&sort=updated&affiliation=owner,collaborator`,
-        { headers }
-      );
+      let reposResponse: Response;
+      
+      // Use authenticated endpoint if token available, otherwise use public endpoint
+      if (githubToken) {
+        reposResponse = await fetch(
+          `https://api.github.com/user/repos?per_page=100&page=${page}&sort=updated&affiliation=owner,collaborator`,
+          { headers }
+        );
+      } else {
+        // Use public repos endpoint when no token
+        reposResponse = await fetch(
+          `https://api.github.com/users/${username}/repos?per_page=100&page=${page}&sort=updated`,
+          { headers }
+        );
+      }
 
       if (!reposResponse.ok) {
-        // Fallback to public repos if user/repos fails
-        if (reposResponse.status === 404 || reposResponse.status === 403) {
+        // Fallback to public repos if authenticated endpoint fails
+        if (githubToken && (reposResponse.status === 404 || reposResponse.status === 403)) {
           const publicReposResponse = await fetch(
             `https://api.github.com/users/${username}/repos?per_page=100&page=${page}&sort=updated`,
             { headers }
@@ -89,9 +101,17 @@ export default async function handler(
 
         // Fetch all commits with pagination
         while (hasMoreCommits) {
+          const commitHeaders: HeadersInit = {
+            Accept: 'application/vnd.github.v3+json',
+          };
+          
+          if (githubToken) {
+            commitHeaders.Authorization = `token ${githubToken}`;
+          }
+          
           const response = await fetch(
             `https://api.github.com/repos/${repoName}/commits?per_page=100&page=${commitPage}&author=${username}`,
-            { headers }
+            { headers: commitHeaders }
           );
 
           if (!response.ok) {

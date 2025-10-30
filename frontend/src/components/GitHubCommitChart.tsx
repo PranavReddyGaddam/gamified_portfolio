@@ -26,15 +26,22 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
         const response = await fetch('/api/github-commits');
         
         if (!response.ok) {
-          throw new Error('Failed to fetch commit data');
+          const errorData = await response.json().catch(() => ({}));
+          console.error('API Error:', response.status, errorData);
+          throw new Error(errorData.message || `Failed to fetch commit data (${response.status})`);
         }
         
         const data = await response.json();
-        setCommitData(data);
-        setError(null);
+        if (Array.isArray(data)) {
+          setCommitData(data);
+          setError(null);
+        } else {
+          throw new Error('Invalid data format received');
+        }
       } catch (err) {
         console.error('Error fetching commit data:', err);
-        setError('Failed to load commit history');
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load commit history';
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
