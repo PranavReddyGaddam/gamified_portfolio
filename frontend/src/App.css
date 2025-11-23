@@ -126,3 +126,27 @@ html {
 .text-responsive-xl {
   font-size: clamp(2rem, 8vw, 4rem);
 }
+
+/* Hide scrollbar utility for mobile carousel */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
+/* Lanyard swing animation */
+@keyframes swing {
+  0%, 100% {
+    transform: rotate(6deg);
+  }
+  50% {
+    transform: rotate(-2deg);
+  }
+}
+
+.animate-swing {
+  animation: swing 3s ease-in-out infinite;
+  transform-origin: top center;
+}

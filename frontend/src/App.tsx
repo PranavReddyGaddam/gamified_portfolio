@@ -6,6 +6,14 @@ import TextType from "./backgrounds/TextAnimations/TextType/TextType";
 import emailjs from '@emailjs/browser';
 import Navbar from "./components/Navbar";
 import GitHubCommitChart from "./components/GitHubCommitChart";
+import AchievementPopup from "./components/AchievementPopup";
+import GameInstructionsModal from "./components/GameInstructionsModal";
+import { Button } from "@/components/ui/8bit/button";
+import { Card, CardContent } from "@/components/ui/8bit/card";
+import { Input } from "@/components/ui/8bit/input";
+import { Textarea } from "@/components/ui/8bit/textarea";
+import { Label } from "@/components/ui/8bit/label";
+import { Badge } from "@/components/ui/8bit/badge";
 import {
   Linkedin,
   Github,
@@ -19,145 +27,6 @@ import { BsRobot, BsTools, BsDatabaseAdd } from "react-icons/bs";
 import { RxGear } from "react-icons/rx";
 import { FaDocker, FaLock } from "react-icons/fa";
 import { GoTrophy } from "react-icons/go";
-
-// Achievement popup component
-const AchievementPopup: React.FC<{
-  title: string;
-  xp: number;
-  isVisible: boolean;
-  theme: "purple" | "blue" | "yellow" | "green" | "red" | "teal";
-  index?: number;
-}> = ({ title, xp, isVisible, theme, index = 0 }) => {
-  const getThemeColors = () => {
-    switch (theme) {
-      case "purple":
-        return {
-          border: "border-purple-400",
-          bg: "bg-purple-900/80",
-          text: "text-purple-300",
-          icon: "text-purple-400",
-        };
-      case "blue":
-        return {
-          border: "border-blue-400",
-          bg: "bg-blue-900/80",
-          text: "text-blue-300",
-          icon: "text-blue-400",
-        };
-      case "yellow":
-        return {
-          border: "border-yellow-400",
-          bg: "bg-yellow-900/80",
-          text: "text-yellow-300",
-          icon: "text-yellow-400",
-        };
-      case "green":
-        return {
-          border: "border-green-400",
-          bg: "bg-green-900/80",
-          text: "text-green-300",
-          icon: "text-green-400",
-        };
-      case "red":
-        return {
-          border: "border-red-400",
-          bg: "bg-red-900/80",
-          text: "text-red-300",
-          icon: "text-red-400",
-        };
-      case "teal":
-        return {
-          border: "border-teal-400",
-          bg: "bg-teal-900/80",
-          text: "text-teal-300",
-          icon: "text-teal-400",
-        };
-      default:
-        return {
-          border: "border-purple-400",
-          bg: "bg-purple-900/80",
-          text: "text-purple-300",
-          icon: "text-purple-400",
-        };
-    }
-  };
-
-  const colors = getThemeColors();
-
-  if (!isVisible) return null;
-
-  return (
-    <div
-      className="fixed right-6 z-50 animate-fade-in transition-all duration-300"
-      style={{
-        bottom: index === 0 ? "1.5rem" : `${1.5 + index * 5}rem`,
-        zIndex: 50 + index,
-      }}
-    >
-      <div
-        className={`border-2 ${colors.border} ${colors.bg} backdrop-blur-sm px-6 py-4 rounded-lg shadow-lg`}
-      >
-        <div className="flex items-center gap-3">
-          <span className={`text-2xl ${colors.icon}`}><GoTrophy /></span>
-          <div>
-            <h3 className="font-pressstart2p text-white text-lg">{title}</h3>
-            <p className={`font-pixellari text-sm ${colors.text}`}>+{xp} XP</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Game Instructions Modal component
-const GameInstructionsModal: React.FC<{
-  isVisible: boolean;
-  onClose: () => void;
-}> = ({ isVisible, onClose }) => {
-  if (!isVisible) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="bg-black border-2 border-green-400 rounded-lg p-6 max-w-md w-full shadow-lg">
-        <div className="text-center mb-4">
-          <h2 className="font-pressstart2p text-green-400 text-xl mb-2">
-            Game Instructions:
-          </h2>
-        </div>
-        <ul className="space-y-2 text-white font-pixellari text-sm">
-          <li className="flex items-start gap-2">
-            <span className="text-green-400 mt-1">•</span>
-            <span>Scroll down to explore different levels</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-green-400 mt-1">•</span>
-            <span>Click on skills to unlock them and earn XP</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-green-400 mt-1">•</span>
-            <span>Unlock projects to view details and links</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-green-400 mt-1">•</span>
-            <span>Collect achievements by exploring the portfolio</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-green-400 mt-1">•</span>
-            <span>Complete all levels to reach the contact form</span>
-          </li>
-        </ul>
-        <div className="text-center mt-6">
-          <button
-            onClick={onClose}
-            className="font-pressstart2p bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded border border-green-400 transition-colors"
-          >
-            GOT IT!
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // EmailJS configuration
 const EMAILJS_SERVICE_ID = 'service_d0bwser';
@@ -186,10 +55,24 @@ function App() {
   const [unlockedProjects, setUnlockedProjects] = useState<Set<string>>(
     new Set()
   );
-  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [carouselIndex, setCarouselIndex] = useState(1);
   
   // Show more projects state
   const [showMoreProjects, setShowMoreProjects] = useState(false);
+
+  // Command center state
+  const [terminalInput, setTerminalInput] = useState('');
+  const [terminalHistory, setTerminalHistory] = useState<string[]>([]);
+  const [currentCommand, setCurrentCommand] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [activeTab, setActiveTab] = useState<'socials' | 'quests' | 'terminal'>('socials');
+
+  // Mobile carousel auto-animation state
+  const [visibleCardIndex, setVisibleCardIndex] = useState(1); // Start with Master's card visible
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  
+  // Spaceship sound ref
+  const spaceshipSoundRef = useRef<HTMLAudioElement | null>(null);
 
   // Achievements modal visibility
   const [showAchievementsModal, setShowAchievementsModal] = useState(false);
@@ -204,9 +87,7 @@ function App() {
   const [visibleAchievements, setVisibleAchievements] = useState<string[]>([]);
 
   // Achievement popup states
-  const [showQuestInitiator, setShowQuestInitiator] = useState(false);
   const [showRulebookRaider, setShowRulebookRaider] = useState(false);
-  const [showScrollSeeker, setShowScrollSeeker] = useState(false);
 
   // Game instructions modal state
   const [showGameInstructions, setShowGameInstructions] = useState(false);
@@ -290,9 +171,7 @@ function App() {
     // Score increments per achievement
     const xpMap: Record<string, number> = {
       // Generic/game flow
-      "quest-initiator": 50,
       "rulebook-raider": 30,
-      "scroll-seeker": 20,
       // Section 2 specific
       face_of_hero: 150,
       keeper_of_stories: 100,
@@ -338,9 +217,7 @@ function App() {
   // Mapping of achievement IDs to their corresponding section levels
   const achievementToSectionMap: Record<string, number> = {
     // Intro achievements
-    "quest-initiator": 1,
     "rulebook-raider": 1,
-    "scroll-seeker": 1,
     // Section unlock achievements
     "identity_unlocked": 2,
     "pathfinder": 3,
@@ -398,18 +275,11 @@ function App() {
   }[] = [
     // Generic/game flow
     {
-      id: "quest-initiator",
-      title: "Quest Initiator",
-      xp: 50,
-      section: "Intro",
-    },
-    {
       id: "rulebook-raider",
       title: "Rulebook Raider",
       xp: 30,
       section: "Intro",
     },
-    { id: "scroll-seeker", title: "Scroll Seeker", xp: 20, section: "Intro" },
     // Section unlock-on-scroll
     {
       id: "identity_unlocked",
@@ -534,7 +404,17 @@ function App() {
   }, []);
 
   const handleStartGame = () => {
-    showAchievement("quest-initiator", setShowQuestInitiator);
+    // Play spaceship sound
+    if (spaceshipSoundRef.current) {
+      spaceshipSoundRef.current.currentTime = 0;
+      spaceshipSoundRef.current.play().catch(e => console.log('Audio play failed:', e));
+    }
+    
+    // Show identity unlocked achievement for consistency with section unlocking
+    showAchievement("identity_unlocked", setShowIdentityUnlocked);
+    
+    // Scroll to next section
+    nextSectionRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleHowToPlay = () => {
@@ -546,10 +426,6 @@ function App() {
     window.open(RESUME_URL, '_blank');
   };
 
-  const handleScrollToContinue = () => {
-    showAchievement("scroll-seeker", setShowScrollSeeker);
-    nextSectionRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   const handleUnlockAllProjects = () => {
     const allProjectIds = ["gitbridge", "quizforge", "isowebsite", "sentimentanalysis", "movierecommendation", "personalwebsite"];
@@ -617,6 +493,33 @@ function App() {
     );
 
     sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  // Mobile carousel auto-animation effect
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const cardIndex = parseInt(entry.target.getAttribute('data-card-index') || '0');
+            setVisibleCardIndex(cardIndex);
+            setCarouselIndex(cardIndex);
+          }
+        });
+      },
+      {
+        root: null,
+        threshold: 0.5,
+        rootMargin: '-50px 0px -50px 0px'
+      }
+    );
+
+    // Observe all mobile carousel cards
+    cardRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
     return () => observer.disconnect();
   }, []);
 
@@ -717,6 +620,112 @@ function App() {
 
   // Removed: career progression unlock handler (no longer gated)
 
+  // Terminal command handler
+  const handleTerminalCommand = (command: string) => {
+    const cmd = command.toLowerCase().trim();
+    let response = '';
+
+    switch (cmd) {
+      case 'help':
+        response = `Available commands:
+  help - Show this help message
+  about - Learn about Pranav
+  skills - View technical skills
+  projects - See project portfolio with GitHub links
+  github - Access GitHub profile
+  contact - Get contact information
+  social - View social profiles
+  interests - Discover personal interests
+  resume - Download resume
+  clear - Clear terminal history`;
+        break;
+      case 'about':
+        response = `Pranav Reddy Gaddam - Full Stack Developer & AI Enthusiast
+Master's Student at San Jose State University
+Passionate about building innovative solutions with AI and modern web technologies.`;
+        break;
+      case 'skills':
+        response = `Technical Arsenal:
+Frontend: React, TypeScript, Tailwind CSS, Next.js
+Backend: FastAPI, Node.js, Python, PostgreSQL
+AI/ML: OpenAI APIs, LangChain, Vector Databases
+DevOps: Docker, AWS, Git, CI/CD
+Tools: Vite, Webpack, Figma, VS Code`;
+        break;
+      case 'projects':
+        response = `Featured Projects:
+🔗 GitBridge - AI-powered GitHub repository analyzer
+   GitHub: https://github.com/pranavreddygaddam/gitbridge
+
+🔗 Hirely - AI interview preparation platform  
+   GitHub: https://github.com/pranavreddygaddam/hirely
+
+🔗 Nexus - 3D startup analysis tool
+   GitHub: https://github.com/pranavreddygaddam/nexus
+
+🔗 QuizForge - AI quiz generation platform
+   GitHub: https://github.com/pranavreddygaddam/quizforge
+
+🔗 ISO Web App - University event management system
+   GitHub: https://github.com/pranavreddygaddam/iso-website
+
+🔗 Portfolio - Gamified personal website
+   GitHub: https://github.com/pranavreddygaddam/gamified-portfolio
+
+Type 'github' to open main GitHub profile`;
+        break;
+      case 'github':
+        response = `Opening GitHub profile...`;
+        setTimeout(() => {
+          window.open('https://github.com/PranavReddyGaddam', '_blank');
+        }, 1000);
+        break;
+      case 'resume':
+        response = `Opening resume download...`;
+        setTimeout(() => {
+          window.open('/Pranav_Reddy_Gaddam_Resume_FT_Google.pdf', '_blank');
+        }, 1000);
+        break;
+      case 'contact':
+        response = `Get in touch:
+Email: pranavreddy.gaddam@sjsu.edu
+GitHub: github.com/PranavReddyGaddam
+LinkedIn: linkedin.com/in/pranav-reddy-gaddam-69338321b/
+Location: San Jose, California
+
+Type 'github' to open GitHub profile directly`;
+        break;
+      case 'social':
+        response = `Social Command Center:
+GitHub: Code repositories and contributions
+LinkedIn: Professional network and experience
+Instagram: Personal journey and lifestyle
+Twitter: Tech thoughts and insights
+
+Type 'github' to open GitHub profile directly`;
+        break;
+      case 'interests':
+        response = `Beyond Coding:
+Cinema - Exploring legendary films and hidden gems
+Sports - Cricket, basketball and athletic pursuits
+Cycling - Urban adventures and scenic trails
+Travel - Discovering new places and cultures`;
+        break;
+      case 'clear':
+        setTerminalHistory([]);
+        return;
+      default:
+        if (cmd) {
+          response = `Command not recognized: ${cmd}
+Type 'help' to see available commands.`;
+        } else {
+          return;
+        }
+    }
+
+    setTerminalHistory(prev => [...prev, `> ${command}`, response]);
+  };
+
   // Handle collaboration form submit (Section 6)
   const handleCollabSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -788,6 +797,13 @@ function App() {
         onOpenAchievements={() => setShowAchievementsModal(true)}
       />
 
+      {/* Spaceship Start Sound */}
+      <audio 
+        ref={spaceshipSoundRef}
+        src="https://assets.mixkit.co/sfx/preview/mixkit-rocket-launch-shuttle-takeoff-1641.mp3"
+        preload="auto"
+      />
+
       {/* Section 1: Landing Page */}
       <section
         data-level={1}
@@ -810,71 +826,60 @@ function App() {
           {/* Fade out overlay */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
         </div>
-        <div className="relative z-10 border-2 border-white bg-black p-8 rounded-lg max-w-2xl w-full text-center mb-16">
-          {/* Start Prompt */}
-          <p className="font-pressstart2p text-purple-400 text-lg mb-6">
-            PRANAV REDDY GADDAM'S
-          </p>
+        <Card className="relative z-10 max-w-2xl w-full text-center mb-16 bg-black border-white">
+          <CardContent className="p-8">
+            {/* Start Prompt */}
+            <p className="font-pressstart2p text-purple-400 text-lg mb-6">
+              PRANAV REDDY GADDAM'S
+            </p>
 
-          {/* Main Title with Typing Effect */}
-          <div className="font-pressstart2p text-4xl md:text-6xl text-white mb-4">
-            <TextType
-              text={["RUNTIME ODYSSEY"]}
-              typingSpeed={125}
-              pauseDuration={1000}
-              showCursor={true}
-              cursorCharacter="_"
-            />
-          </div>
+            {/* Main Title with Typing Effect */}
+            <div className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl lg:text-6xl text-white mb-4">
+              <TextType
+                text={["RUNTIME ODYSSEY"]}
+                typingSpeed={125}
+                pauseDuration={1000}
+                showCursor={true}
+                cursorCharacter="_"
+              />
+            </div>
 
-          {/* Subtitle */}
-          <p className="font-pressstart2p text-xl text-white mb-4">
-            LEVEL 1: INTRODUCTION
-          </p>
+            {/* Subtitle */}
+            <p className="font-pressstart2p text-xl text-white mb-4">
+              LEVEL 1: INTRODUCTION
+            </p>
 
-          {/* Description */}
-          <p className="font-pressstart2p text-sm text-gray-300 mb-8">
-            An engineer's quest across stacks, pipelines, and pixel worlds
-          </p>
+            {/* Description */}
+            <p className="font-pressstart2p text-sm text-gray-300 mb-8">
+              An engineer's quest across stacks, pipelines, and pixel worlds
+            </p>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              className="font-pressstart2p bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded border-2 border-purple-400 flex items-center justify-center gap-2 transition-colors"
-              onClick={handleStartGame}
-            >
-              START GAME
-            </button>
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                variant="default"
+                size="lg"
+                font="retro"
+                className="border-purple-400 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3"
+                onClick={handleStartGame}
+              >
+                START GAME
+              </Button>
 
-            <button
-              className="font-pressstart2p bg-transparent border-2 border-white text-white px-6 py-3 rounded hover:bg-white hover:text-black transition-colors"
-              onClick={handleHowToPlay}
-            >
-              HOW TO PLAY
-            </button>
-          </div>
-        </div>
+              <Button
+                variant="outline"
+                size="lg"
+                font="retro"
+                className="border-white text-white hover:bg-white hover:text-black px-6 py-3"
+                onClick={handleHowToPlay}
+              >
+                HOW TO PLAY
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Scroll Indicator */}
-        <div
-          className="text-center cursor-pointer group z-10"
-          role="button"
-          tabIndex={0}
-          onClick={handleScrollToContinue}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              handleScrollToContinue();
-            }
-          }}
-        >
-          <p className="font-pressstart2p text-white text-sm mb-2 transition-colors duration-200 group-hover:text-purple-400 cursor-pointer">
-            SCROLL TO CONTINUE
-          </p>
-          <div className="text-white text-xl animate-bounce cursor-pointer group-hover:text-purple-400 transition-colors duration-200">
-            ↓
-          </div>
-        </div>
-      </section>
+        </section>
 
       {/* Transition Section - Smooth Blend */}
       <section className="relative z-10 h-32 bg-gradient-to-b from-transparent via-blue-900/5 to-blue-900/20">
@@ -904,13 +909,13 @@ function App() {
         <div className="relative z-10 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-blue-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
+            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-white border-2 border-blue-400 bg-black/50 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
               LEVEL 2: CHARACTER STATS
             </h2>
           </div>
 
           {/* Character Card Container */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-6 items-stretch max-w-7xl mx-auto px-4 md:px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6 items-stretch max-w-7xl mx-auto px-4">
             {/* Left Column: Character Portrait */}
             <div className="col-span-1 flex">
               <div className="relative w-full min-h-[400px] perspective-1000 flex-1">
@@ -990,6 +995,55 @@ function App() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Lanyard "Techie for Hire" Card - Appears when portrait is unlocked */}
+                    {isCardFlipped && (
+                      <div className="absolute -top-2 -right-2 z-20">
+                        {/* Lanyard cord */}
+                        <div className="absolute top-2 left-2 w-1 h-16 bg-gray-600 rounded-full transform rotate-45 origin-top"></div>
+                        
+                        {/* Stamped card hanging from lanyard */}
+                        <div className="relative transform rotate-6 hover:rotate-3 transition-transform duration-300">
+                          {/* Stamp shadow effect */}
+                          <div className="absolute inset-0 bg-red-900/40 blur-lg transform translate-x-1 translate-y-1"></div>
+                          
+                          {/* Main stamp card - smaller size for lanyard */}
+                          <div className="relative bg-gradient-to-br from-red-600 to-red-800 border-3 border-red-900 rounded-md p-3 shadow-xl">
+                            {/* Stamp texture overlay */}
+                            <div className="absolute inset-0 bg-red-900/20 rounded-md"></div>
+                            
+                            {/* Ink splatter effects */}
+                            <div className="absolute top-1 left-1 w-2 h-2 bg-red-900/60 rounded-full blur-xs"></div>
+                            <div className="absolute bottom-1 right-1 w-1.5 h-1.5 bg-red-900/50 rounded-full blur-xs"></div>
+                            
+                            {/* Main content */}
+                            <div className="relative z-10 text-center">
+                              <div className="transform -rotate-1">
+                                <h3 className="font-pressstart2p text-white text-sm mb-1 tracking-wider">
+                                  TECHIE
+                                </h3>
+                                <div className="border-t border-white/60 border-b border-white/60 py-1 my-1">
+                                  <h4 className="font-pressstart2p text-yellow-300 text-xs font-bold tracking-widest">
+                                    FOR HIRE
+                                  </h4>
+                                </div>
+                                <div className="flex justify-center items-center gap-1 mt-1">
+                                  <div className="w-4 h-px bg-white/60"></div>
+                                  <span className="font-pixellari text-white/80 text-[8px]">NOW</span>
+                                  <div className="w-4 h-px bg-white/60"></div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Stamp edges */}
+                            <div className="absolute inset-0 border border-white/30 rounded-md pointer-events-none"></div>
+                          </div>
+                          
+                          {/* Additional ink drops */}
+                          <div className="absolute -top-0.5 -right-1 w-3 h-3 bg-red-900/50 rounded-full blur-sm"></div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1036,20 +1090,20 @@ function App() {
                       </div>
                       <div className="font-pressstart2p space-y-3 text-gray-300 text-xs md:text-[10px] text-left leading-relaxed overflow-y-auto flex-1 min-h-0">
                         <p className="break-words">
-                          A creative builder and systems thinker who engineers
-                          AI-powered applications using tools like Python,
-                          FastAPI, MongoDB, and Next.js. Currently pursuing a
-                          Master's at San Jose State University, with projects
-                          spanning GitBridge (a voice-enabled GitHub companion),
-                          QuizForge (an adaptive learning platform), and
-                          scalable cloud-first ML pipelines.
+                          A creative full-stack developer who builds
+                          intelligent applications using React 18, TypeScript, FastAPI,
+                          and real-time ML pipelines. Currently pursuing a Master's in 
+                          Computer Science at San Jose State University, with production 
+                          projects including Nexus (AI-powered startup analysis), Ripple 
+                          (real-time social media intelligence), and gamified portfolio systems.
                         </p>
                         <p className="break-words">
-                          An active hackathon participant and backend
-                          specialist, with hands-on experience in AWS and LLM
-                          integration. Passionate about designing resilient
-                          systems, collaborating across fast-paced teams, and
-                          always ready to debug the next boss-level challenge.
+                          Specialized in LLM integration (OpenAI/Anthropic), streaming 
+                          systems, and 3D visualization with Three.js. Active 
+                          contributor to open-source with expertise in Docker, PostgreSQL, 
+                          and scalable real-time applications. Passionate about developing 
+                          AI-powered solutions and collaborating on technical teams 
+                          through complex engineering challenges.
                         </p>
                       </div>
                     </div>
@@ -1105,24 +1159,32 @@ function App() {
                       </h3>
                       <ul className="space-y-2 md:space-y-3 text-xs text-gray-300 font-pressstart2p overflow-y-auto flex-1 min-h-0">
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-yellow-400">⚡</span>
-                          FastAPI Mastery
+                          <span className="text-yellow-400">[FRONTEND]</span>
+                          React 18 & TypeScript
                         </li>
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-green-400">🛠</span>
-                          LLM Prompt Tuning
+                          <span className="text-green-400">[BACKEND]</span>
+                          FastAPI & Python
                         </li>
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-cyan-400">☁️</span>
-                          AWS & Cloud Deployments
+                          <span className="text-cyan-400">[ML]</span>
+                          Real-time ML Pipelines
                         </li>
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-pink-400">🌉</span>
-                          GitBridge Voice AI
+                          <span className="text-pink-400">[AI]</span>
+                          LLM Integration (OpenAI/Anthropic)
                         </li>
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-indigo-400">📊</span>
-                          QuizForge Analytics
+                          <span className="text-indigo-400">[DATA]</span>
+                          Social Media Intelligence
+                        </li>
+                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
+                          <span className="text-purple-400">[3D]</span>
+                          Three.js & 3D Visualization
+                        </li>
+                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
+                          <span className="text-red-400">[DEVOPS]</span>
+                          Docker & Streaming Systems
                         </li>
                       </ul>
                     </div>
@@ -1156,7 +1218,7 @@ function App() {
         <div className="relative z-10 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-yellow-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
+            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-white border-2 border-yellow-400 bg-black/50 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
               LEVEL 3: CAREER PATH
             </h2>
             <p className="font-pressstart2p text-white text-sm mt-4">
@@ -1164,363 +1226,516 @@ function App() {
             </p>
           </div>
 
-          {/* Career Progression Carousel (always visible) */}
-          {
-            <div className="flex justify-center items-center mt-8 w-full px-4">
-              {/* Custom Carousel for Progression Path */}
-              <div className="w-full flex flex-col items-center justify-center mt-8 min-h-[420px]">
-                <div className="relative w-full max-w-3xl flex flex-col items-center">
-                  {/* Carousel Card */}
-                  <div
-                    className="bg-yellow-900/80 border-2 border-yellow-400 rounded-lg w-full min-h-[400px] flex flex-col items-center justify-start p-4 md:p-8 transition-all duration-500"
-                    data-card={
-                      carouselIndex === 1
-                        ? "work-experience"
-                        : carouselIndex === 0
-                        ? "masters"
-                        : ""
-                    }
+          {/* Career Progression Timeline - Redesigned for Better UX */}
+          <div className="flex justify-center items-center mt-8 w-full px-4">
+            <div className="w-full max-w-6xl">
+              {/* Timeline Navigation - Desktop Only */}
+              <div className="hidden md:flex flex-wrap justify-center gap-4 mb-8">
+                {[
+                  { id: 'bachelors', title: "BACHELOR'S", color: "green" },
+                  { id: 'masters', title: "MASTER'S", color: "yellow" },
+                  { id: 'experience', title: 'EXPERIENCE', color: "blue" },
+                  { id: 'achievements', title: 'ACHIEVEMENTS', color: "purple" }
+                ].map((item) => (
+                  <Button
+                    key={item.id}
+                    onClick={() => {
+                      const index = item.id === 'bachelors' ? 0 : item.id === 'masters' ? 1 : item.id === 'experience' ? 2 : 3;
+                      setCarouselIndex(index);
+                      handleCarouselNavigation(index);
+                    }}
+                    variant={carouselIndex === (item.id === 'bachelors' ? 0 : item.id === 'masters' ? 1 : item.id === 'experience' ? 2 : 3) ? "default" : "outline"}
+                    size="lg"
+                    font="retro"
+                    className={`${
+                      carouselIndex === (item.id === 'bachelors' ? 0 : item.id === 'masters' ? 1 : item.id === 'experience' ? 2 : 3)
+                        ? `bg-${item.color}-600 border-${item.color}-400 text-white`
+                        : `border-${item.color}-400 text-${item.color}-400 hover:bg-${item.color}-600 hover:text-white`
+                    } px-6 py-3 transition-all duration-300 hover:scale-105`}
                   >
-                    {(() => {
-                      switch (carouselIndex) {
-                        case 0:
-                          return (
-                            <>
-                              <h3 className="font-pressstart2p text-white text-3xl mb-2 text-center">
-                                Master's
-                              </h3>
-                              <div className="flex-1 w-full space-y-3 overflow-y-auto px-1">
-                                {/* Main Quest */}
-                                <div className="text-center mb-1">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
-                                    Quest Title
-                                  </h4>
-                                  <p className="font-pixellari text-white text-lg">
-                                    Master's in Data Analytics
-                                  </p>
-                                </div>
-                                {/* Training Grounds & Duration */}
-                                <div className="flex flex-col justify-start items-start mb-1 gap-2">
-                                  <div className="text-left md:text-md">
-                                    <span className="font-pressstart2p text-yellow-400 text-md">
-                                      Training Grounds:
-                                    </span>
+                    {item.title}
+                  </Button>
+                ))}
+              </div>
 
-                                    <span className="font-pixellari text-white text-base ml-2">
-                                      San Jose State University
-                                    </span>
-                                  </div>
-                                  <div className="text-right md:text-md">
-                                    <span className="font-pressstart2p text-yellow-400 text-md">
-                                      Campaign Duration:
-                                    </span>
-                                    <span className="font-pixellari text-white text-base ml-2">
-                                      Aug 2024 – May 2026
-                                    </span>
-                                  </div>
-                                </div>
-                                {/* Stats */}
-                                <div className="flex flex-row items-center mb-2">
-                                  <span className="font-pressstart2p text-yellow-400 text-md mr-2">
-                                    Stats:
-                                  </span>
-                                  <span className="font-pixellari text-white text-base">
-                                    CGPA 3.8 / 4.0
-                                  </span>
-                                </div>
-                                {/* Skills Unlocked */}
-                                <div className="mb-1">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-md mb-1">
-                                    Skills Unlocked
-                                  </h4>
-                                  <ul className="columns-1 sm:columns-2 gap-x-6 list-disc list-inside font-pixellari text-white text-sm space-y-1 pl-4">
-                                    <li>Big Data, Machine Learning</li>
-                                    <li>Data Warehousing & Pipelines</li>
-                                    <li>
-                                      Applied Statistics, Analytics Strategy
-                                    </li>
-                                    <li>Data-Driven Decision Making</li>
-                                  </ul>
-                                </div>
-
-                                {/* Achievements */}
-                                <div className="mb-1">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-1">
-                                    Achievements
-                                  </h4>
-                                  <ul className="columns-1 sm:columns-2 gap-x-6 list-disc list-inside font-pixellari text-white text-sm space-y-1 pl-4">
-                                    <li>
-                                      Winner – SpartUp Spring Hackathon 2025
-                                      (Hosted by Cisco & SJSU)
-                                    </li>
-                                    <li>
-                                      Participated in 8+ hackathons focused on
-                                      AI/ML and Cloud
-                                    </li>
-                                  </ul>
-                                </div>
-
-                                {/* Power-Ups */}
-                                <div className="mb-1">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-1">
-                                    Power-Ups
-                                  </h4>
-                                  <ul className="columns-1 sm:columns-2 gap-x-6 list-disc list-inside font-pixellari text-white text-sm space-y-1 pl-4">
-                                    <li>Snowflake Mastery</li>
-                                    <li>dbt Workflow Architect</li>
-                                    <li>
-                                      AWS Certified (Cloud + AI Practitioner)
-                                    </li>
-                                    <li>Vespa-powered Search Systems</li>
-                                    <li>
-                                      HuggingFace Transformers Integration
-                                    </li>
-                                  </ul>
-                                </div>
-
-                                {/* Side Quests */}
-                                <div>
-                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-1">
-                                    Side Quests
-                                  </h4>
-                                  <p className="font-pixellari text-white text-sm">
-                                    Tech Team Lead – Indian Student Organization
-                                    (2025)
-                                  </p>
-                                </div>
-                              </div>
-                            </>
-                          );
-                        case 1:
-                          return (
-                            <>
-                              <h3 className="font-pressstart2p text-white text-3xl mb-4">
-                                Work Experience
-                              </h3>
-                              <div className="flex-1 w-full space-y-2 overflow-y-auto px-1">
-                                <div className="text-center mb-2">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
-                                    Quest Completed
-                                  </h4>
-                                  <p className="font-pixellari text-white text-base">
-                                    Data Engineer
-                                  </p>
-                                </div>
-                                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2 gap-2">
-                                  <div className="text-center md:text-left">
-                                    <span className="font-pressstart2p text-yellow-400 text-sm">
-                                      Guild:
-                                    </span>
-                                    <span className="font-pixellari text-white text-sm ml-2">
-                                      VE PROJECTS PVT LTD
-                                    </span>
-                                  </div>
-                                  <div className="text-center md:text-right">
-                                    <span className="font-pressstart2p text-yellow-400 text-sm">
-                                      Duration:
-                                    </span>
-                                    <span className="font-pixellari text-white text-sm ml-2">
-                                      Aug 2023 – Jul 2024
-                                    </span>
-                                  </div>
-                                </div>
-                                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2 gap-2">
-                                  <div className="text-center md:text-left">
-                                    <span className="font-pressstart2p text-yellow-400 text-sm">
-                                      Role:
-                                    </span>
-                                    <span className="font-pixellari text-white text-sm ml-2">
-                                      Backend Ops & Data Pipeline Architect
-                                    </span>
-                                  </div>
-                                  <div className="text-center md:text-right">
-                                    <span className="font-pressstart2p text-yellow-400 text-sm">
-                                      Rank Achieved:
-                                    </span>
-                                    <span className="font-pixellari text-white text-sm ml-2">
-                                      Data Engineer
-                                    </span>
-                                  </div>
-                                </div>
-                                <div className="text-center mb-2">
-                                  <span className="font-pressstart2p text-yellow-400 text-sm">
-                                    XP Gained:
-                                  </span>
-                                  <span className="font-pixellari text-white text-sm ml-2">
-                                    +9000 XP
-                                  </span>
-                                </div>
-                                <div className="mb-2">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-base mb-1">
-                                    Loot Collected
-                                  </h4>
-                                  <ul className="list-disc list-inside font-pixellari text-white text-sm space-y-1 pl-2">
-                                    <li>
-                                      <span className="text-yellow-300">
-                                        Redshift Relic
-                                      </span>{" "}
-                                      — Migrated databases from Oracle to Amazon
-                                      Redshift
-                                      <br />
-                                      <span className="text-gray-300">
-                                        Resulted in $120K annual cost savings
-                                        and 12% improvement in query speed
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span className="text-yellow-300">
-                                        ETL Mastery Scroll
-                                      </span>{" "}
-                                      — Built and optimized a real-time ETL
-                                      pipeline processing 150M+ records/day
-                                      <br />
-                                      <span className="text-gray-300">
-                                        Integrated 30+ data sources using Kafka,
-                                        PySpark, and Redshift
-                                        <br />
-                                        Reduced manual intervention by 29%
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span className="text-yellow-300">
-                                        QA Totem of Accuracy
-                                      </span>{" "}
-                                      — Implemented automated data quality
-                                      validation
-                                      <br />
-                                      <span className="text-gray-300">
-                                        Used SQL, Python, and Airflow
-                                        <br />
-                                        Improved accuracy by 60% and accelerated
-                                        BI reporting by 3x
-                                      </span>
-                                    </li>
-                                  </ul>
-                                </div>
-                                <div>
-                                  <h4 className="font-pressstart2p text-yellow-400 text-base mb-1">
-                                    Skills Unlocked
-                                  </h4>
-                                  <p className="font-pixellari text-white text-sm">
-                                    SQL, Apache Kafka, Apache Airflow, Redshift,
-                                    PySpark, Pipeline Optimization, Data QA
-                                    Automation, Cost Optimization
-                                  </p>
-                                </div>
-                              </div>
-                            </>
-                          );
-                        case 2:
-                          return (
-                            <>
-                              <h3 className="font-pressstart2p text-white text-3xl mb-6">
-                                Bachelor's
-                              </h3>
-                              <div className="flex-1 w-full space-y-3">
-                                <div className="text-center">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-xl mb-2">
-                                    Quest Title
-                                  </h4>
-                                  <p className="font-pixellari text-white text-lg">
-                                    Bachelor's in Computer Science
-                                  </p>
-                                </div>
-                                <div className="text-center">
-                                  <h5 className="font-pressstart2p text-yellow-400 text-lg mb-1">
-                                    Training Grounds
-                                  </h5>
-                                  <p className="font-pixellari text-white text-base">
-                                    St. Martin's Engineering College
-                                  </p>
-                                </div>
-                                <div className="text-center">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
-                                    Campaign Duration
-                                  </h4>
-                                  <p className="font-pixellari text-white text-base">
-                                    Aug 2019 – May 2023
-                                  </p>
-                                </div>
-                                <div className="text-center">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
-                                    Skill Unlocks
-                                  </h4>
-                                  <p className="font-pixellari text-white text-base">
-                                    DBMS, Machine Learning, Data Mining, DSA
-                                  </p>
-                                </div>
-                                <div className="text-center">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
-                                    Lore Unlocked
-                                  </h4>
-                                  <p className="font-pixellari text-white text-base">
-                                    Patent – ML Techniques for Hate Speech
-                                    Detection
-                                  </p>
-                                  <p className="font-pixellari text-white text-base">
-                                    Publication – Feature Extraction for Student
-                                    Classification
-                                  </p>
-                                </div>
-                                <div className="text-center">
-                                  <h4 className="font-pressstart2p text-yellow-400 text-lg mb-1">
-                                    Side Quests
-                                  </h4>
-                                  <p className="font-pixellari text-white text-base">
-                                    SMEC Technology Awareness Month Director of
-                                    Operations
-                                  </p>
-                                </div>
-                              </div>
-                            </>
-                          );
-                        default:
-                          return null;
-                      }
-                    })()}
+              {/* Content Cards - Original Desktop Grid + Mobile Carousel */}
+              {/* Mobile Carousel - Hidden on Desktop */}
+              <div className="md:hidden">
+                <div className="flex gap-4 overflow-x-auto pb-4 px-1 snap-x snap-mandatory scrollbar-hide">
+                  {/* Master's Card - Show First on Mobile */}
+                  <div 
+                    ref={(el) => { cardRefs.current[1] = el; }}
+                    data-card-index="1"
+                    className={`cursor-pointer transform transition-all duration-500 flex-shrink-0 w-80 snap-center ${
+                      visibleCardIndex === 1 ? 'scale-105 opacity-100' : 'scale-95 opacity-60'
+                    }`}
+                  >
+                    <Card className="bg-yellow-900/80 border-yellow-400 h-full hover:border-yellow-300">
+                      <CardContent className="p-4 h-full">
+                        <div className="flex items-center gap-3 mb-3">
+                          <h3 className="font-pressstart2p text-white text-lg">MASTER'S</h3>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <div>
+                            <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">Quest Title</h4>
+                            <p className="font-pixellari text-white text-sm">Master's in Computer Science</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">Training Grounds</h4>
+                            <p className="font-pixellari text-white text-sm">San Jose State University</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">Campaign Duration</h4>
+                            <p className="font-pixellari text-white text-sm">Aug 2024 – May 2026</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">Stats</h4>
+                            <p className="font-pixellari text-white text-sm">CGPA: 3.84 / 4.0</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-yellow-400 text-xs mb-2">Skills Unlocked</h4>
+                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                              <li>- Big Data, Machine Learning</li>
+                              <li>- Data Warehousing & Pipelines</li>
+                              <li>- Applied Statistics, Analytics Strategy</li>
+                              <li>- Data-Driven Decision Making</li>
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-yellow-400 text-xs mb-2">Achievements</h4>
+                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                              <li>- Winner SpartUp Spring Hackathon 2025</li>
+                              <li>- 8+ AI/ML and Cloud hackathons</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-                  {/* Carousel Navigation - Arrows on Sides */}
-                  <button
-                    className="absolute left-2 md:left-[-48px] top-1/2 -translate-y-1/2 text-2xl md:text-4xl text-yellow-300 hover:text-white px-2 py-1 disabled:opacity-40 z-10 bg-black/50 rounded-full w-10 h-10 md:w-auto md:h-auto flex items-center justify-center"
-                    onClick={() => {
-                      const newIndex = Math.max(0, carouselIndex - 1);
-                      setCarouselIndex(newIndex);
-                      handleCarouselNavigation(newIndex);
-                    }}
-                    disabled={carouselIndex === 0}
-                    aria-label="Previous Card"
+
+                  {/* Bachelor's Card */}
+                  <div 
+                    ref={(el) => { cardRefs.current[0] = el; }}
+                    data-card-index="0"
+                    className={`cursor-pointer transform transition-all duration-500 flex-shrink-0 w-80 snap-center ${
+                      visibleCardIndex === 0 ? 'scale-105 opacity-100' : 'scale-95 opacity-60'
+                    }`}
                   >
-                    &#8592;
-                  </button>
-                  <button
-                    className="absolute right-2 md:right-[-48px] top-1/2 -translate-y-1/2 text-2xl md:text-4xl text-yellow-300 hover:text-white px-2 py-1 disabled:opacity-40 z-10 bg-black/50 rounded-full w-10 h-10 md:w-auto md:h-auto flex items-center justify-center"
-                    onClick={() => {
-                      const newIndex = Math.min(2, carouselIndex + 1);
-                      setCarouselIndex(newIndex);
-                      handleCarouselNavigation(newIndex);
-                    }}
-                    disabled={carouselIndex === 2}
-                    aria-label="Next Card"
+                    <Card className="bg-green-900/80 border-green-400 h-full hover:border-green-300">
+                      <CardContent className="p-4 h-full">
+                        <div className="flex items-center gap-3 mb-3">
+                          <h3 className="font-pressstart2p text-white text-lg">BACHELOR'S</h3>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <div>
+                            <h4 className="font-pressstart2p text-green-400 text-xs mb-1">Quest Title</h4>
+                            <p className="font-pixellari text-white text-sm">Bachelor's in Computer Science</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-green-400 text-xs mb-1">Training Grounds</h4>
+                            <p className="font-pixellari text-white text-sm">St. Martin's Engineering College</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-green-400 text-xs mb-1">Campaign Duration</h4>
+                            <p className="font-pixellari text-white text-sm">Aug 2019 – May 2023</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-green-400 text-xs mb-1">Stats</h4>
+                            <p className="font-pixellari text-white text-sm">B. Tech in Computer Science</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-green-400 text-xs mb-2">Skills Unlocked</h4>
+                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                              <li>- Data Structures & Algorithms</li>
+                              <li>- Web Development, Databases</li>
+                              <li>- Machine Learning, AI Basics</li>
+                              <li>- Software Engineering</li>
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-green-400 text-xs mb-2">Achievements</h4>
+                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                              <li>- Academic Excellence Award</li>
+                              <li>- Multiple Hackathon Wins</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Experience Card */}
+                  <div 
+                    ref={(el) => { cardRefs.current[2] = el; }}
+                    data-card-index="2"
+                    className={`cursor-pointer transform transition-all duration-500 flex-shrink-0 w-80 snap-center ${
+                      visibleCardIndex === 2 ? 'scale-105 opacity-100' : 'scale-95 opacity-60'
+                    }`}
                   >
-                    &#8594;
-                  </button>
-                  {/* Dot Indicators Below Card */}
-                  <div className="flex gap-2 justify-center mt-8">
-                    {[0, 1, 2].map((idx) => (
-                      <span
-                        key={idx}
-                        className={`h-3 w-3 rounded-full border-2 ${
-                          carouselIndex === idx
-                            ? "bg-yellow-400 border-yellow-400"
-                            : "bg-yellow-900 border-yellow-400"
-                        }`}
-                      />
-                    ))}
+                    <Card className="bg-blue-900/80 border-blue-400 h-full hover:border-blue-300">
+                      <CardContent className="p-4 h-full">
+                        <div className="flex items-center gap-3 mb-3">
+                          <h3 className="font-pressstart2p text-white text-lg">EXPERIENCE</h3>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <div>
+                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">Current Quest</h4>
+                            <p className="font-pixellari text-white text-sm">Software Engineer (Data)</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">Guild Location</h4>
+                            <p className="font-pixellari text-white text-sm">VE Projects Pvt Ltd</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">Campaign Duration</h4>
+                            <p className="font-pixellari text-white text-sm">Aug 2023 – Jul 2024</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-2">Core Technologies</h4>
+                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                              <li>- FastAPI, React, PostgreSQL</li>
+                              <li>- AWS, Docker, Git, CI/CD</li>
+                              <li>- OpenAI APIs, LangChain</li>
+                              <li>- Vector Databases, RAG Systems</li>
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-2">Key Projects</h4>
+                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                              <li>- AI-powered repository analyzer</li>
+                              <li>- Interview preparation platform</li>
+                              <li>- Real-time data streaming systems</li>
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">Expertise Level</h4>
+                            <p className="font-pixellari text-white text-sm">Mid-Level Engineer</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Power-Ups Card */}
+                  <div 
+                    ref={(el) => { cardRefs.current[3] = el; }}
+                    data-card-index="3"
+                    className={`cursor-pointer transform transition-all duration-500 flex-shrink-0 w-80 snap-center ${
+                      visibleCardIndex === 3 ? 'scale-105 opacity-100' : 'scale-95 opacity-60'
+                    }`}
+                  >
+                    <Card className="bg-purple-900/80 border-purple-400 h-full hover:border-purple-300">
+                      <CardContent className="p-4 h-full">
+                        <div className="flex items-center gap-3 mb-3">
+                          <h3 className="font-pressstart2p text-white text-lg">POWER-UPS</h3>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <div>
+                            <h4 className="font-pressstart2p text-purple-400 text-xs mb-2">Technical Arsenal</h4>
+                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                              <li>- React 18, TypeScript, Tailwind CSS</li>
+                              <li>- FastAPI, Python, PostgreSQL</li>
+                              <li>- AWS, Docker, Git, CI/CD</li>
+                              <li>- OpenAI APIs, LangChain</li>
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-purple-400 text-xs mb-2">AI/ML Stack</h4>
+                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                              <li>- Vector Databases, RAG Systems</li>
+                              <li>- HuggingFace Transformers</li>
+                              <li>- Real-time ML Pipelines</li>
+                              <li>- Data Warehousing & Analytics</li>
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-pressstart2p text-purple-400 text-xs mb-2">Power-Ups Unlocked</h4>
+                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                              <li>- dbt Workflow Development</li>
+                              <li>- Vespa Search Systems</li>
+                              <li>- HuggingFace Transformers</li>
+                              <li>- Streaming Systems & Real-time Data</li>
+                              <li>- Snowflake Mastery</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
                 </div>
               </div>
+
+              {/* Desktop Grid - Hidden on Mobile */}
+              <div className="hidden md:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
+                {/* Bachelor's Card - Desktop */}
+                <div 
+                  onClick={() => {
+                    setCarouselIndex(0);
+                    handleCarouselNavigation(0);
+                  }}
+                  className={`cursor-pointer transform transition-all duration-500 ${
+                    carouselIndex === 0 ? 'scale-105 opacity-100' : 'scale-95 opacity-60'
+                  }`}
+                >
+                  <Card className="bg-green-900/80 border-green-400 h-full hover:border-green-300">
+                    <CardContent className="p-4 h-full">
+                      <div className="flex items-center gap-3 mb-3">
+                        <h3 className="font-pressstart2p text-white text-lg">BACHELOR'S</h3>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <h4 className="font-pressstart2p text-green-400 text-xs mb-1">Quest Title</h4>
+                          <p className="font-pixellari text-white text-sm">Bachelor's in Computer Science</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-green-400 text-xs mb-1">Training Grounds</h4>
+                          <p className="font-pixellari text-white text-sm">St. Martin's Engineering College</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-green-400 text-xs mb-1">Campaign Duration</h4>
+                          <p className="font-pixellari text-white text-sm">Aug 2019 – May 2023</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-green-400 text-xs mb-1">Stats</h4>
+                          <p className="font-pixellari text-white text-sm">B. Tech in Computer Science</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-green-400 text-xs mb-2">Skills Unlocked</h4>
+                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <li>- Data Structures & Algorithms</li>
+                            <li>- Web Development, Databases</li>
+                            <li>- Machine Learning, AI Basics</li>
+                            <li>- Software Engineering</li>
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-green-400 text-xs mb-2">Achievements</h4>
+                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <li>- Academic Excellence Award</li>
+                            <li>- Multiple Hackathon Wins</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Master's Card - Desktop */}
+                <div 
+                  onClick={() => {
+                    setCarouselIndex(1);
+                    handleCarouselNavigation(1);
+                  }}
+                  className={`cursor-pointer transform transition-all duration-500 ${
+                    carouselIndex === 1 ? 'scale-105 opacity-100' : 'scale-95 opacity-60'
+                  }`}
+                >
+                  <Card className="bg-yellow-900/80 border-yellow-400 h-full hover:border-yellow-300">
+                    <CardContent className="p-4 h-full">
+                      <div className="flex items-center gap-3 mb-3">
+                        <h3 className="font-pressstart2p text-white text-lg">MASTER'S</h3>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">Quest Title</h4>
+                          <p className="font-pixellari text-white text-sm">Master's in Computer Science</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">Training Grounds</h4>
+                          <p className="font-pixellari text-white text-sm">San Jose State University</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">Campaign Duration</h4>
+                          <p className="font-pixellari text-white text-sm">Aug 2024 – May 2026</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">Stats</h4>
+                          <p className="font-pixellari text-white text-sm">CGPA: 3.84 / 4.0</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-yellow-400 text-xs mb-2">Skills Unlocked</h4>
+                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <li>- Big Data, Machine Learning</li>
+                            <li>- Data Warehousing & Pipelines</li>
+                            <li>- Applied Statistics, Analytics Strategy</li>
+                            <li>- Data-Driven Decision Making</li>
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-yellow-400 text-xs mb-2">Achievements</h4>
+                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <li>- Winner SpartUp Spring Hackathon 2025</li>
+                            <li>- 8+ AI/ML and Cloud hackathons</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Experience Card - Desktop */}
+                <div 
+                  onClick={() => {
+                    setCarouselIndex(2);
+                    handleCarouselNavigation(2);
+                  }}
+                  className={`cursor-pointer transform transition-all duration-500 ${
+                    carouselIndex === 2 ? 'scale-105 opacity-100' : 'scale-95 opacity-60'
+                  }`}
+                >
+                  <Card className="bg-blue-900/80 border-blue-400 h-full hover:border-blue-300">
+                    <CardContent className="p-4 h-full">
+                      <div className="flex items-center gap-3 mb-3">
+                        <h3 className="font-pressstart2p text-white text-lg">EXPERIENCE</h3>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">Current Quest</h4>
+                          <p className="font-pixellari text-white text-sm">Software Engineer (Data)</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">Guild Location</h4>
+                          <p className="font-pixellari text-white text-sm">VE Projects Pvt Ltd</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">Campaign Duration</h4>
+                          <p className="font-pixellari text-white text-sm">Aug 2023 – Jul 2024</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-2">Core Technologies</h4>
+                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <li>- FastAPI, React, PostgreSQL</li>
+                            <li>- AWS, Docker, Git, CI/CD</li>
+                            <li>- OpenAI APIs, LangChain</li>
+                            <li>- Vector Databases, RAG Systems</li>
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-2">Key Projects</h4>
+                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <li>- AI-powered repository analyzer</li>
+                            <li>- Interview preparation platform</li>
+                            <li>- Real-time data streaming systems</li>
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">Expertise Level</h4>
+                          <p className="font-pixellari text-white text-sm">Mid-Level Engineer</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Power-Ups Card - Desktop */}
+                <div 
+                  onClick={() => {
+                    setCarouselIndex(3);
+                    handleCarouselNavigation(3);
+                  }}
+                  className={`cursor-pointer transform transition-all duration-500 ${
+                    carouselIndex === 3 ? 'scale-105 opacity-100' : 'scale-95 opacity-60'
+                  }`}
+                >
+                  <Card className="bg-purple-900/80 border-purple-400 h-full hover:border-purple-300">
+                    <CardContent className="p-4 h-full">
+                      <div className="flex items-center gap-3 mb-3">
+                        <h3 className="font-pressstart2p text-white text-lg">POWER-UPS</h3>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <h4 className="font-pressstart2p text-purple-400 text-xs mb-2">Technical Arsenal</h4>
+                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <li>- React 18, TypeScript, Tailwind CSS</li>
+                            <li>- FastAPI, Python, PostgreSQL</li>
+                            <li>- AWS, Docker, Git, CI/CD</li>
+                            <li>- OpenAI APIs, LangChain</li>
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-purple-400 text-xs mb-2">AI/ML Stack</h4>
+                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <li>- Vector Databases, RAG Systems</li>
+                            <li>- HuggingFace Transformers</li>
+                            <li>- Real-time ML Pipelines</li>
+                            <li>- Data Warehousing & Analytics</li>
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-pressstart2p text-purple-400 text-xs mb-2">Power-Ups Unlocked</h4>
+                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <li>- dbt Workflow Development</li>
+                            <li>- Vespa Search Systems</li>
+                            <li>- HuggingFace Transformers</li>
+                            <li>- Streaming Systems & Real-time Data</li>
+                            <li>- Snowflake Mastery</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              {/* Progress Indicator - Desktop Only */}
+              <div className="hidden md:flex justify-center mt-8">
+                <div className="flex gap-2">
+                  {[0, 1, 2, 3].map((idx) => (
+                    <div
+                      key={idx}
+                      className={`h-2 w-8 rounded-full transition-all duration-300 ${
+                        carouselIndex === idx
+                          ? 'bg-yellow-400 scale-110'
+                          : 'bg-gray-600 hover:bg-gray-500'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
-          }
+          </div>
         </div>
       </section>
 
@@ -1549,7 +1764,7 @@ function App() {
         <div className="relative z-10 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12 relative">
-            <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-green-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
+            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-white border-2 border-green-400 bg-black/50 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
               LEVEL 4: SKILL TREE
             </h2>
             <p className="font-pressstart2p text-white text-sm mt-4">
@@ -1558,19 +1773,22 @@ function App() {
             
             {/* Unlock All Button - Only show when at least one skill is unlocked */}
             {Object.values(unlockedSkills).some(skill => skill) && (
-              <button
+              <Button
                 onClick={handleUnlockAllSkills}
-                className="absolute top-0 right-0 font-pressstart2p text-xs sm:text-sm md:text-base text-green-400 hover:text-white bg-black/70 border border-green-400 hover:border-green-300 px-2 py-1 sm:px-3 sm:py-2 md:px-4 md:py-2 rounded-lg transition-all duration-300 hover:bg-green-900/20 hover:scale-105 whitespace-nowrap"
+                variant="outline"
+                size="sm"
+                font="retro"
+                className="absolute top-0 right-0 text-green-400 hover:text-white bg-black/70 border border-green-400 hover:border-green-300 px-2 py-1 sm:px-3 sm:py-2 md:px-4 md:py-2 hover:bg-green-900/20 hover:scale-105 whitespace-nowrap"
                 title="Unlock all skills at once"
               >
                 <span className="hidden sm:inline">UNLOCK ALL</span>
                 <span className="sm:hidden">ALL</span>
-              </button>
+              </Button>
             )}
           </div>
 
           {/* Skill Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
             {/* Frontend Skills */}
             <div
               className={`border rounded-lg p-6 transition-all duration-300 cursor-pointer relative overflow-hidden ${
@@ -1592,9 +1810,6 @@ function App() {
                 <h3 className="font-pressstart2p text-white text-lg">
                   Frontend
                 </h3>
-                {unlockedSkills.frontend && (
-                  <span className="text-green-400 text-xl">✓</span>
-                )}
               </div>
 
               {/* Content area */}
@@ -1618,15 +1833,23 @@ function App() {
                     <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
                         <span className="text-green-400">●</span>
-                        React & Next.js
+                        React 18 & TypeScript
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-green-400">●</span>
-                        TypeScript & JavaScript
+                        Vite & Modern Build Tools
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-green-400">●</span>
-                        HTML/CSS & Tailwind
+                        Tailwind CSS & Responsive Design
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-400">●</span>
+                        Three.js & React Three Fiber
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-400">●</span>
+                        React Router & State Management
                       </li>
                     </ul>
 
@@ -1635,9 +1858,9 @@ function App() {
                       <span className="font-pixellari text-white text-sm">
                         +50 XP
                       </span>
-                      <span className="font-pressstart2p text-green-400 text-sm">
+                      <Badge variant="default" font="retro" className="bg-green-600 border-green-400 text-green-400 text-sm">
                         UNLOCKED
-                      </span>
+                      </Badge>
                     </div>
                   </div>
                 )}
@@ -1660,14 +1883,11 @@ function App() {
                     unlockedSkills.backend ? "text-cyan-400" : "text-white"
                   }`}
                 >
-                  <RxGear />
+                  {RxGear as any}
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">
                   Backend
                 </h3>
-                {unlockedSkills.backend && (
-                  <span className="text-green-400 text-xl">✓</span>
-                )}
               </div>
 
               {/* Content area */}
@@ -1691,15 +1911,23 @@ function App() {
                     <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
                         <span className="text-green-400">●</span>
-                        Flask
+                        FastAPI & Python
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-green-400">●</span>
-                        FastAPI
+                        PostgreSQL & Database Design
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-green-400">●</span>
-                        Django
+                        REST APIs & Pydantic
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-400">●</span>
+                        WebSocket & Real-time Communication
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-400">●</span>
+                        Authentication & Security
                       </li>
                     </ul>
 
@@ -1708,9 +1936,9 @@ function App() {
                       <span className="font-pixellari text-white text-sm">
                         +50 XP
                       </span>
-                      <span className="font-pressstart2p text-green-400 text-sm">
+                      <Badge variant="default" font="retro" className="bg-green-600 border-green-400 text-green-400 text-sm">
                         UNLOCKED
-                      </span>
+                      </Badge>
                     </div>
                   </div>
                 )}
@@ -1733,14 +1961,11 @@ function App() {
                     unlockedSkills.database ? "text-green-400" : "text-white"
                   }`}
                 >
-                  <BsDatabaseAdd />
+                  {BsDatabaseAdd as any}
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">
                   Database
                 </h3>
-                {unlockedSkills.database && (
-                  <span className="text-green-400 text-xl">✓</span>
-                )}
               </div>
 
               {/* Content area */}
@@ -1764,7 +1989,11 @@ function App() {
                     <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
                         <span className="text-green-400">●</span>
-                        PostgreSQL & MySQL
+                        PostgreSQL
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-400">●</span>
+                        MySQL
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-green-400">●</span>
@@ -1785,9 +2014,9 @@ function App() {
                       <span className="font-pixellari text-white text-sm">
                         +50 XP
                       </span>
-                      <span className="font-pressstart2p text-green-400 text-sm">
+                      <Badge variant="default" font="retro" className="bg-green-600 border-green-400 text-green-400 text-sm">
                         UNLOCKED
-                      </span>
+                      </Badge>
                     </div>
                   </div>
                 )}
@@ -1810,12 +2039,9 @@ function App() {
                     unlockedSkills.devops ? "text-yellow-400" : "text-white"
                   }`}
                 >
-                  <FaDocker />
+                  {FaDocker as any}
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">DevOps</h3>
-                {unlockedSkills.devops && (
-                  <span className="text-green-400 text-xl">✓</span>
-                )}
               </div>
 
               {/* Content area */}
@@ -1839,19 +2065,23 @@ function App() {
                     <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
                         <span className="text-yellow-400">●</span>
-                        Docker & Kubernetes
+                        Docker & Containerization
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-yellow-400">●</span>
-                        AWS & Cloud Deployments
+                        Streaming Systems & Real-time Data
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-yellow-400">●</span>
-                        CI/CD & GitHub Actions
+                        Data Pipeline Engineering
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-yellow-400">●</span>
-                        Airflow
+                        API Design & Microservices
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-yellow-400">●</span>
+                        Performance Optimization
                       </li>
                     </ul>
 
@@ -1860,9 +2090,9 @@ function App() {
                       <span className="font-pixellari text-white text-sm">
                         +50 XP
                       </span>
-                      <span className="font-pressstart2p text-green-400 text-sm">
+                      <Badge variant="default" font="retro" className="bg-green-600 border-green-400 text-green-400 text-sm">
                         UNLOCKED
-                      </span>
+                      </Badge>
                     </div>
                   </div>
                 )}
@@ -1885,12 +2115,9 @@ function App() {
                     unlockedSkills.ai ? "text-purple-400" : "text-white"
                   }`}
                 >
-                  <BsRobot />
+                  {BsRobot as any}
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">AI/ML</h3>
-                {unlockedSkills.ai && (
-                  <span className="text-green-400 text-xl">✓</span>
-                )}
               </div>
 
               {/* Content area */}
@@ -1914,19 +2141,23 @@ function App() {
                     <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
                         <span className="text-purple-400">●</span>
-                        LLM Integration & APIs
+                        OpenAI & Anthropic API Integration
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-purple-400">●</span>
-                        PyTorch
+                        Real-time Data Processing Pipelines
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-purple-400">●</span>
-                        Hugging Face Transformers
+                        Social Media Intelligence & Sentiment Analysis
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-purple-400">●</span>
-                        spaCy, ML workflows
+                        ML Model Deployment & Streaming
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-purple-400">●</span>
+                        Data Visualization & Topic Modeling
                       </li>
                     </ul>
 
@@ -1935,9 +2166,9 @@ function App() {
                       <span className="font-pixellari text-white text-sm">
                         +50 XP
                       </span>
-                      <span className="font-pressstart2p text-green-400 text-sm">
+                      <Badge variant="default" font="retro" className="bg-green-600 border-green-400 text-green-400 text-sm">
                         UNLOCKED
-                      </span>
+                      </Badge>
                     </div>
                   </div>
                 )}
@@ -1960,12 +2191,9 @@ function App() {
                     unlockedSkills.tools ? "text-pink-400" : "text-white"
                   }`}
                 >
-                  <BsTools />
+                  {BsTools as any}
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">Tools</h3>
-                {unlockedSkills.tools && (
-                  <span className="text-green-400 text-xl">✓</span>
-                )}
               </div>
 
               {/* Content area */}
@@ -1989,15 +2217,23 @@ function App() {
                     <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
                         <span className="text-pink-400">●</span>
-                        PowerBI, Tableau
+                        Git & Version Control
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-pink-400">●</span>
-                        AI tools
+                        VS Code & Development Tools
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="text-pink-400">●</span>
-                        Postman, VS Code, etc.
+                        API Testing & Documentation
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-pink-400">●</span>
+                        Data Analysis & Visualization
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-pink-400">●</span>
+                        Project Management & Collaboration
                       </li>
                     </ul>
 
@@ -2006,9 +2242,9 @@ function App() {
                       <span className="font-pixellari text-white text-sm">
                         +50 XP
                       </span>
-                      <span className="font-pressstart2p text-green-400 text-sm">
+                      <Badge variant="default" font="retro" className="bg-green-600 border-green-400 text-green-400 text-sm">
                         UNLOCKED
-                      </span>
+                      </Badge>
                     </div>
                   </div>
                 )}
@@ -2037,7 +2273,7 @@ function App() {
         <div className="relative z-10 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-red-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
+            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-white border-2 border-red-400 bg-black/50 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
               LEVEL 5: PROJECT QUESTS
             </h2>
             <p className="font-pressstart2p text-white text-sm mt-4">
@@ -2046,7 +2282,7 @@ function App() {
           </div>
 
           {/* Project Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
             {/* gitbridge AI Project */}
             <div className="relative w-full h-[450px] perspective-1000">
               <div
@@ -2091,14 +2327,14 @@ function App() {
                       </h3>
                       {/* Difficulty Badge */}
                       <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
-                        Expert
+                        Hard
                       </div>
                     </div>
 
                     {/* Project Details - Flexible Height */}
                     <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
                       <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
-                        AI-powered developer tool that transforms GitHub repositories into interactive diagrams and narrated explainers. Generates visual architecture diagrams, provides AI-narrated walkthroughs, and offers intelligent Q&A for codebase exploration. Built with FastAPI and AWS.
+                        AI-powered developer tool that transforms GitHub repositories into interactive diagrams and narrated explainers. Generates visual system diagrams, provides AI-narrated walkthroughs, and offers intelligent Q&A for codebase exploration. Built with FastAPI and AWS.
                       </p>
                       {/* Technology Tags */}
                       <div className="flex flex-wrap gap-2 mt-auto">
@@ -2119,13 +2355,15 @@ function App() {
 
                     {/* View Code Button - Fixed Bottom */}
                     <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <button
+                      <Button
                         onClick={() => handleProjectLink("gitbridge")}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                        variant="default"
+                        size="sm"
+                        font="retro"
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
                       >
-                        <span className="text-lg">📄</span>
                         <span>View Code</span>
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -2176,7 +2414,7 @@ function App() {
                       </h3>
                       {/* Difficulty Badge */}
                       <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
-                        Expert
+                        Hard
                       </div>
                     </div>
 
@@ -2207,13 +2445,15 @@ function App() {
 
                     {/* View Code Button - Fixed Bottom */}
                     <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <button
+                      <Button
                         onClick={() => handleProjectLink("hirely")}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                        variant="default"
+                        size="sm"
+                        font="retro"
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
                       >
-                        <span className="text-lg">📄</span>
                         <span>View Code</span>
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -2295,13 +2535,15 @@ function App() {
 
                     {/* View Code Button - Fixed Bottom */}
                     <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <button
+                      <Button
                         onClick={() => handleProjectLink("nexus")}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                        variant="default"
+                        size="sm"
+                        font="retro"
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
                       >
-                        <span className="text-lg">📄</span>
                         <span>View Code</span>
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -2351,7 +2593,7 @@ function App() {
                         QuizForge
                       </h3>
                       {/* Difficulty Badge */}
-                      <div className="absolute top-2 right-2 bg-orange-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
+                      <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
                         Hard
                       </div>
                     </div>
@@ -2380,13 +2622,15 @@ function App() {
 
                     {/* View Code Button - Fixed Bottom */}
                     <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <button
+                      <Button
                         onClick={() => handleProjectLink("quizforge")}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                        variant="default"
+                        size="sm"
+                        font="retro"
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
                       >
-                        <span className="text-lg">📄</span>
                         <span>View Code</span>
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -2468,13 +2712,15 @@ function App() {
 
                     {/* View Code Button - Fixed Bottom */}
                     <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <button
+                      <Button
                         onClick={() => handleProjectLink("isowebapp")}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                        variant="default"
+                        size="sm"
+                        font="retro"
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
                       >
-                        <span className="text-lg">📄</span>
                         <span>View Code</span>
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -2525,7 +2771,7 @@ function App() {
                       </h3>
                       {/* Difficulty Badge */}
                       <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-pressstart2p whitespace-nowrap flex-shrink-0">
-                        Expert
+                        Hard
                       </div>
                     </div>
 
@@ -2550,13 +2796,15 @@ function App() {
 
                     {/* View Code Button - Fixed Bottom */}
                     <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <button
+                      <Button
                         onClick={() => handleProjectLink("personalwebsite")}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
+                        variant="default"
+                        size="sm"
+                        font="retro"
+                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
                       >
-                        <span className="text-lg">📄</span>
                         <span>View Code</span>
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -2566,12 +2814,15 @@ function App() {
             {/* Show More Button */}
             {!showMoreProjects && (
               <div className="col-span-full flex justify-center mt-6">
-                <button
+                <Button
                   onClick={() => setShowMoreProjects(true)}
-                  className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded border border-red-400 transition-colors text-sm md:text-base"
+                  variant="default"
+                  size="lg"
+                  font="retro"
+                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 border border-red-400 transition-colors text-sm md:text-base"
                 >
-                  VIEW MORE PROJECTS
-                </button>
+                  SHOW MORE PROJECTS
+                </Button>
               </div>
             )}
 
@@ -2852,182 +3103,262 @@ function App() {
         <div className="relative z-10 max-w-5xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-3xl md:text-4xl text-white border-2 border-teal-400 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
-              LEVEL 6: PLAYER LOUNGE
+            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-white border-2 border-teal-400 bg-black/50 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
+              LEVEL 6: COMMAND CENTER
             </h2>
             <p className="font-pressstart2p text-white text-sm mt-4">
-              GET TO KNOW ME SOME MORE
+              INTERACTIVE TERMINAL • CONNECT • EXPLORE
             </p>
           </div>
 
-          {/* Contact Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Email Card */}
-            <div className="bg-black/80 border border-teal-400 rounded-lg p-4 md:p-5 transition-all duration-300 hover:border-teal-300">
-              <form onSubmit={handleCollabSubmit} className="space-y-3">
-                <h3 className="font-pressstart2p text-white text-base md:text-lg text-center">
-                  Collaborate
-                </h3>
-                <p className="font-pixellari text-teal-300 text-[10px] md:text-xs text-center -mt-1">
-                  Tell me about your project and let's build together
-                </p>
-                <div className="space-y-2.5">
-                  <input
-                    aria-label="Your name"
-                    type="text"
-                    value={collabName}
-                    onChange={(e) => setCollabName(e.target.value)}
-                    placeholder="Your name (optional)"
-                    disabled={isSubmitting}
-                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari disabled:opacity-50 disabled:cursor-not-allowed"
-                  />
-                  <input
-                    aria-label="Your email"
-                    type="email"
-                    value={collabEmail}
-                    onChange={(e) => setCollabEmail(e.target.value)}
-                    placeholder="Your email"
-                    required
-                    disabled={isSubmitting}
-                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari disabled:opacity-50 disabled:cursor-not-allowed"
-                  />
-                  <textarea
-                    aria-label="Project details"
-                    value={collabMessage}
-                    onChange={(e) => setCollabMessage(e.target.value)}
-                    placeholder="Briefly describe the project / idea"
-                    required
-                    rows={3}
-                    disabled={isSubmitting}
-                    className="w-full bg-black/70 border border-teal-500/60 focus:border-teal-400 outline-none rounded px-2.5 py-1.5 text-sm text-white placeholder:text-teal-300/60 font-pixellari disabled:opacity-50 disabled:cursor-not-allowed"
-                  />
-                </div>
-                
-                {/* Status Messages */}
-                {submitStatus === 'success' && (
-                  <div className="bg-green-900/30 border border-green-400 rounded px-3 py-2">
-                    <p className="font-pixellari text-green-400 text-xs text-center">
-                      ✓ Message sent successfully! I'll get back to you soon.
-                    </p>
-                  </div>
-                )}
-                
-                {submitStatus === 'error' && (
-                  <div className="bg-red-900/30 border border-red-400 rounded px-3 py-2">
-                    <p className="font-pixellari text-red-400 text-xs text-center">
-                      ✗ Failed to send message. Please try again or contact me directly.
-                    </p>
-                  </div>
-                )}
-                
+          {/* Interactive Command Center */}
+          <div className="max-w-6xl mx-auto px-4">
+            {/* Tab Navigation */}
+            <div className="flex justify-center mb-6">
+              <div className="bg-black/80 border border-teal-400 rounded-lg p-1 flex gap-1 flex-wrap justify-center max-w-sm mx-auto">
                 <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full font-pressstart2p bg-teal-600 hover:bg-teal-700 disabled:bg-teal-800 disabled:cursor-not-allowed text-white px-3 py-2 rounded border border-teal-400 transition-colors text-sm"
+                  onClick={() => setActiveTab('socials')}
+                  className={`px-3 py-2 rounded font-pressstart2p text-xs transition-all duration-300 min-w-[80px] ${
+                    activeTab === 'socials' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'text-teal-300 hover:text-white hover:bg-teal-800/50'
+                  }`}
                 >
-                  {isSubmitting ? "SENDING..." : "SEND REQUEST"}
-                </button>
-                <p className="font-pixellari text-teal-300 text-[10px] text-center">
-                  {isSubmitting ? "Sending your message..." : "Your message will be sent directly to me"}
-                </p>
-              </form>
-            </div>
-
-            {/* LinkedIn Card */}
-            <div className="bg-black/80 border border-teal-400 rounded-lg p-4 md:p-5 transition-all duration-300 hover:border-teal-300">
-              <div className="text-center mb-4">
-                <h3 className="font-pressstart2p text-white text-base md:text-lg">
-                  SIDE QUESTS
-                </h3>
-              </div>
-              <ul className="list-disc list-inside space-y-2 text-left px-2">
-                <li className="font-pixellari text-teal-300 text-sm md:text-base">
-                  <span className="text-teal-300 font-pressstart2p">
-                    Cinephile's Marathon
-                  </span>
-                  <span className="text-gray-300">
-                    {" "}
-                    – Binge-watch legendary films and uncover hidden cinematic
-                    gems.
-                  </span>
-                </li>
-                <li className="font-pixellari text-teal-300 text-sm md:text-base">
-                  <span className="text-teal-300 font-pressstart2p">
-                    Arena Watcher
-                  </span>
-                  <span className="text-gray-300">
-                    {" "}
-                    – Track epic matches across cricket, basketball, and beyond.
-                  </span>
-                </li>
-                <li className="font-pixellari text-teal-300 text-sm md:text-base">
-                  <span className="text-teal-300 font-pressstart2p">
-                    The City Rider
-                  </span>
-                  <span className="text-gray-300">
-                    {" "}
-                    – Cycle through bustling streets and scenic trails.
-                  </span>
-                </li>
-                <li className="font-pixellari text-teal-300 text-sm md:text-base">
-                  <span className="text-teal-300 font-pressstart2p">
-                    Explorer's Odyssey
-                  </span>
-                  <span className="text-gray-300">
-                    {" "}
-                    – Venture into unfamiliar neighborhoods and travel to
-                    distant cities, collecting stories along the way.
-                  </span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Social Dock (compact version) */}
-            <div className="md:col-span-2 w-60 bg-black/80 border border-teal-400 rounded-lg p-1 transition-all duration-300 hover:border-teal-300 mx-auto justify-self-center">
-              <div className="text-center mb-1">
-                <h3 className="font-pressstart2p text-white text-sm">
                   SOCIALS
-                </h3>
+                </button>
+                <button
+                  onClick={() => setActiveTab('quests')}
+                  className={`px-3 py-2 rounded font-pressstart2p text-xs transition-all duration-300 min-w-[80px] ${
+                    activeTab === 'quests' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'text-teal-300 hover:text-white hover:bg-teal-800/50'
+                  }`}
+                >
+                  QUESTS
+                </button>
+                <button
+                  onClick={() => setActiveTab('terminal')}
+                  className={`px-3 py-2 rounded font-pressstart2p text-xs transition-all duration-300 min-w-[80px] ${
+                    activeTab === 'terminal' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'text-teal-300 hover:text-white hover:bg-teal-800/50'
+                  }`}
+                >
+                  TERMINAL
+                </button>
               </div>
-              <nav className="flex items-center justify-center gap-3 sm:gap-4 md:gap-5 flex-wrap py-0.5">
-                <a
-                  href="https://github.com/PranavReddyGaddam"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                  className="text-teal-300 hover:text-white transition-colors"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/pranav-reddy-gaddam-69338321b/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                  className="text-teal-300 hover:text-white transition-colors"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://www.instagram.com/__pranav.reddy__"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="text-teal-300 hover:text-white transition-colors"
-                >
-                  <Instagram className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://twitter.com/Pranav_2801"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Twitter"
-                  className="text-teal-300 hover:text-white transition-colors"
-                >
-                  <RiTwitterXFill className="w-5 h-5" />
-                </a>
-              </nav>
             </div>
+
+            {/* Terminal Tab */}
+            {activeTab === 'terminal' && (
+              <div className="bg-black/90 border-2 border-teal-400 rounded-lg overflow-hidden">
+                {/* Terminal Header */}
+                <div className="bg-teal-900/50 px-4 py-2 flex items-center justify-between border-b border-teal-400/50">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span className="font-pixellari text-teal-300 text-xs ml-2">pranav@portfolio:~</span>
+                  </div>
+                  <button
+                    onClick={() => setTerminalHistory([])}
+                    className="font-pixellari text-teal-300 text-xs hover:text-white transition-colors"
+                  >
+                    CLEAR
+                  </button>
+                </div>
+
+                {/* Terminal Body */}
+                <div className="p-3 sm:p-4 h-64 sm:h-80 md:h-96 overflow-y-auto">
+                  {/* Welcome Message */}
+                  {terminalHistory.length === 0 && (
+                    <div className="mb-4">
+                      <p className="font-pixellari text-teal-300 text-sm mb-2">
+                        Welcome to Pranav's Interactive Terminal v2.0
+                      </p>
+                      <p className="font-pixellari text-teal-300 text-sm mb-4">
+                        Type 'help' to explore available commands
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Command History */}
+                  {terminalHistory.map((line, index) => (
+                    <div key={index} className="mb-2">
+                      <p className={`font-pixellari text-sm ${
+                        line.startsWith('>') ? 'text-teal-400' : 'text-gray-300'
+                      } whitespace-pre-line`}>
+                        {line}
+                      </p>
+                    </div>
+                  ))}
+
+                  {/* Command Input */}
+                  <div className="flex items-center gap-2 mt-4">
+                    <span className="font-pixellari text-teal-400 text-sm flex-shrink-0">$</span>
+                    <input
+                      type="text"
+                      value={currentCommand}
+                      onChange={(e) => setCurrentCommand(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleTerminalCommand(currentCommand);
+                          setCurrentCommand('');
+                        }
+                      }}
+                      placeholder="Type a command..."
+                      className="flex-1 bg-transparent text-teal-300 font-pixellari text-xs sm:text-sm outline-none placeholder-teal-300/50 min-w-0"
+                      autoFocus
+                    />
+                    {isTyping && (
+                      <span className="text-teal-400 animate-pulse flex-shrink-0">_</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Terminal Footer */}
+                <div className="bg-teal-900/30 px-4 py-2 border-t border-teal-400/30">
+                  <p className="font-pixellari text-teal-300 text-xs">
+                    Press Enter to execute • Type 'help' for commands
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Socials Tab */}
+            {activeTab === 'socials' && (
+              <div className="bg-black/90 border-2 border-teal-400 rounded-lg p-4 sm:p-6">
+                <h3 className="font-pressstart2p text-white text-base sm:text-lg mb-4 sm:mb-6 text-center">
+                  SOCIAL COMMAND CENTER
+                </h3>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                  <a
+                    href="https://github.com/PranavReddyGaddam"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-teal-900/30 border border-teal-400/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-800/50 hover:border-teal-300 hover:scale-105 group"
+                  >
+                    <Github className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-300 group-hover:text-white" />
+                    <p className="font-pressstart2p text-white text-xs">GitHub</p>
+                    <p className="font-pixellari text-teal-300 text-xs mt-1">Code Repository</p>
+                  </a>
+                  
+                  <a
+                    href="https://www.linkedin.com/in/pranav-reddy-gaddam-69338321b/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-teal-900/30 border border-teal-400/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-800/50 hover:border-teal-300 hover:scale-105 group"
+                  >
+                    <Linkedin className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-300 group-hover:text-white" />
+                    <p className="font-pressstart2p text-white text-xs">LinkedIn</p>
+                    <p className="font-pixellari text-teal-300 text-xs mt-1">Professional</p>
+                  </a>
+                  
+                  <a
+                    href="https://www.instagram.com/__pranav.reddy__"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-teal-900/30 border border-teal-400/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-800/50 hover:border-teal-300 hover:scale-105 group"
+                  >
+                    <Instagram className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-300 group-hover:text-white" />
+                    <p className="font-pressstart2p text-white text-xs">Instagram</p>
+                    <p className="font-pixellari text-teal-300 text-xs mt-1">Personal</p>
+                  </a>
+                  
+                  <a
+                    href="https://twitter.com/Pranav_2801"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-teal-900/30 border border-teal-400/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-800/50 hover:border-teal-300 hover:scale-105 group"
+                  >
+                    {React.createElement(RiTwitterXFill as any, { className: "w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-300 group-hover:text-white" })}
+                    <p className="font-pressstart2p text-white text-xs">Twitter</p>
+                    <p className="font-pixellari text-teal-300 text-xs mt-1">Insights</p>
+                  </a>
+                </div>
+
+                {/* Direct Contact */}
+                <div className="bg-teal-900/20 border border-teal-400/30 rounded-lg p-3 sm:p-4">
+                  <h4 className="font-pressstart2p text-teal-300 text-sm mb-2 sm:mb-3">DIRECT COMMS CHANNEL</h4>
+                  <div className="space-y-1 sm:space-y-2">
+                    <p className="font-pixellari text-gray-300 text-xs sm:text-sm break-words">
+                      <span className="text-teal-400">Email:</span> pranavreddy.gaddam@sjsu.edu
+                    </p>
+                    <p className="font-pixellari text-gray-300 text-xs sm:text-sm">
+                      <span className="text-teal-400">Location:</span> San Jose, California
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Quests Tab */}
+            {activeTab === 'quests' && (
+              <div className="bg-black/90 border-2 border-teal-400 rounded-lg p-4 sm:p-6">
+                <h3 className="font-pressstart2p text-white text-base sm:text-lg mb-4 sm:mb-6 text-center">
+                  HOBBIES & INTERESTS
+                </h3>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="bg-teal-900/20 border border-teal-400/30 rounded-lg p-3 sm:p-4">
+                    <div>
+                      <h4 className="font-pressstart2p text-teal-300 text-sm mb-1">Movie Enthusiast</h4>
+                      <p className="font-pixellari text-gray-400 text-xs mb-3">Film Buff</p>
+                    </div>
+                    <p className="font-pixellari text-gray-300 text-xs leading-relaxed">
+                      Love watching a wide variety of movies - from classic films to modern cinema across all genres.
+                    </p>
+                  </div>
+
+                  <div className="bg-teal-900/20 border border-teal-400/30 rounded-lg p-3 sm:p-4">
+                    <div>
+                      <h4 className="font-pressstart2p text-teal-300 text-sm mb-1">Weekend Coding</h4>
+                      <p className="font-pixellari text-gray-400 text-xs mb-3">Passion Projects</p>
+                    </div>
+                    <p className="font-pixellari text-gray-300 text-xs leading-relaxed">
+                      Enjoy vibe coding on weekends - exploring new technologies and building creative side projects.
+                    </p>
+                  </div>
+
+                  <div className="bg-teal-900/20 border border-teal-400/30 rounded-lg p-3 sm:p-4">
+                    <div>
+                      <h4 className="font-pressstart2p text-teal-300 text-sm mb-1">Sports Fan</h4>
+                      <p className="font-pixellari text-gray-400 text-xs mb-3">Cricket, Basketball & Tennis</p>
+                    </div>
+                    <p className="font-pixellari text-gray-300 text-xs leading-relaxed">
+                      Passionate about watching cricket, basketball, and tennis. Also enjoy following various other sports.
+                    </p>
+                  </div>
+
+                  <div className="bg-teal-900/20 border border-teal-400/30 rounded-lg p-3 sm:p-4">
+                    <div>
+                      <h4 className="font-pressstart2p text-teal-300 text-sm mb-1">Baking</h4>
+                      <p className="font-pixellari text-gray-400 text-xs mb-3">Home Chef</p>
+                    </div>
+                    <p className="font-pixellari text-gray-300 text-xs leading-relaxed">
+                      Enjoy baking as a creative outlet - experimenting with recipes and creating delicious treats.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Collaboration Section */}
+                <div className="mt-4 sm:mt-6 bg-gradient-to-r from-teal-900/30 to-cyan-900/30 border border-teal-400 rounded-lg p-3 sm:p-4">
+                  <h4 className="font-pressstart2p text-teal-300 text-sm mb-2 sm:mb-3 text-center">
+                    LET'S COLLABORATE
+                  </h4>
+                  <p className="font-pixellari text-gray-300 text-xs sm:text-sm text-center mb-3 sm:mb-4">
+                    Have an interesting project or idea? I'd love to hear about it and work together!
+                  </p>
+                  <button
+                    onClick={() => setActiveTab('terminal')}
+                    className="w-full font-pressstart2p bg-teal-600 hover:bg-teal-700 text-white px-3 sm:px-4 py-2 rounded border border-teal-400 transition-all duration-300 hover:scale-105 text-xs"
+                  >
+                    GET IN TOUCH →
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -3043,13 +3374,6 @@ function App() {
       </footer>
 
       {/* Achievement Popups */}
-      <AchievementPopup
-        title="Quest Initiator"
-        xp={50}
-        isVisible={showQuestInitiator}
-        theme="purple"
-        index={getAchievementIndex("quest-initiator")}
-      />
       {/* Section unlock-on-scroll Achievement Popups */}
       <AchievementPopup
         title="Identity Unlocked"
@@ -3092,13 +3416,6 @@ function App() {
         isVisible={showRulebookRaider}
         theme="blue"
         index={getAchievementIndex("rulebook-raider")}
-      />
-      <AchievementPopup
-        title="Scroll Seeker"
-        xp={20}
-        isVisible={showScrollSeeker}
-        theme="yellow"
-        index={getAchievementIndex("scroll-seeker")}
       />
       {/* Section 2 Achievement Popups */}
       <AchievementPopup
@@ -3217,7 +3534,7 @@ function App() {
                           isUnlocked ? "text-green-400" : "text-gray-400"
                         }`}
                       >
-                        <GoTrophy />
+                        {GoTrophy as any}
                       </span>
                       <div className="flex-1 min-w-0">
                         <div
@@ -3240,13 +3557,13 @@ function App() {
                       {isClickable && !isUnlocked && (
                         <span className="text-yellow-400 text-xs">→</span>
                       )}
-                      <span
-                        className={`font-pressstart2p text-xs ${
-                          isUnlocked ? "text-green-400" : "text-gray-400"
-                        }`}
+                      <Badge 
+                        variant={isUnlocked ? "default" : "outline"} 
+                        font="retro" 
+                        className={`${isUnlocked ? "bg-green-600 border-green-400 text-green-400" : "bg-gray-600 border-gray-400 text-gray-400"} text-sm`}
                       >
                         {isUnlocked ? "UNLOCKED" : "LOCKED"}
-                      </span>
+                      </Badge>
                     </div>
                   </div>
                 );
