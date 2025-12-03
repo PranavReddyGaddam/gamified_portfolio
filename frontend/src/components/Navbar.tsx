@@ -40,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {/* Resume link - place as a direct child for equal spacing */}
         <a
-          href="/Pranav_Reddy_Gaddam_Resume_FT_Google.pdf"
+          href="/Pranav_Reddy_Gaddam_Resume_FT_Master.pdf"
           target="_blank"
           rel="noopener noreferrer"
           className="border border-purple-400 bg-black/50 backdrop-blur-sm px-2.5 py-1.5 md:px-4 md:py-2 rounded-md min-w-fit active:scale-[0.98] transition-transform hover:bg-purple-600/20"
@@ -87,7 +87,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
           {/* Bottom Row - Resume & Achievements */}
           <a
-            href="/Pranav_Reddy_Gaddam_Resume_FT_Google.pdf"
+            href="/Pranav_Reddy_Gaddam_Resume_FT_Master.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="border border-purple-400 bg-black/50 backdrop-blur-sm px-3 py-2 rounded-md active:scale-[0.98] transition-transform hover:bg-purple-600/20"
