@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import GitHubCommitChart from "./components/GitHubCommitChart";
 import AchievementPopup from "./components/AchievementPopup";
 import GameInstructionsModal from "./components/GameInstructionsModal";
+import CodeRequestModal from "./components/CodeRequestModal";
 import { Button } from "@/components/ui/8bit/button";
 import { Card, CardContent } from "@/components/ui/8bit/card";
 import { Input } from "@/components/ui/8bit/input";
@@ -130,6 +131,10 @@ function App() {
 
   // Section 6 Achievement
   const [showAllianceFormed, setShowAllianceFormed] = useState(false);
+
+  // Code Request Modal
+  const [showCodeRequestModal, setShowCodeRequestModal] = useState(false);
+  const [isSubmittingCodeRequest, setIsSubmittingCodeRequest] = useState(false);
 
   // Section visibility to control heavy backgrounds
   const [isSection1Visible, setIsSection1Visible] = useState(true);
@@ -655,6 +660,12 @@ function App() {
   };
 
   const handleProjectLink = (projectId: string) => {
+    // Show code request modal for private portfolio website
+    if (projectId === "personalwebsite") {
+      setShowCodeRequestModal(true);
+      return;
+    }
+
     const projectUrls: { [key: string]: string } = {
       gitbridge: "https://github.com/pranavreddygaddam/gitbridge",
       quizforge: "https://github.com/pranavreddygaddam/quizforge",
@@ -663,7 +674,6 @@ function App() {
         "https://github.com/PranavReddyGaddam/Network-Based-Social-Media-Sentiment-Analysis-on-Twitter",
       movierecommendation:
         "https://github.com/PranavReddyGaddam/Movie-Recomendation",
-      personalwebsite: "https://github.com/pranavreddygaddam/gitbridge",
     };
 
     const url = projectUrls[projectId];
@@ -842,6 +852,51 @@ Type 'help' to see available commands.`;
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Handle code request submission
+  const handleCodeRequestSubmit = async (requestData: { name: string; from: string; reason: string }) => {
+    setIsSubmittingCodeRequest(true);
+    
+    try {
+      // Check if EmailJS is properly configured
+      if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+        throw new Error(
+          "EmailJS configuration is missing. Please check your environment variables."
+        );
+      }
+
+      // Initialize EmailJS with your public key
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+
+      // Prepare template parameters matching the existing contact form template
+      const templateParams = {
+        name: requestData.name,
+        email: "no-reply@portfolio.com", // Placeholder since no email is collected
+        message: `From: ${requestData.from}\n\nReason for code request:\n${requestData.reason}\n\nProject: Portfolio Website`,
+        title: "Code Request from Portfolio",
+        time: new Date().toLocaleString(),
+      };
+
+      // Send email using EmailJS
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams
+      );
+
+      if (response.status === 200) {
+        alert("Code request sent successfully! I'll get back to you soon.");
+        setShowCodeRequestModal(false);
+      } else {
+        throw new Error("Failed to send request");
+      }
+    } catch (error) {
+      console.error("Error sending code request:", error);
+      alert("Failed to send request. Please try again later.");
+    } finally {
+      setIsSubmittingCodeRequest(false);
     }
   };
 
@@ -3681,6 +3736,14 @@ Type 'help' to see available commands.`;
       <GameInstructionsModal
         isVisible={showGameInstructions}
         onClose={() => setShowGameInstructions(false)}
+      />
+
+      {/* Code Request Modal */}
+      <CodeRequestModal
+        isVisible={showCodeRequestModal}
+        onClose={() => setShowCodeRequestModal(false)}
+        onSubmit={handleCodeRequestSubmit}
+        isSubmitting={isSubmittingCodeRequest}
       />
 
       {/* Achievements Modal */}
