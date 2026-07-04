@@ -1,14 +1,23 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import "./App.css";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import Galaxy from "./backgrounds/Backgrounds/Galaxy";
 import Squares from "./backgrounds/Backgrounds/Squares";
 import TextType from "./backgrounds/TextAnimations/TextType/TextType";
 import emailjs from "@emailjs/browser";
 import Navbar from "./components/Navbar";
 import GitHubCommitChart from "./components/GitHubCommitChart";
-import AchievementPopup from "./components/AchievementPopup";
+import AchievementToasts, {
+  AchievementToast,
+  AchievementTheme,
+} from "./components/AchievementToasts";
 import GameInstructionsModal from "./components/GameInstructionsModal";
 import CodeRequestModal from "./components/CodeRequestModal";
+import ProjectShowcase from "./components/ProjectShowcase";
+import HireMeStats from "./components/HireMeStats";
 import { Button } from "@/components/ui/8bit/button";
 import { Card, CardContent } from "@/components/ui/8bit/card";
 import { Input } from "@/components/ui/8bit/input";
@@ -28,6 +37,9 @@ import { BsRobot, BsTools, BsDatabaseAdd } from "react-icons/bs";
 import { RxGear } from "react-icons/rx";
 import { FaDocker, FaLock, FaUnlock } from "react-icons/fa";
 import { GoTrophy } from "react-icons/go";
+import { IoClose } from "react-icons/io5";
+
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin);
 
 // EmailJS configuration
 const EMAILJS_SERVICE_ID = "service_d0bwser";
@@ -36,6 +48,157 @@ const EMAILJS_PUBLIC_KEY = "wRXZiwguBPiyEMvoX";
 
 // Resume URL (place your PDF in public/ and update this path if needed)
 const RESUME_URL = "/frontend/public/Pranav_Reddy_Gaddam_Resume_FT_Master.pdf";
+
+// Achievement toast metadata (title/xp/theme shown in the popup)
+const ACHIEVEMENT_TOAST_META: Record<
+  string,
+  { title: string; xp: number; theme: AchievementTheme }
+> = {
+  "rulebook-raider": { title: "Rulebook Raider", xp: 30, theme: "blue" },
+  identity_unlocked: { title: "Identity Unlocked", xp: 100, theme: "blue" },
+  pathfinder: { title: "Pathfinder", xp: 100, theme: "yellow" },
+  skill_mastery: { title: "Skill Mastery", xp: 100, theme: "green" },
+  quest_conqueror: { title: "Quest Conqueror", xp: 100, theme: "red" },
+  social_link_established: { title: "Social Link", xp: 100, theme: "teal" },
+  face_of_hero: { title: "Face of the Hero", xp: 150, theme: "blue" },
+  keeper_of_stories: { title: "Keeper of Stories", xp: 100, theme: "yellow" },
+  power_unleashed: { title: "Power Unleashed", xp: 75, theme: "green" },
+  guild_explorer: { title: "Guild Explorer", xp: 75, theme: "green" },
+  grandmasters_path: { title: "Grandmaster's Path", xp: 90, theme: "purple" },
+  skill_tree_master: { title: "Skill Tree Master", xp: 200, theme: "green" },
+  project_master: { title: "Project Master", xp: 300, theme: "red" },
+  alliance_formed: { title: "Alliance Formed", xp: 100, theme: "teal" },
+};
+
+// Level 5 project quests
+type Project = {
+  id: string;
+  title: string;
+  image: string;
+  imageClass?: string;
+  description: string;
+  tags: string[];
+  linkLabel: string;
+  placeholder?: boolean;
+  previewImages?: string[];
+};
+
+const projects: Project[] = [
+  {
+    id: "gitbridge",
+    title: "GitBridge",
+    image: "/github-mark-white.png",
+    description:
+      "Turns GitHub repositories into interactive diagrams and AI-narrated walkthroughs for fast codebase exploration.",
+    tags: ["React", "ElevenLabs", "FastAPI", "AWS", "MermaidJS"],
+    linkLabel: "View Code",
+    previewImages: ["/GitBridge.mp4"],
+  },
+  {
+    id: "hirely",
+    title: "Hirely",
+    image: "/Hirely.png",
+    description:
+      "AI interview prep platform that scrapes live job listings and generates personalized interview questions.",
+    tags: ["FastAPI", "React", "Groq", "Supabase", "ChromaDB"],
+    linkLabel: "View Code",
+    previewImages: ["/Hirely.mp4"],
+  },
+  {
+    id: "nexus",
+    title: "Nexus",
+    image: "/market_research.png",
+    description:
+      "Evaluates startup ideas through simulated expert personas, visualized on an interactive 3D globe.",
+    tags: ["React", "Three.js", "Tailwind CSS", "FastAPI", "OpenAI"],
+    linkLabel: "View Code",
+    previewImages: ["/Nexus.mp4"],
+  },
+  {
+    id: "quizforge",
+    title: "QuizForge",
+    image: "/Quiz.png",
+    description:
+      "Generates custom quizzes from any topic for educators, with LLM-powered questions and performance analytics.",
+    tags: ["Next.js", "JavaScript", "Qwen3 LLM", "MongoDB"],
+    linkLabel: "View Code",
+  },
+  {
+    id: "isowebapp",
+    title: "ISO Web App",
+    image: "/SJSU_Logo.webp",
+    description:
+      "Volunteer and event management system with role-based access, dynamic ticketing, and QR check-in.",
+    tags: ["FastAPI", "React", "Tailwind CSS", "Supabase", "Docker"],
+    linkLabel: "View Code",
+  },
+  {
+    id: "personalwebsite",
+    title: "Personal Portfolio Website",
+    image: "/mario_logo.png",
+    description:
+      "Gamified portfolio with level progression, achievements, WebGL backgrounds, and scroll-based reveals.",
+    tags: ["Vite", "Tailwind CSS", "React"],
+    linkLabel: "View Code",
+  },
+  {
+    id: "isowebsite",
+    title: "ISO Website",
+    image: "/SJSU_Logo.webp",
+    description:
+      "Website for SJSU's Indian Student Organization with events, member registration, and photo galleries.",
+    tags: ["React", "Tailwind CSS", "MongoDB"],
+    linkLabel: "View Website",
+  },
+  {
+    id: "sentimentanalysis",
+    title: "Sentiment Analysis",
+    image: "/X_logo.png",
+    imageClass: "filter invert drop-shadow-lg",
+    description:
+      "Classifies Twitter sentiment with machine learning and visualizes public opinion trends in dashboards.",
+    tags: ["Python", "Twitter API", "Machine Learning", "Streamlit"],
+    linkLabel: "View Code",
+  },
+  {
+    id: "movierecommendation",
+    title: "Recommendation System",
+    image: "/Netflix_logo.png",
+    imageClass: "drop-shadow-lg",
+    description:
+      "Recommends movies with collaborative filtering and vector search, powered by the TMDB API.",
+    tags: ["Next.js", "TMDB API", "Vector Database", "Cross Filtering"],
+    linkLabel: "View Code",
+  },
+  // Placeholder slots for upcoming projects (keeps the showcase grid at 3 full rows)
+  {
+    id: "coming-soon-1",
+    title: "???",
+    image: "/Pranav_Logo.png",
+    description: "A new quest is under construction. Check back soon.",
+    tags: ["TBD"],
+    linkLabel: "Coming Soon",
+    placeholder: true,
+  },
+  {
+    id: "coming-soon-2",
+    title: "???",
+    image: "/Pranav_Logo.png",
+    description: "A new quest is under construction. Check back soon.",
+    tags: ["TBD"],
+    linkLabel: "Coming Soon",
+    placeholder: true,
+  },
+  {
+    id: "coming-soon-3",
+    title: "???",
+    image: "/Pranav_Logo.png",
+    description: "A new quest is under construction. Check back soon.",
+    tags: ["TBD"],
+    linkLabel: "Coming Soon",
+    placeholder: true,
+  },
+];
 
 function App() {
   const totalLevels = 6;
@@ -50,18 +213,7 @@ function App() {
     tools: false,
   });
 
-  // Project card flip states
-  const [flippedProjects, setFlippedProjects] = useState<Set<string>>(
-    new Set()
-  );
-
-  const [unlockedProjects, setUnlockedProjects] = useState<Set<string>>(
-    new Set()
-  );
   const [carouselIndex, setCarouselIndex] = useState(1);
-
-  // Show more projects state
-  const [showMoreProjects, setShowMoreProjects] = useState(false);
 
   // Command center state
   const [terminalInput, setTerminalInput] = useState("");
@@ -88,11 +240,12 @@ function App() {
   );
   const unlockedAchievementsRef = useRef<Set<string>>(new Set());
 
-  // Achievement stacking state
-  const [visibleAchievements, setVisibleAchievements] = useState<string[]>([]);
-
-  // Achievement popup states
-  const [showRulebookRaider, setShowRulebookRaider] = useState(false);
+  // Achievement toast queue (max 3 visible, extras wait their turn)
+  const [achievementToasts, setAchievementToasts] = useState<
+    AchievementToast[]
+  >([]);
+  const toastQueueRef = useRef<AchievementToast[]>([]);
+  const visibleToastCountRef = useRef(0);
 
   // Game instructions modal state
   const [showGameInstructions, setShowGameInstructions] = useState(false);
@@ -102,35 +255,14 @@ function App() {
   const [isInfoCardFlipped, setIsInfoCardFlipped] = useState(false);
   const [isAttributesCardFlipped, setIsAttributesCardFlipped] = useState(false);
 
-  // Section 2 Achievements
-  const [showFaceOfHero, setShowFaceOfHero] = useState(false);
-  const [showKeeperOfStories, setShowKeeperOfStories] = useState(false);
-  const [showPowerUnleashed, setShowPowerUnleashed] = useState(false);
+  // Per-section achievement bookkeeping
   const [unlockedSection2Achievements] = useState<Set<string>>(new Set());
-
-  // Section 3 Achievements (only carousel navigation achievements remain)
-  const [showGuildExplorer, setShowGuildExplorer] = useState(false);
-  const [showGrandmastersPath, setShowGrandmastersPath] = useState(false);
   const [unlockedSection3Achievements] = useState<Set<string>>(new Set());
-
-  // Section unlock-on-scroll Achievements
-  const [showIdentityUnlocked, setShowIdentityUnlocked] = useState(false);
-  const [showPathfinder, setShowPathfinder] = useState(false);
-  const [showSkillMastery, setShowSkillMastery] = useState(false);
-  const [showQuestConqueror, setShowQuestConqueror] = useState(false);
-  const [showSocialLinkEstablished, setShowSocialLinkEstablished] =
-    useState(false);
-
-  // Section 4 Achievements
-  const [showSkillTreeMaster, setShowSkillTreeMaster] = useState(false);
   const [unlockedSection4Achievements] = useState<Set<string>>(new Set());
-
-  // Section 5 Achievements
-  const [showProjectMaster, setShowProjectMaster] = useState(false);
   const [unlockedSection5Achievements] = useState<Set<string>>(new Set());
 
-  // Section 6 Achievement
-  const [showAllianceFormed, setShowAllianceFormed] = useState(false);
+  // "Why you should hire me" modal (opened from the lanyard stamp card)
+  const [showWhyHireMeModal, setShowWhyHireMeModal] = useState(false);
 
   // Code Request Modal
   const [showCodeRequestModal, setShowCodeRequestModal] = useState(false);
@@ -152,11 +284,31 @@ function App() {
     "idle" | "success" | "error"
   >("idle");
 
-  // Achievement popup handlers
-  const showAchievement = (
-    achievementId: string,
-    setter: React.Dispatch<React.SetStateAction<boolean>>
-  ) => {
+  // Achievement toast handlers
+  const TOAST_DURATION_MS = 3500;
+  const TOAST_EXIT_MS = 300;
+  const MAX_VISIBLE_TOASTS = 3;
+
+  const removeToast = (id: string) => {
+    // play the exit animation, then drop the toast and promote a queued one
+    setAchievementToasts((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, leaving: true } : t))
+    );
+    setTimeout(() => {
+      setAchievementToasts((prev) => prev.filter((t) => t.id !== id));
+      visibleToastCountRef.current -= 1;
+      const next = toastQueueRef.current.shift();
+      if (next) displayToast(next);
+    }, TOAST_EXIT_MS);
+  };
+
+  const displayToast = (toast: AchievementToast) => {
+    visibleToastCountRef.current += 1;
+    setAchievementToasts((prev) => [...prev, toast]);
+    setTimeout(() => removeToast(toast.id), TOAST_DURATION_MS);
+  };
+
+  const showAchievement = (achievementId: string) => {
     // Check if achievement is already unlocked (session-wide)
     if (unlockedAchievementsRef.current.has(achievementId)) {
       return; // Already unlocked, don't show again
@@ -166,18 +318,16 @@ function App() {
     unlockedAchievementsRef.current.add(achievementId);
     setUnlockedAchievements((prev) => new Set(prev).add(achievementId));
 
-    // Add to visible achievements for stacking
-    setVisibleAchievements((prev) => [...prev, achievementId]);
-
-    // Show the popup
-    setter(true);
-    setTimeout(() => {
-      setter(false);
-      // Remove from visible achievements after hiding
-      setVisibleAchievements((prev) =>
-        prev.filter((id) => id !== achievementId)
-      );
-    }, 5000);
+    // Show a toast (max 3 at once; extras wait in the queue)
+    const meta = ACHIEVEMENT_TOAST_META[achievementId];
+    if (meta) {
+      const toast: AchievementToast = { id: achievementId, ...meta };
+      if (visibleToastCountRef.current < MAX_VISIBLE_TOASTS) {
+        displayToast(toast);
+      } else {
+        toastQueueRef.current.push(toast);
+      }
+    }
 
     // Score increments per achievement
     const xpMap: Record<string, number> = {
@@ -218,11 +368,6 @@ function App() {
     if (gained > 0) {
       setScore((prev) => prev + gained);
     }
-  };
-
-  // Helper function to get achievement index for stacking
-  const getAchievementIndex = (achievementId: string) => {
-    return visibleAchievements.indexOf(achievementId);
   };
 
   // Mapping of achievement IDs to their corresponding section levels
@@ -266,7 +411,11 @@ function App() {
       `[data-level="${sectionLevel}"]`
     );
     if (sectionElement) {
-      sectionElement.scrollIntoView({ behavior: "smooth" });
+      if (smootherRef.current) {
+        smootherRef.current.scrollTo(sectionElement, true, "top top");
+      } else {
+        sectionElement.scrollIntoView({ behavior: "smooth" });
+      }
       setShowAchievementsModal(false);
     }
   };
@@ -374,56 +523,66 @@ function App() {
     },
   ];
 
+  // Escape closes any open modal
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowWhyHireMeModal(false);
+        setShowAchievementsModal(false);
+        setShowGameInstructions(false);
+        setShowCodeRequestModal(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  // GSAP smooth scrolling for the whole page
+  const smootherRef = useRef<ScrollSmoother | null>(null);
+  useLayoutEffect(() => {
+    const smoother = ScrollSmoother.create({
+      wrapper: "#smooth-wrapper",
+      content: "#smooth-content",
+      smooth: 0.8,
+      // Native 1:1 momentum on touch devices; smoothing only applies to wheel
+      smoothTouch: false,
+      effects: false,
+    });
+    smootherRef.current = smoother;
+    return () => {
+      smoother.kill();
+      smootherRef.current = null;
+    };
+  }, []);
+
   // Unlock achievements when sections enter viewport
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const levelAttr = entry.target.getAttribute("data-level");
-          const level = levelAttr ? Number(levelAttr) : NaN;
-          switch (level) {
-            case 2:
-              showAchievement("identity_unlocked", setShowIdentityUnlocked);
-              observer.unobserve(entry.target);
-              break;
-            case 3:
-              showAchievement("pathfinder", setShowPathfinder);
-              observer.unobserve(entry.target);
-              break;
-            case 4:
-              showAchievement("skill_mastery", setShowSkillMastery);
-              observer.unobserve(entry.target);
-              break;
-            case 5:
-              showAchievement("quest_conqueror", setShowQuestConqueror);
-              observer.unobserve(entry.target);
-              break;
-            case 6:
-              showAchievement(
-                "social_link_established",
-                setShowSocialLinkEstablished
-              );
-              observer.unobserve(entry.target);
-              break;
-            default:
-              break;
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+    const unlockByLevel: Record<number, () => void> = {
+      2: () => showAchievement("identity_unlocked"),
+      3: () => showAchievement("pathfinder"),
+      4: () => showAchievement("skill_mastery"),
+      5: () => showAchievement("quest_conqueror"),
+      6: () => showAchievement("social_link_established"),
+    };
 
-    const nodes = document.querySelectorAll<HTMLElement>("section[data-level]");
-    nodes.forEach((node) => {
-      const levelAttr = node.getAttribute("data-level");
-      const level = levelAttr ? Number(levelAttr) : NaN;
-      if (level >= 2 && level <= 6) {
-        observer.observe(node);
-      }
-    });
+    const triggers: ScrollTrigger[] = [];
+    document
+      .querySelectorAll<HTMLElement>("section[data-level]")
+      .forEach((node) => {
+        const level = Number(node.getAttribute("data-level"));
+        const unlock = unlockByLevel[level];
+        if (!unlock) return;
+        triggers.push(
+          ScrollTrigger.create({
+            trigger: node,
+            start: "top 50%",
+            once: true,
+            onEnter: unlock,
+          })
+        );
+      });
 
-    return () => observer.disconnect();
+    return () => triggers.forEach((t) => t.kill());
   }, []);
 
   const handleStartGame = () => {
@@ -436,15 +595,21 @@ function App() {
     }
 
     // Show identity unlocked achievement for consistency with section unlocking
-    showAchievement("identity_unlocked", setShowIdentityUnlocked);
+    showAchievement("identity_unlocked");
 
     // Scroll to next section
-    nextSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (nextSectionRef.current) {
+      if (smootherRef.current) {
+        smootherRef.current.scrollTo(nextSectionRef.current, true, "top top");
+      } else {
+        nextSectionRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }
   };
 
   const handleHowToPlay = () => {
     setShowGameInstructions(true);
-    showAchievement("rulebook-raider", setShowRulebookRaider);
+    showAchievement("rulebook-raider");
   };
 
   const handleOpenResume = () => {
@@ -455,59 +620,54 @@ function App() {
   const handleRevealAvatar = () => {
     setIsCardFlipped(true);
     if (!unlockedSection2Achievements.has("face_of_hero")) {
-      showAchievement("face_of_hero", setShowFaceOfHero);
+      showAchievement("face_of_hero");
     }
   };
 
   const handleUnlockLore = () => {
     setIsInfoCardFlipped(true);
     if (!unlockedSection2Achievements.has("keeper_of_stories")) {
-      showAchievement("keeper_of_stories", setShowKeeperOfStories);
+      showAchievement("keeper_of_stories");
     }
   };
 
   const handleUnlockMetrics = () => {
     setIsAttributesCardFlipped(true);
     if (!unlockedSection2Achievements.has("power_unleashed")) {
-      showAchievement("power_unleashed", setShowPowerUnleashed);
+      showAchievement("power_unleashed");
     }
   };
 
   // Section 3 Achievement Handlers (none for hint/password anymore)
 
-  // Observe which section is in view and update level indicator
+  // Track which section occupies the viewport and update level indicator
   useEffect(() => {
-    const sections = Array.from(
-      document.querySelectorAll<HTMLElement>("section[data-level]")
-    );
+    const triggers: ScrollTrigger[] = [];
 
-    if (sections.length === 0) return;
+    document
+      .querySelectorAll<HTMLElement>("section[data-level]")
+      .forEach((section) => {
+        const level = Number(section.getAttribute("data-level"));
+        if (Number.isNaN(level)) return;
+        triggers.push(
+          ScrollTrigger.create({
+            trigger: section,
+            start: "top 60%",
+            end: "bottom 40%",
+            onToggle: (self) => {
+              if (self.isActive) {
+                setCurrentLevel(level);
+                // Control background visibility to avoid overlapping canvases
+                setIsSection1Visible(level === 1);
+                setIsSection2Visible(level === 2);
+                setIsSection3Visible(level === 3);
+              }
+            },
+          })
+        );
+      });
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const target = entry.target as HTMLElement;
-            const levelAttr = target.getAttribute("data-level");
-            const level = levelAttr ? parseInt(levelAttr, 10) : NaN;
-            if (!Number.isNaN(level)) {
-              setCurrentLevel(level);
-              // Control background visibility to avoid overlapping canvases
-              setIsSection1Visible(level === 1);
-              setIsSection2Visible(level === 2);
-              setIsSection3Visible(level === 3);
-            }
-          }
-        });
-      },
-      {
-        root: null,
-        threshold: 0.6,
-      }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+    return () => triggers.forEach((t) => t.kill());
   }, []);
 
   // Mobile carousel auto-animation effect
@@ -542,12 +702,12 @@ function App() {
   // Section 3 Carousel Navigation Achievements
   const handleCarouselNavigation = (newIndex: number) => {
     if (newIndex === 1 && !unlockedSection3Achievements.has("guild_explorer")) {
-      showAchievement("guild_explorer", setShowGuildExplorer);
+      showAchievement("guild_explorer");
     } else if (
       newIndex === 2 &&
       !unlockedSection3Achievements.has("grandmasters_path")
     ) {
-      showAchievement("grandmasters_path", setShowGrandmastersPath);
+      showAchievement("grandmasters_path");
     }
   };
 
@@ -566,7 +726,7 @@ function App() {
         allSkillsUnlocked &&
         !unlockedSection4Achievements.has("skill_tree_master")
       ) {
-        showAchievement("skill_tree_master", setShowSkillTreeMaster);
+        showAchievement("skill_tree_master");
       }
 
       return newSkills;
@@ -585,77 +745,7 @@ function App() {
 
     // Trigger section completion achievement
     if (!unlockedSection4Achievements.has("skill_tree_master")) {
-      showAchievement("skill_tree_master", setShowSkillTreeMaster);
-    }
-  };
-
-  const handleProjectUnlock = (projectId: string) => {
-    setUnlockedProjects((prev) => {
-      const newProjects = new Set(Array.from(prev).concat(projectId));
-
-      // Check if all projects are now unlocked
-      const allProjectIds = [
-        "gitbridge",
-        "quizforge",
-        "isowebsite",
-        "sentimentanalysis",
-        "movierecommendation",
-        "personalwebsite",
-      ];
-      const allProjectsUnlocked = allProjectIds.every((id) =>
-        newProjects.has(id)
-      );
-
-      if (
-        allProjectsUnlocked &&
-        !unlockedSection5Achievements.has("project_master")
-      ) {
-        showAchievement("project_master", setShowProjectMaster);
-      }
-
-      return newProjects;
-    });
-  };
-
-  const handleProjectFlip = (projectId: string) => {
-    setFlippedProjects((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(projectId)) {
-        newSet.delete(projectId);
-      } else {
-        newSet.add(projectId);
-      }
-      return newSet;
-    });
-    // Also unlock the project when flipped
-    if (!unlockedProjects.has(projectId)) {
-      handleProjectUnlock(projectId);
-    }
-  };
-
-  const handleUnlockAllProjects = () => {
-    const allProjectIds = [
-      "gitbridge",
-      "hirely",
-      "nexus",
-      "quizforge",
-      "isowebapp",
-      "personalwebsite",
-      "isowebsite",
-      "sentimentanalysis",
-      "movierecommendation",
-    ];
-    setFlippedProjects(new Set(allProjectIds));
-    // Unlock all projects
-    allProjectIds.forEach((projectId) => {
-      if (!unlockedProjects.has(projectId)) {
-        handleProjectUnlock(projectId);
-      }
-    });
-
-    // Trigger section completion achievement
-    if (!unlockedSection5Achievements.has("project_master")) {
-      showAchievement("project_master", setShowProjectMaster);
+      showAchievement("skill_tree_master");
     }
   };
 
@@ -843,7 +933,7 @@ Type 'help' to see available commands.`;
         setCollabMessage("");
 
         // Trigger Section 6 achievement on successful submit
-        showAchievement("alliance_formed", setShowAllianceFormed);
+        showAchievement("alliance_formed");
       } else {
         throw new Error("Email sending failed");
       }
@@ -916,6 +1006,9 @@ Type 'help' to see available commands.`;
         src="https://assets.mixkit.co/sfx/preview/mixkit-rocket-launch-shuttle-takeoff-1641.mp3"
         preload="auto"
       />
+
+      <div id="smooth-wrapper">
+      <div id="smooth-content">
 
       {/* Section 1: Landing Page */}
       <section
@@ -1115,7 +1208,16 @@ Type 'help' to see available commands.`;
                         <div className="absolute top-2 left-2 w-1 h-16 bg-gray-600 rounded-full transform rotate-45 origin-top"></div>
 
                         {/* Stamped card hanging from lanyard */}
-                        <div className="relative transform rotate-6 hover:rotate-3 transition-transform duration-300">
+                        <div
+                          className="relative transform rotate-6 hover:rotate-3 transition-transform duration-300 cursor-pointer"
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => setShowWhyHireMeModal(true)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ")
+                              setShowWhyHireMeModal(true);
+                          }}
+                        >
                           {/* Stamp shadow effect */}
                           <div className="absolute inset-0 bg-red-900/40 blur-lg transform translate-x-1 translate-y-1"></div>
 
@@ -1131,18 +1233,18 @@ Type 'help' to see available commands.`;
                             {/* Main content */}
                             <div className="relative z-10 text-center">
                               <div className="transform -rotate-1">
-                                <h3 className="font-pressstart2p text-white text-sm mb-1 tracking-wider">
-                                  TECHIE
+                                <h3 className="font-pressstart2p text-white text-[10px] mb-1 tracking-wider">
+                                  WHY YOU
                                 </h3>
                                 <div className="border-t border-white/60 border-b border-white/60 py-1 my-1">
-                                  <h4 className="font-pressstart2p text-yellow-300 text-xs font-bold tracking-widest">
-                                    FOR HIRE
+                                  <h4 className="font-pressstart2p text-yellow-300 text-[8px] font-bold tracking-widest">
+                                    SHOULD HIRE ME
                                   </h4>
                                 </div>
                                 <div className="flex justify-center items-center gap-1 mt-1">
                                   <div className="w-4 h-px bg-white/60"></div>
                                   <span className="font-pixellari text-white/80 text-[8px]">
-                                    NOW
+                                    CLICK ME
                                   </span>
                                   <div className="w-4 h-px bg-white/60"></div>
                                 </div>
@@ -1204,22 +1306,22 @@ Type 'help' to see available commands.`;
                       </div>
                       <div className="font-pressstart2p space-y-3 text-gray-300 text-xs md:text-[10px] text-left leading-relaxed overflow-y-auto flex-1 min-h-0">
                         <p className="break-words">
-                          A creative full-stack developer who builds intelligent
-                          applications using React 18, TypeScript, FastAPI, and
-                          real-time ML pipelines. Currently pursuing a Master's
-                          in Computer Science at San Jose State University, with
-                          production projects including Nexus (AI-powered
-                          startup analysis), Ripple (real-time social media
-                          intelligence), and gamified portfolio systems.
+                          A full-stack engineer drawn to the hard parts of AI
+                          systems, the agent loops, the tool orchestration,
+                          the context pipelines that make intelligent software
+                          actually work. Builds with Python, TypeScript, and
+                          FastAPI, and cares as much about how systems behave
+                          under pressure as how they demo. Just graduated with a Master's in Applied Data Science at San
+                          Jose State University.
                         </p>
                         <p className="break-words">
-                          Specialized in LLM integration (OpenAI/Anthropic),
-                          streaming systems, and 3D visualization with Three.js.
-                          Active contributor to open-source with expertise in
-                          Docker, PostgreSQL, and scalable real-time
-                          applications. Passionate about developing AI-powered
-                          solutions and collaborating on technical teams through
-                          complex engineering challenges.
+                          Plays a builder class: prototypes fast, reads the
+                          docs, debugs with stubborn patience, and doesn't ship
+                          things that fall over. Equally comfortable deep in a
+                          backend service or polishing the last pixel of a
+                          frontend. Always chasing the next thing worth
+                          learning — usually found experimenting with whatever
+                          the AI ecosystem shipped this week.
                         </p>
                       </div>
                     </div>
@@ -1275,32 +1377,32 @@ Type 'help' to see available commands.`;
                       </h3>
                       <ul className="space-y-2 md:space-y-3 text-xs text-gray-300 font-pressstart2p overflow-y-auto flex-1 min-h-0">
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-yellow-400">[FRONTEND]</span>
-                          React 18 & TypeScript
+                          <span className="text-yellow-400">◆</span>
+                          Python & FastAPI
                         </li>
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-green-400">[BACKEND]</span>
-                          FastAPI & Python
+                          <span className="text-green-400">◆</span>
+                          React, Next.js & TypeScript
                         </li>
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-cyan-400">[ML]</span>
-                          Real-time ML Pipelines
+                          <span className="text-pink-400">◆</span>
+                          Agentic AI & LLM Orchestration
                         </li>
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-pink-400">[AI]</span>
-                          LLM Integration (OpenAI/Anthropic)
+                          <span className="text-cyan-400">◆</span>
+                          Distributed Systems & Agent Architecture
                         </li>
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-indigo-400">[DATA]</span>
-                          Social Media Intelligence
+                          <span className="text-indigo-400">◆</span>
+                          PostgreSQL & MongoDB
                         </li>
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-purple-400">[3D]</span>
-                          Three.js & 3D Visualization
+                          <span className="text-red-400">◆</span>
+                          Docker, Kubernetes & AWS
                         </li>
                         <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-red-400">[DEVOPS]</span>
-                          Docker & Streaming Systems
+                          <span className="text-purple-400">◆</span>
+                          Real-Time Systems & Data Pipelines
                         </li>
                       </ul>
                     </div>
@@ -1402,7 +1504,7 @@ Type 'help' to see available commands.`;
                       cardRefs.current[1] = el;
                     }}
                     data-card-index="1"
-                    className={`cursor-pointer transform transition-all duration-500 flex-shrink-0 w-72 snap-center ${
+                    className={`cursor-pointer transform transition-all duration-500 flex-shrink-0 w-[72vw] max-w-72 snap-center ${
                       visibleCardIndex === 1
                         ? "scale-105 opacity-100"
                         : "scale-95 opacity-60"
@@ -1422,7 +1524,7 @@ Type 'help' to see available commands.`;
                               Current Quest
                             </h4>
                             <p className="font-pixellari text-white text-sm">
-                              Master's in Computer Science
+                              Master's in Applied Data Science
                             </p>
                           </div>
 
@@ -1475,7 +1577,7 @@ Type 'help' to see available commands.`;
                       cardRefs.current[0] = el;
                     }}
                     data-card-index="0"
-                    className={`cursor-pointer transform transition-all duration-500 flex-shrink-0 w-72 snap-center ${
+                    className={`cursor-pointer transform transition-all duration-500 flex-shrink-0 w-[72vw] max-w-72 snap-center ${
                       visibleCardIndex === 0
                         ? "scale-105 opacity-100"
                         : "scale-95 opacity-60"
@@ -1548,7 +1650,7 @@ Type 'help' to see available commands.`;
                       cardRefs.current[2] = el;
                     }}
                     data-card-index="2"
-                    className={`cursor-pointer transform transition-all duration-500 flex-shrink-0 w-72 snap-center ${
+                    className={`cursor-pointer transform transition-all duration-500 flex-shrink-0 w-[72vw] max-w-72 snap-center ${
                       visibleCardIndex === 2
                         ? "scale-105 opacity-100"
                         : "scale-95 opacity-60"
@@ -1732,7 +1834,7 @@ Type 'help' to see available commands.`;
                             Current Quest
                           </h4>
                           <p className="font-pixellari text-white text-sm">
-                            Master's in Computer Science
+                            Master's in Applied Data Science
                           </p>
                         </div>
 
@@ -1918,20 +2020,6 @@ Type 'help' to see available commands.`;
               CLICK ON SKILLS TO UNLOCK THEM AND EARN EXPERIENCE POINTS
             </p>
 
-            {/* Unlock All Button - Only show when at least one skill is unlocked */}
-            {Object.values(unlockedSkills).some((skill) => skill) && (
-              <Button
-                onClick={handleUnlockAllSkills}
-                variant="outline"
-                size="sm"
-                font="retro"
-                className="absolute top-0 right-0 text-green-400 hover:text-white bg-black/70 border border-green-400 hover:border-green-300 px-2 py-1 sm:px-3 sm:py-2 md:px-4 md:py-2 hover:bg-green-900/20 hover:scale-105 whitespace-nowrap"
-                title="Unlock all skills at once"
-              >
-                <span className="hidden sm:inline">UNLOCK ALL</span>
-                <span className="sm:hidden">ALL</span>
-              </Button>
-            )}
           </div>
 
           {/* Skill Grid */}
@@ -2034,7 +2122,7 @@ Type 'help' to see available commands.`;
                     unlockedSkills.backend ? "text-cyan-400" : "text-white"
                   }`}
                 >
-                  {RxGear as any}
+                  <RxGear />
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">
                   Backend
@@ -2116,7 +2204,7 @@ Type 'help' to see available commands.`;
                     unlockedSkills.database ? "text-green-400" : "text-white"
                   }`}
                 >
-                  {BsDatabaseAdd as any}
+                  <BsDatabaseAdd />
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">
                   Database
@@ -2198,7 +2286,7 @@ Type 'help' to see available commands.`;
                     unlockedSkills.devops ? "text-yellow-400" : "text-white"
                   }`}
                 >
-                  {FaDocker as any}
+                  <FaDocker />
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">DevOps</h3>
               </div>
@@ -2278,7 +2366,7 @@ Type 'help' to see available commands.`;
                     unlockedSkills.ai ? "text-purple-400" : "text-white"
                   }`}
                 >
-                  {BsRobot as any}
+                  <BsRobot />
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">AI/ML</h3>
               </div>
@@ -2358,7 +2446,7 @@ Type 'help' to see available commands.`;
                     unlockedSkills.tools ? "text-pink-400" : "text-white"
                   }`}
                 >
-                  {BsTools as any}
+                  <BsTools />
                 </span>
                 <h3 className="font-pressstart2p text-white text-lg">Tools</h3>
               </div>
@@ -2448,840 +2536,69 @@ Type 'help' to see available commands.`;
               LEVEL 5: PROJECT QUESTS
             </h2>
             <p className="font-pressstart2p text-white text-sm mt-4">
-              UNLOCK PROJECTS TO VIEW DETAILS AND EARN REWARDS
+              EXPLORE PROJECTS AND THE TECH BEHIND THEM
             </p>
           </div>
 
           {/* Project Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
-            {/* gitbridge AI Project */}
-            <div className="relative w-full h-[450px] perspective-1000">
-              <div
-                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                  flippedProjects.has("gitbridge") ? "rotate-y-180" : ""
-                }`}
-              >
-                {/* Front Card - Locked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden">
-                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col p-6">
-                    <div className="text-center flex-1 flex flex-col justify-center">
-                      <div className="flex justify-center mb-4">
-                        <img
-                          src="/github-mark-white.png"
-                          alt="GitBridge"
-                          className="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90"
-                        />
-                      </div>
-                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
-                        GitBridge
-                      </h3>
-                    </div>
-                    <div className="mt-auto pb-2 text-center flex justify-center">
-                      <button
-                        onClick={() => handleProjectFlip("gitbridge")}
-                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
-                      >
-                        UNLOCK PROJECT
-                      </button>
-                    </div>
-                  </div>
-                </div>
+          {/* Desktop: grid-to-full-preview showcase */}
+          <div className="hidden lg:block">
+            <ProjectShowcase projects={projects} onProjectOpen={handleProjectLink} />
+          </div>
 
-                {/* Back Card - Unlocked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
-                    {/* Project Name - Flexible Height */}
-                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30">
-                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
-                        GitBridge
-                      </h3>
-                    </div>
-
-                    {/* Project Details - Flexible Height */}
-                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
-                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
-                        AI-powered developer tool that transforms GitHub
-                        repositories into interactive diagrams and narrated
-                        explainers. Generates visual system diagrams, provides
-                        AI-narrated walkthroughs, and offers intelligent Q&A for
-                        codebase exploration. Built with FastAPI and AWS.
-                      </p>
-                      {/* Technology Tags */}
-                      <div className="flex flex-wrap gap-2 mt-auto">
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          React
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          ElevenLabs
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          FastAPI
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          AWS
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          MermaidJS
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* View Code Button - Fixed Bottom */}
-                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <Button
-                        onClick={() => handleProjectLink("gitbridge")}
-                        variant="default"
-                        size="sm"
-                        font="retro"
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
-                      >
-                        <span>View Code</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 2. Hirely */}
-            <div className="relative w-full h-[450px] perspective-1000">
-              <div
-                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                  flippedProjects.has("hirely") ? "rotate-y-180" : ""
-                }`}
-              >
-                {/* Front Card - Locked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden">
-                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col p-6">
-                    <div className="text-center flex-1 flex flex-col justify-center">
-                      <div className="flex justify-center mb-4">
-                        <img
-                          src="/Hirely.png"
-                          alt="Hirely"
-                          className="w-32 h-32 md:w-40 md:h-40 object-contain opacity-90"
-                        />
-                      </div>
-                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
-                        Hirely
-                      </h3>
-                    </div>
-                    <div className="mt-auto pb-2 text-center flex justify-center">
-                      <button
-                        onClick={() => handleProjectFlip("hirely")}
-                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
-                      >
-                        UNLOCK PROJECT
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Back Card - Unlocked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
-                    {/* Project Name - Flexible Height */}
-                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30">
-                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
-                        Hirely
-                      </h3>
-                    </div>
-
-                    {/* Project Details - Flexible Height */}
-                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
-                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
-                        AI-powered interview analysis and preparation platform
-                        that bridges real job market data with personalized
-                        training. Scrapes live job listings using BrightData MCP
-                        and Crawl4AI, performs skill analysis via Groq, and
-                        generates customized interview questions. Built with
-                        FastAPI, React, Supabase, and ChromaDB.
-                      </p>
-                      {/* Technology Tags */}
-                      <div className="flex flex-wrap gap-2 mt-auto">
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          FastAPI
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          React
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          Groq
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          Supabase
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          ChromaDB
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* View Code Button - Fixed Bottom */}
-                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <Button
-                        onClick={() => handleProjectLink("hirely")}
-                        variant="default"
-                        size="sm"
-                        font="retro"
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
-                      >
-                        <span>View Code</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. Nexus */}
-            <div className="relative w-full h-[450px] perspective-1000">
-              <div
-                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                  flippedProjects.has("nexus") ? "rotate-y-180" : ""
-                }`}
-              >
-                {/* Front Card - Locked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden">
-                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col p-6">
-                    <div className="text-center flex-1 flex flex-col justify-center">
-                      <div className="flex justify-center mb-4">
-                        <img
-                          src="/market_research.png"
-                          alt="Nexus"
-                          className="w-32 h-32 md:w-40 md:h-40 object-contain opacity-90"
-                        />
-                      </div>
-                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
-                        Nexus
-                      </h3>
-                    </div>
-                    <div className="mt-auto pb-2 text-center flex justify-center">
-                      <button
-                        onClick={() => handleProjectFlip("nexus")}
-                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
-                      >
-                        UNLOCK PROJECT
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Back Card - Unlocked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
-                    {/* Project Name - Flexible Height */}
-                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30">
-                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
-                        Nexus
-                      </h3>
-                    </div>
-
-                    {/* Project Details - Flexible Height */}
-                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
-                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
-                        AI-driven startup analysis platform that evaluates
-                        business ideas through simulated expert personas. Users
-                        visualize insights on an interactive 3D globe and
-                        receive market-specific feedback powered by LLMs.
-                        Features real-time analysis, file uploads, and
-                        WebSocket-based live updates. Built with React,
-                        Three.js, and FastAPI.
-                      </p>
-                      {/* Technology Tags */}
-                      <div className="flex flex-wrap gap-2 mt-auto">
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          React
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          Three.js
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          Tailwind CSS
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          FastAPI
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          OpenAI
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* View Code Button - Fixed Bottom */}
-                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <Button
-                        onClick={() => handleProjectLink("nexus")}
-                        variant="default"
-                        size="sm"
-                        font="retro"
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
-                      >
-                        <span>View Code</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 4. QuizForge */}
-            <div className="relative w-full h-[450px] perspective-1000">
-              <div
-                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                  flippedProjects.has("quizforge") ? "rotate-y-180" : ""
-                }`}
-              >
-                {/* Front Card - Locked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden">
-                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col p-6">
-                    <div className="text-center flex-1 flex flex-col justify-center">
-                      <div className="flex justify-center mb-4">
-                        <img
-                          src="/Quiz.png"
-                          alt="QuizForge"
-                          className="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90"
-                        />
-                      </div>
-                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
-                        QuizForge
-                      </h3>
-                    </div>
-                    <div className="mt-auto pb-2 text-center flex justify-center">
-                      <button
-                        onClick={() => handleProjectFlip("quizforge")}
-                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
-                      >
-                        UNLOCK PROJECT
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Back Card - Unlocked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
-                    {/* Project Name - Flexible Height */}
-                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30">
-                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
-                        QuizForge
-                      </h3>
-                    </div>
-
-                    {/* Project Details - Flexible Height */}
-                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
-                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
-                        AI-powered quiz generation platform for educators.
-                        Generates custom quizzes from any topic using Qwen3 LLM
-                        with automatic question generation and performance
-                        analytics. Built with Next.js and MongoDB.
-                      </p>
-                      {/* Technology Tags */}
-                      <div className="flex flex-wrap gap-2 mt-auto">
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          Next.js
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          JavaScript
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          Qwen3 LLM
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          MongoDB
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* View Code Button - Fixed Bottom */}
-                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <Button
-                        onClick={() => handleProjectLink("quizforge")}
-                        variant="default"
-                        size="sm"
-                        font="retro"
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
-                      >
-                        <span>View Code</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 5. ISO Web App */}
-            <div className="relative w-full h-[450px] perspective-1000">
-              <div
-                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                  flippedProjects.has("isowebapp") ? "rotate-y-180" : ""
-                }`}
-              >
-                {/* Front Card - Locked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden">
-                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col p-6">
-                    <div className="text-center flex-1 flex flex-col justify-center">
-                      <div className="flex justify-center mb-4">
-                        <img
-                          src="/SJSU_Logo.webp"
-                          alt="ISO Web App"
-                          className="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90"
-                        />
-                      </div>
-                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
-                        ISO Web App
-                      </h3>
-                    </div>
-                    <div className="mt-auto pb-2 text-center flex justify-center">
-                      <button
-                        onClick={() => handleProjectFlip("isowebapp")}
-                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
-                      >
-                        UNLOCK PROJECT
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Back Card - Unlocked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
-                    {/* Project Name - Flexible Height */}
-                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30">
-                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
-                        ISO Web App
-                      </h3>
-                    </div>
-
-                    {/* Project Details - Flexible Height */}
-                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
-                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
-                        Comprehensive volunteer and event management system for
-                        university organizations. Includes role-based access,
-                        dynamic ticketing, QR check-in, and admin dashboard.
-                        Integrates Supabase for PostgreSQL storage, Gmail API
-                        for notifications, and FastAPI backend with Docker
-                        deployment. Built with React, Tailwind CSS, and FastAPI.
-                      </p>
-                      {/* Technology Tags */}
-                      <div className="flex flex-wrap gap-2 mt-auto">
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          FastAPI
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          React
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          Tailwind CSS
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          Supabase
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          Docker
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* View Code Button - Fixed Bottom */}
-                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <Button
-                        onClick={() => handleProjectLink("isowebapp")}
-                        variant="default"
-                        size="sm"
-                        font="retro"
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
-                      >
-                        <span>View Code</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 6. Portfolio */}
-            <div className="relative w-full h-[450px] perspective-1000">
-              <div
-                className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                  flippedProjects.has("personalwebsite") ? "rotate-y-180" : ""
-                }`}
-              >
-                {/* Front Card - Locked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden">
-                  <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col p-6">
-                    <div className="text-center flex-1 flex flex-col justify-center">
-                      <div className="flex justify-center mb-4">
-                        <img
-                          src="/mario_logo.png"
-                          alt="Personal Portfolio Website"
-                          className="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90"
-                        />
-                      </div>
-                      <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
-                        Personal Portfolio Website
-                      </h3>
-                    </div>
-                    <div className="mt-auto pb-2 text-center flex justify-center">
-                      <button
-                        onClick={() => handleProjectFlip("personalwebsite")}
-                        className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
-                      >
-                        UNLOCK PROJECT
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Back Card - Unlocked State */}
-                <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                  <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
-                    {/* Project Name - Flexible Height */}
-                    <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30">
-                      <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
-                        Personal Portfolio Website
-                      </h3>
-                    </div>
-
-                    {/* Project Details - Flexible Height */}
-                    <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
-                      <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
-                        Gamified portfolio website with level progression,
-                        achievements, and scoring systems. Features WebGL
-                        backgrounds, flip card interactions, and smooth
-                        scroll-based reveals. Built with React 19, Vite, and
-                        Tailwind CSS.
-                      </p>
-                      {/* Technology Tags */}
-                      <div className="flex flex-wrap gap-2 mt-auto">
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          Vite
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          Tailwind CSS
-                        </span>
-                        <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                          React
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* View Code Button - Fixed Bottom */}
-                    <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                      <Button
-                        onClick={() => handleProjectLink("personalwebsite")}
-                        variant="default"
-                        size="sm"
-                        font="retro"
-                        className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 border border-red-400 flex items-center justify-center gap-2 text-xs"
-                      >
-                        <span>View Code</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Show More Button */}
-            {!showMoreProjects && (
-              <div className="col-span-full flex justify-center mt-6">
-                <Button
-                  onClick={() => setShowMoreProjects(true)}
-                  variant="default"
-                  size="lg"
-                  font="retro"
-                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 border border-red-400 transition-colors text-sm md:text-base"
+          {/* Mobile / tablet: compact cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 lg:hidden">
+            {projects.filter((p) => !p.placeholder).map(
+              (project) => (
+                <div
+                  key={project.id}
+                  className="bg-black/80 border border-red-400 hover:border-red-300 rounded-lg flex flex-col overflow-hidden transition-colors"
                 >
-                  SHOW MORE PROJECTS
-                </Button>
-              </div>
+                  <div className="py-4 px-3 flex flex-col items-center gap-3 border-b border-red-400/30">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className={`w-14 h-14 object-contain ${
+                        project.imageClass ?? "opacity-90"
+                      }`}
+                    />
+                    <h3 className="font-pressstart2p text-white text-xs text-center leading-tight break-words">
+                      {project.title}
+                    </h3>
+                  </div>
+                  <div className="flex-1 p-3 flex flex-col">
+                    <p className="text-gray-300 font-pixellari text-sm leading-relaxed mb-3 flex-1">
+                      {project.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5 mt-auto">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="bg-red-900/50 text-red-300 px-2 py-0.5 rounded text-xs font-pixellari"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="p-3 border-t border-red-400/30">
+                    <Button
+                      onClick={() => handleProjectLink(project.id)}
+                      variant="default"
+                      size="sm"
+                      font="retro"
+                      className="w-full bg-red-600 hover:bg-red-700 text-white border border-red-400 text-xs"
+                    >
+                      {project.linkLabel}
+                    </Button>
+                  </div>
+                </div>
+              )
             )}
 
-            {/* Additional Projects - Shown when showMoreProjects is true */}
-            {showMoreProjects && (
-              <>
-                {/* 7. ISO Website */}
-                <div className="relative w-full h-[450px] perspective-1000">
-                  <div
-                    className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                      flippedProjects.has("isowebsite") ? "rotate-y-180" : ""
-                    }`}
-                  >
-                    {/* Front Card - Locked State */}
-                    <div className="absolute inset-0 w-full h-full backface-hidden">
-                      <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col p-6">
-                        <div className="text-center flex-1 flex flex-col justify-center">
-                          <div className="flex justify-center mb-4">
-                            <img
-                              src="/SJSU_Logo.webp"
-                              alt="ISO Website"
-                              className="w-24 h-24 md:w-32 md:h-32 object-contain opacity-90"
-                            />
-                          </div>
-                          <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
-                            ISO Website
-                          </h3>
-                        </div>
-                        <div className="mt-auto pb-2 text-center flex justify-center">
-                          <button
-                            onClick={() => handleProjectFlip("isowebsite")}
-                            className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
-                          >
-                            UNLOCK PROJECT
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Back Card - Unlocked State */}
-                    <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                      <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
-                        {/* Project Name - Flexible Height */}
-                        <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30">
-                          <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
-                            ISO Website
-                          </h3>
-                        </div>
-
-                        {/* Project Details - Flexible Height */}
-                        <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
-                          <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
-                            Modern website for the Indian Student Organization
-                            at San Jose State University. Features event
-                            management, member registration, photo galleries,
-                            and real-time updates. Built with React, Tailwind
-                            CSS, and MongoDB.
-                          </p>
-                          {/* Technology Tags */}
-                          <div className="flex flex-wrap gap-2 mt-auto">
-                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                              React
-                            </span>
-                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                              Tailwind CSS
-                            </span>
-                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                              MongoDB
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* View Website Button - Fixed Bottom */}
-                        <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                          <button
-                            onClick={() => handleProjectLink("isowebsite")}
-                            className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
-                          >
-                            <span className="text-lg">📄</span>
-                            <span>View Website</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 8. Sentiment Analysis */}
-                <div className="relative w-full h-[450px] perspective-1000">
-                  <div
-                    className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                      flippedProjects.has("sentimentanalysis")
-                        ? "rotate-y-180"
-                        : ""
-                    }`}
-                  >
-                    {/* Front Card - Locked State */}
-                    <div className="absolute inset-0 w-full h-full backface-hidden">
-                      <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col p-6">
-                        <div className="text-center flex-1 flex flex-col justify-center">
-                          <div className="flex justify-center mb-4">
-                            <img
-                              src="/X_logo.png"
-                              alt="Sentiment Analysis"
-                              className="w-24 h-24 md:w-32 md:h-32 object-contain filter invert drop-shadow-lg"
-                            />
-                          </div>
-                          <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
-                            Sentiment Analysis
-                          </h3>
-                        </div>
-                        <div className="mt-auto pb-2 text-center flex justify-center">
-                          <button
-                            onClick={() =>
-                              handleProjectFlip("sentimentanalysis")
-                            }
-                            className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
-                          >
-                            UNLOCK PROJECT
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Back Card - Unlocked State */}
-                    <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                      <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
-                        {/* Project Name - Flexible Height */}
-                        <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30">
-                          <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
-                            Sentiment Analysis
-                          </h3>
-                        </div>
-
-                        {/* Project Details - Flexible Height */}
-                        <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
-                          <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
-                            Network-based sentiment analysis system for Twitter
-                            data. Uses Python, Twitter API, and machine learning
-                            algorithms to classify sentiment and visualize
-                            public opinion trends. Built with Streamlit for
-                            interactive dashboards.
-                          </p>
-                          {/* Technology Tags */}
-                          <div className="flex flex-wrap gap-2 mt-auto">
-                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                              Python
-                            </span>
-                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                              Twitter API
-                            </span>
-                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                              Macine Learning
-                            </span>
-                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                              Streamlit
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* View Code Button - Fixed Bottom */}
-                        <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                          <button
-                            onClick={() =>
-                              handleProjectLink("sentimentanalysis")
-                            }
-                            className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
-                          >
-                            <span className="text-lg">📄</span>
-                            <span>View Code</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 9. Movie Recommendation */}
-                <div className="relative w-full h-[450px] perspective-1000">
-                  <div
-                    className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                      flippedProjects.has("movierecommendation")
-                        ? "rotate-y-180"
-                        : ""
-                    }`}
-                  >
-                    {/* Front Card - Locked State */}
-                    <div className="absolute inset-0 w-full h-full backface-hidden">
-                      <div className="border border-red-400 bg-red-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col p-6">
-                        <div className="text-center flex-1 flex flex-col justify-center">
-                          <div className="flex justify-center mb-4">
-                            <img
-                              src="/Netflix_logo.png"
-                              alt="Netflix Logo"
-                              className="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-lg"
-                            />
-                          </div>
-                          <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
-                            Recommendation System
-                          </h3>
-                        </div>
-                        <div className="mt-auto pb-2 text-center flex justify-center">
-                          <button
-                            onClick={() =>
-                              handleProjectFlip("movierecommendation")
-                            }
-                            className="font-pressstart2p bg-red-600 hover:bg-red-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-red-400 transition-colors text-xs md:text-sm"
-                          >
-                            UNLOCK PROJECT
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Back Card - Unlocked State */}
-                    <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                      <div className="bg-black/80 border border-red-400 rounded-lg overflow-hidden h-full flex flex-col">
-                        {/* Project Name - Flexible Height */}
-                        <div className="min-h-[12%] py-2 px-4 flex items-center justify-center border-b border-red-400/30">
-                          <h3 className="font-pressstart2p text-white text-xs md:text-sm text-center leading-tight break-words px-8">
-                            Recommendation System
-                          </h3>
-                        </div>
-
-                        {/* Project Details - Flexible Height */}
-                        <div className="flex-1 p-4 flex flex-col overflow-hidden flex-shrink-0 min-h-0">
-                          <p className="text-gray-300 font-pixellari text-sm md:text-base mb-3 leading-relaxed flex-1">
-                            Movie recommendation system using collaborative
-                            filtering and vector databases. Integrates with TMDB
-                            API and uses advanced algorithms to analyze user
-                            preferences for personalized suggestions. Built with
-                            Next.js.
-                          </p>
-                          {/* Technology Tags */}
-                          <div className="flex flex-wrap gap-2 mt-auto">
-                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                              Next.js
-                            </span>
-                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                              TMDB API
-                            </span>
-                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                              Vector Database
-                            </span>
-                            <span className="bg-red-900/50 text-red-300 px-3 py-1 rounded text-xs md:text-sm font-pixellari">
-                              Cross Filtering
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* View Code Button - Fixed Bottom */}
-                        <div className="flex-shrink-0 py-3 px-4 flex items-center justify-center border-t border-red-400/30">
-                          <button
-                            onClick={() =>
-                              handleProjectLink("movierecommendation")
-                            }
-                            className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded border border-red-400 transition-colors flex items-center justify-center gap-2 font-pressstart2p text-xs"
-                          >
-                            <span className="text-lg">📄</span>
-                            <span>View Code</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
           </div>
         </div>
 
-        {/* Floating Unlock All Button - Attached to scrollbar side */}
-        {currentLevel === 5 && flippedProjects.size > 0 && (
-          <div className="fixed right-2 top-1/2 -translate-y-1/2 z-50 group">
-            <button
-              onClick={handleUnlockAllProjects}
-              className="bg-red-900/90 hover:bg-red-800 text-white p-3 rounded-l-lg border-2 border-r-0 border-red-400 hover:border-red-300 transition-all duration-300 hover:scale-105 hover:translate-x-2 shadow-lg hover:shadow-red-500/50 backdrop-blur-sm relative"
-              title="Unlock all projects"
-            >
-              <FaUnlock className="text-lg" />
-            </button>
-            {/* Tooltip */}
-            <div className="absolute right-full top-1/2 -translate-y-1/2 mr-2 px-3 py-1 bg-black/90 text-white text-xs font-pressstart2p rounded border border-red-400 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-              Unlock all projects
-              <div className="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-t-4 border-t-transparent border-b-4 border-b-transparent border-l-4 border-l-black/90"></div>
-            </div>
-          </div>
-        )}
       </section>
       <section
         data-level={6}
@@ -3625,112 +2942,104 @@ Type 'help' to see available commands.`;
         </div>
       </footer>
 
-      {/* Achievement Popups */}
-      {/* Section unlock-on-scroll Achievement Popups */}
-      <AchievementPopup
-        title="Identity Unlocked"
-        xp={100}
-        isVisible={showIdentityUnlocked}
-        theme="blue"
-        index={getAchievementIndex("identity_unlocked")}
-      />
-      <AchievementPopup
-        title="Pathfinder"
-        xp={100}
-        isVisible={showPathfinder}
-        theme="yellow"
-        index={getAchievementIndex("pathfinder")}
-      />
-      <AchievementPopup
-        title="Skill Mastery"
-        xp={100}
-        isVisible={showSkillMastery}
-        theme="green"
-        index={getAchievementIndex("skill_mastery")}
-      />
-      <AchievementPopup
-        title="Quest Conqueror"
-        xp={100}
-        isVisible={showQuestConqueror}
-        theme="red"
-        index={getAchievementIndex("quest_conqueror")}
-      />
-      <AchievementPopup
-        title="Social Link"
-        xp={100}
-        isVisible={showSocialLinkEstablished}
-        theme="teal"
-        index={getAchievementIndex("social_link_established")}
-      />
-      <AchievementPopup
-        title="Rulebook Raider"
-        xp={30}
-        isVisible={showRulebookRaider}
-        theme="blue"
-        index={getAchievementIndex("rulebook-raider")}
-      />
-      {/* Section 2 Achievement Popups */}
-      <AchievementPopup
-        title="Face of the Hero"
-        xp={150}
-        isVisible={showFaceOfHero}
-        theme="blue"
-        index={getAchievementIndex("face_of_hero")}
-      />
-      <AchievementPopup
-        title="Keeper of Stories"
-        xp={100}
-        isVisible={showKeeperOfStories}
-        theme="yellow"
-        index={getAchievementIndex("keeper_of_stories")}
-      />
-      <AchievementPopup
-        title="Power Unleashed"
-        xp={75}
-        isVisible={showPowerUnleashed}
-        theme="green"
-        index={getAchievementIndex("power_unleashed")}
-      />
-      {/* Section 3 Achievement Popups */}
-      <AchievementPopup
-        title="Guild Explorer"
-        xp={75}
-        isVisible={showGuildExplorer}
-        theme="green"
-        index={getAchievementIndex("guild_explorer")}
-      />
-      <AchievementPopup
-        title="Grandmaster's Path"
-        xp={90}
-        isVisible={showGrandmastersPath}
-        theme="purple"
-        index={getAchievementIndex("grandmasters_path")}
-      />
-      {/* Section 4 Achievement Popups */}
-      <AchievementPopup
-        title="Skill Tree Master"
-        xp={200}
-        isVisible={showSkillTreeMaster}
-        theme="green"
-        index={getAchievementIndex("skill_tree_master")}
-      />
-      {/* Section 5 Achievement Popups */}
-      <AchievementPopup
-        title="Project Master"
-        xp={300}
-        isVisible={showProjectMaster}
-        theme="red"
-        index={getAchievementIndex("project_master")}
-      />
+      </div>
+      </div>
 
-      {/* Section 6 Achievement Popup */}
-      <AchievementPopup
-        title="Alliance Formed"
-        xp={100}
-        isVisible={showAllianceFormed}
-        theme="teal"
-        index={getAchievementIndex("alliance_formed")}
-      />
+      {/* Floating Unlock All Skills Button - Attached to scrollbar side */}
+      {currentLevel === 4 &&
+        Object.values(unlockedSkills).some((skill) => skill) && (
+          <div className="fixed right-2 top-1/2 -translate-y-1/2 z-50 group">
+            <button
+              onClick={handleUnlockAllSkills}
+              className="bg-green-900/90 hover:bg-green-800 text-white p-3 rounded-l-lg border-2 border-r-0 border-green-400 hover:border-green-300 transition-all duration-300 hover:scale-105 hover:translate-x-2 shadow-lg hover:shadow-green-500/50 backdrop-blur-sm relative"
+              title="Unlock all skills"
+            >
+              {Object.values(unlockedSkills).every((skill) => skill) ? (
+                <FaUnlock className="text-lg" />
+              ) : (
+                <FaLock className="text-lg" />
+              )}
+            </button>
+            {/* Tooltip */}
+            <div className="absolute right-full top-1/2 -translate-y-1/2 mr-2 px-3 py-1 bg-black/90 text-white text-xs font-pressstart2p rounded border border-green-400 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              Unlock all skills
+              <div className="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-t-4 border-t-transparent border-b-4 border-b-transparent border-l-4 border-l-black/90"></div>
+            </div>
+          </div>
+        )}
+
+      {/* Achievement Toasts */}
+      <AchievementToasts toasts={achievementToasts} />
+
+      {/* Why You Should Hire Me Modal */}
+      {showWhyHireMeModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70"
+          onClick={() => setShowWhyHireMeModal(false)}
+        >
+          <div
+            className="relative bg-gradient-to-br from-red-600 to-red-800 border-3 border-red-900 rounded-lg p-8 max-w-5xl w-full shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Stamp texture overlay to match the lanyard card */}
+            <div className="absolute inset-0 bg-red-900/20 rounded-lg pointer-events-none"></div>
+            <div className="absolute inset-0 border border-white/30 rounded-lg pointer-events-none"></div>
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="font-pressstart2p text-yellow-300 text-lg md:text-2xl tracking-widest">
+                  WHY YOU SHOULD HIRE ME
+                </h2>
+                <button
+                  onClick={() => setShowWhyHireMeModal(false)}
+                  aria-label="Close"
+                  className="text-white/70 hover:text-white text-3xl transition-colors"
+                >
+                  <IoClose />
+                </button>
+              </div>
+              <div className="font-pixellari text-white text-base leading-relaxed max-h-[75vh] overflow-y-auto space-y-6 pr-2">
+                <HireMeStats />
+
+                <div>
+                  <h3 className="font-pressstart2p text-yellow-300 text-sm mb-3 tracking-wider">
+                    WHAT MAKES ME DIFFERENT
+                  </h3>
+                  <p>
+                    Most people my level build with APIs. I build what goes
+                    underneath them — fine-tuned LLMs, agent loops, and real
+                    systems people use today, owned end to end from
+                    infrastructure to UI.
+                  </p>
+                  <ul className="mt-4 space-y-3">
+                    <li className="flex gap-2">
+                      <span className="text-yellow-300">◆</span>
+                      <span>
+                        I close the loop — deploy it, monitor it, own what
+                        breaks at 2 AM.
+                      </span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-yellow-300">◆</span>
+                      <span>
+                        AI-native. I build agentic systems and use them daily,
+                        so I move at the speed of the tooling.
+                      </span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-yellow-300">◆</span>
+                      <span>
+                        Early career: still hungry, still fast, and I will
+                        outwork anyone in the room.
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Game Instructions Modal */}
       <GameInstructionsModal
@@ -3763,7 +3072,7 @@ Type 'help' to see available commands.`;
             </div>
             <div className="mb-4 p-3 bg-yellow-900/20 border border-yellow-400/50 rounded-lg">
               <p className="font-pixellari text-yellow-300 text-sm">
-                💡 Click on locked achievements to navigate to where you can
+                Click on locked achievements to navigate to where you can
                 unlock them!
               </p>
             </div>
@@ -3795,7 +3104,7 @@ Type 'help' to see available commands.`;
                           isUnlocked ? "text-green-400" : "text-gray-400"
                         }`}
                       >
-                        {GoTrophy as any}
+                        <GoTrophy />
                       </span>
                       <div className="flex-1 min-w-0">
                         <div

@@ -20,6 +20,13 @@
   font-display: swap;
 }
 
+html,
+body {
+  /* Sections use semi-transparent gradients; with ScrollSmoother the app's
+     bg-black div only covers the first viewport, so the page itself must be black */
+  background-color: #000;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

@@ -39,9 +39,42 @@
   display: none;
 }
 
-/* Smooth scrolling */
+/* Scrolling is smoothed by GSAP ScrollSmoother; CSS scroll-behavior must stay
+   auto or it fights the transform-based smoothing */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+}
+
+/* Achievement toasts: slide in from the right; on exit, fade out while
+   collapsing height so the remaining toasts settle smoothly */
+.achievement-toast {
+  max-height: 12rem;
+  margin-top: 0.75rem;
+  animation: achievement-toast-in 0.3s ease-out;
+}
+
+.achievement-toast--leaving {
+  animation: achievement-toast-out 0.3s ease-in forwards;
+}
+
+@keyframes achievement-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(120%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes achievement-toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(120%);
+    max-height: 0;
+    margin-top: 0;
+  }
 }
 
 /* Custom animations */
