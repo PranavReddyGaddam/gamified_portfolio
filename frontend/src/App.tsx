@@ -16,7 +16,8 @@ import AchievementToasts, {
 } from "./components/AchievementToasts";
 import GameInstructionsModal from "./components/GameInstructionsModal";
 import CodeRequestModal from "./components/CodeRequestModal";
-import ProjectShowcase from "./components/ProjectShowcase";
+import ProjectDeck from "./components/ProjectDeck";
+import ProjectDeckMobile from "./components/ProjectDeckMobile";
 import HireMeStats from "./components/HireMeStats";
 import { Button } from "@/components/ui/8bit/button";
 import { Card, CardContent } from "@/components/ui/8bit/card";
@@ -81,94 +82,106 @@ type Project = {
   linkLabel: string;
   placeholder?: boolean;
   previewImages?: string[];
+  githubUrl?: string;
+  liveUrl?: string;
 };
 
 const projects: Project[] = [
   {
-    id: "gitbridge",
-    title: "GitBridge",
-    image: "/github-mark-white.png",
-    description:
-      "Turns GitHub repositories into interactive diagrams and AI-narrated walkthroughs for fast codebase exploration.",
-    tags: ["React", "ElevenLabs", "FastAPI", "AWS", "MermaidJS"],
-    linkLabel: "View Code",
-    previewImages: ["/GitBridge.mp4"],
-  },
-  {
-    id: "hirely",
-    title: "Hirely",
-    image: "/Hirely.png",
-    description:
-      "AI interview prep platform that scrapes live job listings and generates personalized interview questions.",
-    tags: ["FastAPI", "React", "Groq", "Supabase", "ChromaDB"],
-    linkLabel: "View Code",
-    previewImages: ["/Hirely.mp4"],
-  },
-  {
-    id: "nexus",
-    title: "Nexus",
-    image: "/market_research.png",
-    description:
-      "Evaluates startup ideas through simulated expert personas, visualized on an interactive 3D globe.",
-    tags: ["React", "Three.js", "Tailwind CSS", "FastAPI", "OpenAI"],
-    linkLabel: "View Code",
-    previewImages: ["/Nexus.mp4"],
-  },
-  {
-    id: "quizforge",
-    title: "QuizForge",
-    image: "/Quiz.png",
+    id: "bloom",
+    title: "Bloom",
+    image: "/projects/Quiz.png",
     description:
       "Generates custom quizzes from any topic for educators, with LLM-powered questions and performance analytics.",
     tags: ["Next.js", "JavaScript", "Qwen3 LLM", "MongoDB"],
     linkLabel: "View Code",
+    githubUrl: "https://github.com/pranavreddygaddam/bloom",
+  },
+  {
+    id: "baywindow",
+    title: "Bay Window",
+    image: "/projects/bay-window.png",
+    description:
+      "Free SF building lookup with a 0-100 health score from DBI violations, evictions, crime, and permits data.",
+    tags: ["React", "MapLibre", "FastAPI"],
+    linkLabel: "View Website",
+    previewImages: ["/videos/Bay-Window.mp4"],
+    githubUrl: "https://github.com/PranavReddyGaddam/Bay-Window",
+    liveUrl: "https://baywindow.pranavreddygaddam.com/",
+  },
+  {
+    id: "systemdesign",
+    title: "System Design",
+    image: "/projects/system-design.png",
+    description:
+      "AI study companion that teaches system design from first principles, quizzes you, and grades mock interviews on a visual canvas.",
+    tags: ["React", "FastAPI", "Claude"],
+    linkLabel: "View Website",
+    githubUrl: "https://github.com/PranavReddyGaddam/system-design",
+    liveUrl: "https://systemdesign.pranavreddygaddam.com/",
+  },
+  {
+    id: "gitbridge",
+    title: "GitBridge",
+    image: "/projects/github-mark-white.png",
+    description:
+      "Turns GitHub repositories into interactive diagrams and AI-narrated walkthroughs for fast codebase exploration.",
+    tags: ["React", "ElevenLabs", "FastAPI", "AWS", "MermaidJS"],
+    linkLabel: "View Code",
+    previewImages: ["/videos/GitBridge.mp4"],
+    githubUrl: "https://github.com/pranavreddygaddam/gitbridge",
+  },
+  {
+    id: "hirely",
+    title: "Hirely",
+    image: "/projects/Hirely.png",
+    description:
+      "AI interview prep platform that scrapes live job listings and generates personalized interview questions.",
+    tags: ["FastAPI", "React", "Groq", "Supabase", "ChromaDB"],
+    linkLabel: "View Code",
+    previewImages: ["/videos/Hirely.mp4"],
+    githubUrl: "https://github.com/PranavReddyGaddam/Hirely",
+  },
+  {
+    id: "nexus",
+    title: "Nexus",
+    image: "/projects/market_research.png",
+    description:
+      "Evaluates startup ideas through simulated expert personas, visualized on an interactive 3D globe.",
+    tags: ["React", "Three.js", "Tailwind CSS", "FastAPI", "OpenAI"],
+    linkLabel: "View Code",
+    previewImages: ["/videos/Nexus.mp4"],
+    githubUrl: "https://github.com/PranavReddyGaddam/Nexus",
   },
   {
     id: "isowebapp",
     title: "ISO Web App",
-    image: "/SJSU_Logo.webp",
+    image: "/projects/SJSU_Logo.webp",
     description:
       "Volunteer and event management system with role-based access, dynamic ticketing, and QR check-in.",
     tags: ["FastAPI", "React", "Tailwind CSS", "Supabase", "Docker"],
     linkLabel: "View Code",
+    githubUrl: "https://github.com/PranavReddyGaddam/ISO_Event_Registration",
   },
   {
     id: "personalwebsite",
     title: "Personal Portfolio Website",
-    image: "/mario_logo.png",
+    image: "/projects/mario_logo.png",
     description:
       "Gamified portfolio with level progression, achievements, WebGL backgrounds, and scroll-based reveals.",
     tags: ["Vite", "Tailwind CSS", "React"],
     linkLabel: "View Code",
   },
   {
-    id: "isowebsite",
-    title: "ISO Website",
-    image: "/SJSU_Logo.webp",
-    description:
-      "Website for SJSU's Indian Student Organization with events, member registration, and photo galleries.",
-    tags: ["React", "Tailwind CSS", "MongoDB"],
-    linkLabel: "View Website",
-  },
-  {
-    id: "sentimentanalysis",
-    title: "Sentiment Analysis",
-    image: "/X_logo.png",
-    imageClass: "filter invert drop-shadow-lg",
-    description:
-      "Classifies Twitter sentiment with machine learning and visualizes public opinion trends in dashboards.",
-    tags: ["Python", "Twitter API", "Machine Learning", "Streamlit"],
-    linkLabel: "View Code",
-  },
-  {
     id: "movierecommendation",
     title: "Recommendation System",
-    image: "/Netflix_logo.png",
+    image: "/projects/Netflix_logo.png",
     imageClass: "drop-shadow-lg",
     description:
       "Recommends movies with collaborative filtering and vector search, powered by the TMDB API.",
     tags: ["Next.js", "TMDB API", "Vector Database", "Cross Filtering"],
     linkLabel: "View Code",
+    githubUrl: "https://github.com/PranavReddyGaddam/Movie-Recomendation",
   },
   // Placeholder slots for upcoming projects (keeps the showcase grid at 3 full rows)
   {
@@ -756,17 +769,8 @@ function App() {
       return;
     }
 
-    const projectUrls: { [key: string]: string } = {
-      gitbridge: "https://github.com/pranavreddygaddam/gitbridge",
-      quizforge: "https://github.com/pranavreddygaddam/quizforge",
-      isowebsite: "https://iso-website-six.vercel.app/",
-      sentimentanalysis:
-        "https://github.com/PranavReddyGaddam/Network-Based-Social-Media-Sentiment-Analysis-on-Twitter",
-      movierecommendation:
-        "https://github.com/PranavReddyGaddam/Movie-Recomendation",
-    };
-
-    const url = projectUrls[projectId];
+    const project = projects.find((p) => p.id === projectId);
+    const url = project?.liveUrl ?? project?.githubUrl;
     if (url) {
       window.open(url, "_blank");
     }
@@ -808,22 +812,22 @@ Tools: Vite, Webpack, Figma, VS Code`;
         break;
       case "projects":
         response = `Featured Projects:
-🔗 GitBridge - AI-powered GitHub repository analyzer
+- GitBridge - AI-powered GitHub repository analyzer
    GitHub: https://github.com/pranavreddygaddam/gitbridge
 
-🔗 Hirely - AI interview preparation platform  
+- Hirely - AI interview preparation platform  
    GitHub: https://github.com/pranavreddygaddam/hirely
 
-🔗 Nexus - 3D startup analysis tool
+- Nexus - 3D startup analysis tool
    GitHub: https://github.com/pranavreddygaddam/nexus
 
-🔗 QuizForge - AI quiz generation platform
-   GitHub: https://github.com/pranavreddygaddam/quizforge
+- Bloom - AI quiz generation platform
+   GitHub: https://github.com/pranavreddygaddam/bloom
 
-🔗 ISO Web App - University event management system
-   GitHub: https://github.com/pranavreddygaddam/iso-website
+- Bay Window - SF building & renter lookup tool
+   Website: https://baywindow.pranavreddygaddam.com/
 
-🔗 Portfolio - Gamified personal website
+- Portfolio - Gamified personal website
    GitHub: https://github.com/pranavreddygaddam/gamified-portfolio
 
 Type 'github' to open main GitHub profile`;
@@ -1158,7 +1162,7 @@ Type 'help' to see available commands.`;
                       {/* Image area */}
                       <div className="flex-1 min-h-0">
                         <img
-                          src="/Pranav.jpeg"
+                          src="/projects/Pranav.jpeg"
                           alt="Character Portrait"
                           className="w-full h-full object-cover"
                         />
@@ -2541,62 +2545,25 @@ Type 'help' to see available commands.`;
           </div>
 
           {/* Project Cards Grid */}
-          {/* Desktop: grid-to-full-preview showcase */}
+          {/* Desktop: horizontal accordion deck */}
           <div className="hidden lg:block">
-            <ProjectShowcase projects={projects} onProjectOpen={handleProjectLink} />
+            <ProjectDeck
+              label="Featured builds"
+              projects={projects.slice(0, 6)}
+              onProjectOpen={handleProjectLink}
+            />
+            <ProjectDeck
+              label="More projects"
+              projects={projects.slice(6)}
+              onProjectOpen={handleProjectLink}
+            />
           </div>
 
-          {/* Mobile / tablet: compact cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 lg:hidden">
-            {projects.filter((p) => !p.placeholder).map(
-              (project) => (
-                <div
-                  key={project.id}
-                  className="bg-black/80 border border-red-400 hover:border-red-300 rounded-lg flex flex-col overflow-hidden transition-colors"
-                >
-                  <div className="py-4 px-3 flex flex-col items-center gap-3 border-b border-red-400/30">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className={`w-14 h-14 object-contain ${
-                        project.imageClass ?? "opacity-90"
-                      }`}
-                    />
-                    <h3 className="font-pressstart2p text-white text-xs text-center leading-tight break-words">
-                      {project.title}
-                    </h3>
-                  </div>
-                  <div className="flex-1 p-3 flex flex-col">
-                    <p className="text-gray-300 font-pixellari text-sm leading-relaxed mb-3 flex-1">
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-1.5 mt-auto">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="bg-red-900/50 text-red-300 px-2 py-0.5 rounded text-xs font-pixellari"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="p-3 border-t border-red-400/30">
-                    <Button
-                      onClick={() => handleProjectLink(project.id)}
-                      variant="default"
-                      size="sm"
-                      font="retro"
-                      className="w-full bg-red-600 hover:bg-red-700 text-white border border-red-400 text-xs"
-                    >
-                      {project.linkLabel}
-                    </Button>
-                  </div>
-                </div>
-              )
-            )}
-
-          </div>
+          {/* Mobile / tablet: vertical accordion, capped at 6 until expanded */}
+          <ProjectDeckMobile
+            projects={projects}
+            onProjectOpen={handleProjectLink}
+          />
         </div>
 
       </section>
