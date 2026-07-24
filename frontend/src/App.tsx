@@ -150,30 +150,14 @@ const projects: Project[] = [
     githubUrl: "https://github.com/PranavReddyGaddam/Prism",
   },
   {
-    id: "isowebapp",
-    title: "ISO Web App",
-    description:
-      "Volunteer and event management system with role-based access, dynamic ticketing, and QR check-in.",
-    tags: ["FastAPI", "React", "Tailwind CSS", "Supabase", "Docker"],
-    linkLabel: "View Code",
-    githubUrl: "https://github.com/PranavReddyGaddam/ISO_Event_Registration",
-  },
-  {
     id: "personalwebsite",
     title: "Personal Portfolio Website",
     description:
       "Gamified portfolio with level progression, achievements, WebGL backgrounds, and scroll-based reveals.",
     tags: ["Vite", "Tailwind CSS", "React"],
     linkLabel: "View Code",
-  },
-  {
-    id: "movierecommendation",
-    title: "Recommendation System",
-    description:
-      "Recommends movies with collaborative filtering and vector search, powered by the TMDB API.",
-    tags: ["Next.js", "TMDB API", "Vector Database", "Cross Filtering"],
-    linkLabel: "View Code",
-    githubUrl: "https://github.com/PranavReddyGaddam/Movie-Recomendation",
+    previewImages: ["/videos/Portfolio.mp4"],
+    githubUrl: "https://github.com/PranavReddyGaddam/gamified-portfolio",
   },
   {
     id: "nexus",
@@ -185,16 +169,27 @@ const projects: Project[] = [
     previewImages: ["/videos/Nexus.mp4"],
     githubUrl: "https://github.com/PranavReddyGaddam/Nexus",
   },
-  // Placeholder slots for upcoming projects (keeps the showcase grid at 3 full rows)
   {
-    id: "coming-soon-1",
-    title: "???",
-    image: "/Pranav_Logo.png",
-    description: "A new quest is under construction. Check back soon.",
-    tags: ["TBD"],
-    linkLabel: "Coming Soon",
-    placeholder: true,
+    id: "pindrop",
+    title: "PinDrop",
+    description:
+      "Drop-pricing group-buy marketplace where the unit price falls as more buyers commit, and every committed buyer pays the lowest tier reached by the deadline. Sharing a drop recruits more buyers, which drops the price for everyone already in.",
+    tags: ["React", "TypeScript", "FastAPI", "Marketplace"],
+    linkLabel: "View Website",
+    previewImages: ["/videos/Pindrop.mp4"],
+    githubUrl: "https://github.com/PranavReddyGaddam/PinDrop",
+    liveUrl: "https://pin-drop-six.vercel.app",
   },
+  {
+    id: "isowebapp",
+    title: "ISO Web App",
+    description:
+      "Volunteer and event management system with role-based access, dynamic ticketing, and QR check-in.",
+    tags: ["FastAPI", "React", "Tailwind CSS", "Supabase", "Docker"],
+    linkLabel: "View Code",
+    githubUrl: "https://github.com/PranavReddyGaddam/ISO_Event_Registration",
+  },
+  // Placeholder slots for upcoming projects (keeps the showcase grid at 3 full rows)
   {
     id: "coming-soon-2",
     title: "???",
@@ -292,6 +287,49 @@ function App() {
 
   // Section 5: reveal the second row of project cards only after the button is clicked
   const [showMoreProjects, setShowMoreProjects] = useState(false);
+  const moreProjectsWrapRef = useRef<HTMLDivElement | null>(null);
+  const isFirstMoreProjectsRender = useRef(true);
+
+  // Animate the "more projects" deck open/closed by height, mirroring the
+  // mobile deck. The wrapper stays mounted so the close tween can actually run.
+  useLayoutEffect(() => {
+    const wrap = moreProjectsWrapRef.current;
+    if (!wrap) return;
+
+    if (isFirstMoreProjectsRender.current) {
+      gsap.set(wrap, {
+        height: showMoreProjects ? "auto" : 0,
+        opacity: showMoreProjects ? 1 : 0,
+      });
+      isFirstMoreProjectsRender.current = false;
+      return;
+    }
+
+    if (showMoreProjects) {
+      gsap.fromTo(
+        wrap,
+        { height: 0, opacity: 0 },
+        {
+          height: wrap.scrollHeight,
+          opacity: 1,
+          duration: 0.5,
+          ease: "power3.inOut",
+          onComplete: () => {
+            gsap.set(wrap, { height: "auto" });
+            ScrollTrigger.refresh();
+          },
+        }
+      );
+    } else {
+      gsap.to(wrap, {
+        height: 0,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power3.inOut",
+        onComplete: () => ScrollTrigger.refresh(),
+      });
+    }
+  }, [showMoreProjects]);
 
   // Collaboration form (Section 6)
   const [collabName, setCollabName] = useState("");
@@ -2557,13 +2595,15 @@ Type 'help' to see available commands.`;
               projects={projects.slice(0, 6)}
               onProjectOpen={handleProjectLink}
             />
-            {showMoreProjects && (
+            {/* stays mounted so GSAP can animate it closed as well as open */}
+            <div ref={moreProjectsWrapRef} className="overflow-hidden">
               <ProjectDeck
                 label="More projects"
                 projects={projects.slice(6)}
                 onProjectOpen={handleProjectLink}
+                paused={!showMoreProjects}
               />
-            )}
+            </div>
             <div className="flex justify-center mt-5">
               <button
                 onClick={() => setShowMoreProjects((current) => !current)}

@@ -50,7 +50,9 @@ const ProjectDeck: React.FC<{
   label: string;
   projects: DeckProject[];
   onProjectOpen: (id: string) => void;
-}> = ({ label, projects, onProjectOpen }) => {
+  /* when the deck is collapsed out of view its videos should not keep playing */
+  paused?: boolean;
+}> = ({ label, projects, onProjectOpen, paused = false }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -91,7 +93,7 @@ const ProjectDeck: React.FC<{
 
       const video = videoRefs.current[i];
       if (video) {
-        if (isActive) {
+        if (isActive && !paused) {
           video.currentTime = 0;
           video.play().catch(() => {});
         } else {
@@ -101,7 +103,7 @@ const ProjectDeck: React.FC<{
     });
     isFirstRender.current = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIndex]);
+  }, [activeIndex, paused]);
 
   const openPanel = (i: number) => {
     setActiveIndex((current) => (current === i ? current : i));
