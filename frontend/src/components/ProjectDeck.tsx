@@ -20,8 +20,7 @@ export type DeckProject = {
   title: string;
   description: string;
   tags: string[];
-  image: string;
-  imageClass?: string;
+  image?: string;
   previewImages?: string[];
   githubUrl?: string;
   liveUrl?: string;

@@ -36,7 +36,7 @@ import {
 import { RiTwitterXFill } from "react-icons/ri";
 import { BsRobot, BsTools, BsDatabaseAdd } from "react-icons/bs";
 import { RxGear } from "react-icons/rx";
-import { FaDocker, FaLock, FaUnlock } from "react-icons/fa";
+import { FaDocker, FaLock, FaUnlock, FaChevronDown } from "react-icons/fa";
 import { GoTrophy } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 
@@ -75,8 +75,7 @@ const ACHIEVEMENT_TOAST_META: Record<
 type Project = {
   id: string;
   title: string;
-  image: string;
-  imageClass?: string;
+  image?: string;
   description: string;
   tags: string[];
   linkLabel: string;
@@ -90,17 +89,17 @@ const projects: Project[] = [
   {
     id: "bloom",
     title: "Bloom",
-    image: "/projects/Quiz.png",
     description:
       "Generates custom quizzes from any topic for educators, with LLM-powered questions and performance analytics.",
-    tags: ["Next.js", "JavaScript", "Qwen3 LLM", "MongoDB"],
+    tags: ["Next.js", "Python", "RAG", "Agentic Architecture"],
     linkLabel: "View Code",
-    githubUrl: "https://github.com/pranavreddygaddam/bloom",
+    previewImages: ["/videos/Bloom.mp4"],
+    githubUrl: "https://github.com/pranavreddygaddam/Bloom",
+    liveUrl: "https://bloom.pranavreddygaddam.com/",
   },
   {
     id: "baywindow",
     title: "Bay Window",
-    image: "/projects/bay-window.png",
     description:
       "Free SF building lookup with a 0-100 health score from DBI violations, evictions, crime, and permits data.",
     tags: ["React", "MapLibre", "FastAPI"],
@@ -112,18 +111,17 @@ const projects: Project[] = [
   {
     id: "systemdesign",
     title: "System Design",
-    image: "/projects/system-design.png",
     description:
       "AI study companion that teaches system design from first principles, quizzes you, and grades mock interviews on a visual canvas.",
     tags: ["React", "FastAPI", "Claude"],
     linkLabel: "View Website",
+    previewImages: ["/videos/system_design.mp4"],
     githubUrl: "https://github.com/PranavReddyGaddam/system-design",
     liveUrl: "https://systemdesign.pranavreddygaddam.com/",
   },
   {
     id: "gitbridge",
     title: "GitBridge",
-    image: "/projects/github-mark-white.png",
     description:
       "Turns GitHub repositories into interactive diagrams and AI-narrated walkthroughs for fast codebase exploration.",
     tags: ["React", "ElevenLabs", "FastAPI", "AWS", "MermaidJS"],
@@ -134,7 +132,6 @@ const projects: Project[] = [
   {
     id: "hirely",
     title: "Hirely",
-    image: "/projects/Hirely.png",
     description:
       "AI interview prep platform that scrapes live job listings and generates personalized interview questions.",
     tags: ["FastAPI", "React", "Groq", "Supabase", "ChromaDB"],
@@ -143,20 +140,18 @@ const projects: Project[] = [
     githubUrl: "https://github.com/PranavReddyGaddam/Hirely",
   },
   {
-    id: "nexus",
-    title: "Nexus",
-    image: "/projects/market_research.png",
+    id: "prism",
+    title: "Prism",
     description:
-      "Evaluates startup ideas through simulated expert personas, visualized on an interactive 3D globe.",
-    tags: ["React", "Three.js", "Tailwind CSS", "FastAPI", "OpenAI"],
+      "LLM explainability framework using Process Reward Models to make step-by-step mathematical reasoning transparent, with real-time token confidence, attention, logit lens, and gradient attribution visualizations.",
+    tags: ["PRM", "LLM", "Explainability", "PyTorch"],
     linkLabel: "View Code",
-    previewImages: ["/videos/Nexus.mp4"],
-    githubUrl: "https://github.com/PranavReddyGaddam/Nexus",
+    previewImages: ["/videos/Prism.mp4"],
+    githubUrl: "https://github.com/PranavReddyGaddam/Prism",
   },
   {
     id: "isowebapp",
     title: "ISO Web App",
-    image: "/projects/SJSU_Logo.webp",
     description:
       "Volunteer and event management system with role-based access, dynamic ticketing, and QR check-in.",
     tags: ["FastAPI", "React", "Tailwind CSS", "Supabase", "Docker"],
@@ -166,7 +161,6 @@ const projects: Project[] = [
   {
     id: "personalwebsite",
     title: "Personal Portfolio Website",
-    image: "/projects/mario_logo.png",
     description:
       "Gamified portfolio with level progression, achievements, WebGL backgrounds, and scroll-based reveals.",
     tags: ["Vite", "Tailwind CSS", "React"],
@@ -175,13 +169,21 @@ const projects: Project[] = [
   {
     id: "movierecommendation",
     title: "Recommendation System",
-    image: "/projects/Netflix_logo.png",
-    imageClass: "drop-shadow-lg",
     description:
       "Recommends movies with collaborative filtering and vector search, powered by the TMDB API.",
     tags: ["Next.js", "TMDB API", "Vector Database", "Cross Filtering"],
     linkLabel: "View Code",
     githubUrl: "https://github.com/PranavReddyGaddam/Movie-Recomendation",
+  },
+  {
+    id: "nexus",
+    title: "Nexus",
+    description:
+      "Evaluates startup ideas through simulated expert personas, visualized on an interactive 3D globe.",
+    tags: ["React", "Three.js", "Tailwind CSS", "FastAPI", "OpenAI"],
+    linkLabel: "View Code",
+    previewImages: ["/videos/Nexus.mp4"],
+    githubUrl: "https://github.com/PranavReddyGaddam/Nexus",
   },
   // Placeholder slots for upcoming projects (keeps the showcase grid at 3 full rows)
   {
@@ -287,6 +289,9 @@ function App() {
   const [isSection3Visible, setIsSection3Visible] = useState(false);
 
   const nextSectionRef = useRef<HTMLDivElement>(null);
+
+  // Section 5: reveal the second row of project cards only after the button is clicked
+  const [showMoreProjects, setShowMoreProjects] = useState(false);
 
   // Collaboration form (Section 6)
   const [collabName, setCollabName] = useState("");
@@ -1036,8 +1041,8 @@ Type 'help' to see available commands.`;
           {/* Fade out overlay */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
         </div>
-        <Card className="relative z-10 max-w-2xl w-full text-center mb-16 bg-black border-white">
-          <CardContent className="p-8">
+        <div className="relative z-10 max-w-2xl w-full text-center mb-16 bg-black/40 backdrop-blur-md rounded-xl">
+          <div className="p-8">
             {/* Start Prompt */}
             <p className="font-pressstart2p text-purple-400 text-lg mb-6">
               PRANAV REDDY GADDAM'S
@@ -1086,8 +1091,8 @@ Type 'help' to see available commands.`;
                 HOW TO PLAY
               </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </section>
 
       {/* Transition Section - Smooth Blend */}
@@ -2552,11 +2557,27 @@ Type 'help' to see available commands.`;
               projects={projects.slice(0, 6)}
               onProjectOpen={handleProjectLink}
             />
-            <ProjectDeck
-              label="More projects"
-              projects={projects.slice(6)}
-              onProjectOpen={handleProjectLink}
-            />
+            {showMoreProjects && (
+              <ProjectDeck
+                label="More projects"
+                projects={projects.slice(6)}
+                onProjectOpen={handleProjectLink}
+              />
+            )}
+            <div className="flex justify-center mt-5">
+              <button
+                onClick={() => setShowMoreProjects((current) => !current)}
+                className="group relative flex items-center gap-2 font-pressstart2p text-[10px] text-white bg-red-600 hover:bg-red-500 px-4 py-2 border-2 border-red-400 shadow-[3px_3px_0_0_rgba(0,0,0,0.6)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,0.6)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:shadow-[1px_1px_0_0_rgba(0,0,0,0.6)] active:translate-x-0.5 active:translate-y-0.5 transition-all duration-150"
+              >
+                {showMoreProjects ? "SHOW LESS" : "MORE PROJECTS"}
+                <FaChevronDown
+                  size={10}
+                  className={`transition-transform duration-300 ${
+                    showMoreProjects ? "rotate-180" : "group-hover:translate-y-0.5"
+                  }`}
+                />
+              </button>
+            </div>
           </div>
 
           {/* Mobile / tablet: vertical accordion, capped at 6 until expanded */}
