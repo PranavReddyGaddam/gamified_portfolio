@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import CalendarHeatmap from 'react-calendar-heatmap';
+import CalendarHeatmap, { ReactCalendarHeatmapValue, TooltipDataAttrs } from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 
 interface CommitData {
@@ -8,46 +8,69 @@ interface CommitData {
   count: number;
 }
 
+/**
+ * The heatmap's own value type. Its `[key: string]: any` index signature covers
+ * the `count` field we supply, and the callbacks require this exact type.
+ */
+type HeatmapValue = ReactCalendarHeatmapValue<string>;
+
+interface LanguageStat {
+  name: string;
+  color: string | null;
+  percent: number;
+}
+
+interface GitHubStats {
+  days: CommitData[];
+  totalContributions: number;
+  activeDays: number;
+  currentStreak: number;
+  longestStreak: number;
+  pullRequests: number;
+  followers: number;
+  languages: LanguageStat[];
+}
+
 interface GitHubCommitChartProps {
   className?: string;
 }
 
 const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' }) => {
-  const [commitData, setCommitData] = useState<CommitData[]>([]);
+  const [stats, setStats] = useState<GitHubStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchCommitData = async () => {
+    const fetchStats = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/github-commits');
-        
+        const response = await fetch('/api/github-stats');
+
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           console.error('API Error:', response.status, errorData);
-          throw new Error(errorData.message || `Failed to fetch commit data (${response.status})`);
+          throw new Error(errorData.message || `Failed to fetch GitHub stats (${response.status})`);
         }
-        
+
         const data = await response.json();
-        if (Array.isArray(data)) {
-          setCommitData(data);
+        if (data && Array.isArray(data.days)) {
+          setStats(data);
           setError(null);
         } else {
           throw new Error('Invalid data format received');
         }
       } catch (err) {
-        console.error('Error fetching commit data:', err);
-        const errorMessage = err instanceof Error ? err.message : 'Failed to load commit history';
+        console.error('Error fetching GitHub stats:', err);
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load GitHub stats';
         setError(errorMessage);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCommitData();
+    fetchStats();
   }, []);
 
   // Setup tooltip handlers for SVG rects
@@ -102,10 +125,10 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
         heatmapContainer.removeEventListener('mouseout', handleMouseOut);
       }
     };
-  }, [commitData]);
+  }, [stats]);
 
   // Transform data for react-calendar-heatmap
-  const heatmapData = commitData.map((item) => ({
+  const heatmapData = (stats?.days ?? []).map((item) => ({
     date: item.date,
     count: item.count,
   }));
@@ -116,7 +139,7 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
   oneYearAgo.setDate(today.getDate() - 365);
 
   // Custom class for the heatmap to match game theme
-  const getClassForValue = (value: { count: number } | null) => {
+  const getClassForValue = (value: HeatmapValue | undefined) => {
     if (!value || value.count === 0) {
       return 'color-empty';
     }
@@ -135,18 +158,27 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
   if (loading) {
     return (
       <div className={`flex items-center justify-center p-4 ${className}`}>
-        <p className="font-pixellari text-blue-300 text-sm">Loading commit history...</p>
+        <p className="font-pixellari text-blue-300 text-sm">Loading GitHub stats...</p>
       </div>
     );
   }
 
-  if (error) {
+  if (error || !stats) {
     return (
       <div className={`flex items-center justify-center p-4 ${className}`}>
         <p className="font-pixellari text-red-300 text-sm">{error}</p>
       </div>
     );
   }
+
+  const statTiles = [
+    { label: 'CONTRIBS', value: stats.totalContributions, accent: 'text-green-400' },
+    { label: 'STREAK', value: `${stats.currentStreak}d`, accent: 'text-yellow-400' },
+    { label: 'BEST RUN', value: `${stats.longestStreak}d`, accent: 'text-orange-400' },
+    { label: 'ACTIVE DAYS', value: stats.activeDays, accent: 'text-cyan-400' },
+    { label: 'PULL REQS', value: stats.pullRequests, accent: 'text-purple-400' },
+    { label: 'FOLLOWERS', value: stats.followers, accent: 'text-pink-400' },
+  ];
 
   return (
     <div className={`flex flex-col ${className}`}>
@@ -211,28 +243,28 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
           fill: #56d364;
         }
       `}</style>
-      <div 
+      <div
         ref={containerRef}
-        className="flex-1 min-h-0 overflow-x-auto overflow-y-visible bg-gradient-to-br from-slate-900/50 to-blue-900/30 rounded-lg border border-blue-400/30 pt-4 px-3 pb-3 backdrop-blur-sm relative"
+        className="overflow-x-auto overflow-y-visible bg-gradient-to-br from-slate-900/50 to-blue-900/30 rounded-lg border border-blue-400/30 pt-4 px-3 pb-3 backdrop-blur-sm relative flex-shrink-0"
       >
         <CalendarHeatmap
           startDate={oneYearAgo}
           endDate={today}
           values={heatmapData}
           classForValue={getClassForValue}
-          tooltipDataAttrs={(value: { date: string; count: number } | null) => {
+          tooltipDataAttrs={(value: HeatmapValue | undefined) => {
             if (!value) {
-              return { 'data-tip': 'No commits' };
+              return { 'data-tip': 'No commits' } as TooltipDataAttrs;
             }
             const dateObj = new Date(value.date);
-            const formattedDate = dateObj.toLocaleDateString('en-US', { 
-              month: 'long', 
+            const formattedDate = dateObj.toLocaleDateString('en-US', {
+              month: 'long',
               day: 'numeric',
               year: 'numeric'
             });
             return {
               'data-tip': `${value.count} ${value.count === 1 ? 'contribution' : 'contributions'} on ${formattedDate}`,
-            };
+            } as TooltipDataAttrs;
           }}
         />
       </div>
@@ -263,9 +295,55 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
         </div>
         <span className="text-blue-400">More</span>
       </div>
+
+      {/* Stat tiles */}
+      <div className="grid grid-cols-3 gap-2 mt-4 flex-shrink-0">
+        {statTiles.map((tile) => (
+          <div
+            key={tile.label}
+            className="bg-slate-900/50 border border-blue-400/30 rounded p-2 text-center"
+          >
+            <div className={`font-pressstart2p text-sm ${tile.accent}`}>{tile.value}</div>
+            <div className="font-pixellari text-blue-300 text-[10px] mt-1 leading-tight">
+              {tile.label}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Top languages */}
+      {stats.languages.length > 0 && (
+        <div className="mt-4 flex-shrink-0">
+          <h4 className="font-pressstart2p text-white text-[10px] mb-2">TOP LANGUAGES</h4>
+          <div className="flex h-3 w-full rounded-sm overflow-hidden border border-blue-400/30">
+            {stats.languages.map((lang) => (
+              <div
+                key={lang.name}
+                style={{
+                  width: `${lang.percent}%`,
+                  backgroundColor: lang.color || '#60a5fa',
+                }}
+                title={`${lang.name} ${lang.percent.toFixed(1)}%`}
+              />
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
+            {stats.languages.map((lang) => (
+              <div key={lang.name} className="flex items-center gap-1.5">
+                <span
+                  className="w-2 h-2 rounded-sm flex-shrink-0"
+                  style={{ backgroundColor: lang.color || '#60a5fa' }}
+                />
+                <span className="font-pixellari text-blue-300 text-[10px]">
+                  {lang.name} {lang.percent.toFixed(0)}%
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default GitHubCommitChart;
-

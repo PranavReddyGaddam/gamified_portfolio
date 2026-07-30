@@ -1412,46 +1412,11 @@ Type 'help' to see available commands.`;
                   <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
                     <div className="bg-blue-900/80 border border-blue-400 rounded-lg p-4 h-full flex flex-col">
                       <h3 className="font-pressstart2p text-white text-base mb-3 flex-shrink-0">
-                        COMMIT HISTORY
+                        GITHUB STATS
                       </h3>
-                      <div className="flex-1 min-h-0 overflow-x-auto overflow-y-visible">
-                        <GitHubCommitChart className="h-full" />
+                      <div className="flex-1 min-h-0 overflow-y-auto">
+                        <GitHubCommitChart />
                       </div>
-
-                      {/* Equipped Skills Panel */}
-                      <h3 className="font-pressstart2p text-white text-sm md:text-base mb-3 flex-shrink-0 mt-4">
-                        EQUIPPED SKILLS
-                      </h3>
-                      <ul className="space-y-2 md:space-y-3 text-xs text-gray-300 font-pressstart2p overflow-y-auto flex-1 min-h-0">
-                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-yellow-400">◆</span>
-                          Python & FastAPI
-                        </li>
-                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-green-400">◆</span>
-                          React, Next.js & TypeScript
-                        </li>
-                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-pink-400">◆</span>
-                          Agentic AI & LLM Orchestration
-                        </li>
-                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-cyan-400">◆</span>
-                          Distributed Systems & Agent Architecture
-                        </li>
-                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-indigo-400">◆</span>
-                          PostgreSQL & MongoDB
-                        </li>
-                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-red-400">◆</span>
-                          Docker, Kubernetes & AWS
-                        </li>
-                        <li className="flex items-center gap-2 whitespace-normal md:whitespace-nowrap">
-                          <span className="text-purple-400">◆</span>
-                          Real-Time Systems & Data Pipelines
-                        </li>
-                      </ul>
                     </div>
                   </div>
                 </div>
