@@ -26,7 +26,7 @@ const THEME_STYLES: Record<
   charcoal: { bg: "#27272a", text: "#fff", buttonBg: "rgba(255,255,255,0.1)" },
 };
 
-const PLACEHOLDER_PREVIEW = "/projects/Pranav.jpeg";
+const PLACEHOLDER_PREVIEW = "/v1/projects/Pranav.jpeg";
 const COLLAPSED_PX = 52;
 const ANIM_DURATION = 0.5;
 const ANIM_EASE = "power3.inOut";

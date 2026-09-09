@@ -93,7 +93,7 @@ const projects: Project[] = [
       "Generates custom quizzes from any topic for educators, with LLM-powered questions and performance analytics.",
     tags: ["Next.js", "Python", "RAG", "Agentic Architecture"],
     linkLabel: "View Code",
-    previewImages: ["/videos/Bloom.mp4"],
+    previewImages: ["/v1/videos/Bloom.mp4"],
     githubUrl: "https://github.com/pranavreddygaddam/Bloom",
     liveUrl: "https://bloom.pranavreddygaddam.com/",
   },
@@ -104,7 +104,7 @@ const projects: Project[] = [
       "Free SF building lookup with a 0-100 health score from DBI violations, evictions, crime, and permits data.",
     tags: ["React", "MapLibre", "FastAPI"],
     linkLabel: "View Website",
-    previewImages: ["/videos/Bay-Window.mp4"],
+    previewImages: ["/v1/videos/Bay-Window.mp4"],
     githubUrl: "https://github.com/PranavReddyGaddam/Bay-Window",
     liveUrl: "https://baywindow.pranavreddygaddam.com/",
   },
@@ -115,7 +115,7 @@ const projects: Project[] = [
       "AI study companion that teaches system design from first principles, quizzes you, and grades mock interviews on a visual canvas.",
     tags: ["React", "FastAPI", "Claude"],
     linkLabel: "View Website",
-    previewImages: ["/videos/system_design.mp4"],
+    previewImages: ["/v1/videos/system_design.mp4"],
     githubUrl: "https://github.com/PranavReddyGaddam/system-design",
     liveUrl: "https://systemdesign.pranavreddygaddam.com/",
   },
@@ -126,7 +126,7 @@ const projects: Project[] = [
       "Turns GitHub repositories into interactive diagrams and AI-narrated walkthroughs for fast codebase exploration.",
     tags: ["React", "ElevenLabs", "FastAPI", "AWS", "MermaidJS"],
     linkLabel: "View Code",
-    previewImages: ["/videos/GitBridge.mp4"],
+    previewImages: ["/v1/videos/GitBridge.mp4"],
     githubUrl: "https://github.com/pranavreddygaddam/gitbridge",
   },
   {
@@ -136,7 +136,7 @@ const projects: Project[] = [
       "AI interview prep platform that scrapes live job listings and generates personalized interview questions.",
     tags: ["FastAPI", "React", "Groq", "Supabase", "ChromaDB"],
     linkLabel: "View Code",
-    previewImages: ["/videos/Hirely.mp4"],
+    previewImages: ["/v1/videos/Hirely.mp4"],
     githubUrl: "https://github.com/PranavReddyGaddam/Hirely",
   },
   {
@@ -146,7 +146,7 @@ const projects: Project[] = [
       "LLM explainability framework using Process Reward Models to make step-by-step mathematical reasoning transparent, with real-time token confidence, attention, logit lens, and gradient attribution visualizations.",
     tags: ["PRM", "LLM", "Explainability", "PyTorch"],
     linkLabel: "View Code",
-    previewImages: ["/videos/Prism.mp4"],
+    previewImages: ["/v1/videos/Prism.mp4"],
     githubUrl: "https://github.com/PranavReddyGaddam/Prism",
   },
   {
@@ -156,7 +156,7 @@ const projects: Project[] = [
       "Gamified portfolio with level progression, achievements, WebGL backgrounds, and scroll-based reveals.",
     tags: ["Vite", "Tailwind CSS", "React"],
     linkLabel: "View Code",
-    previewImages: ["/videos/Portfolio.mp4"],
+    previewImages: ["/v1/videos/Portfolio.mp4"],
     githubUrl: "https://github.com/PranavReddyGaddam/gamified-portfolio",
   },
   {
@@ -166,7 +166,7 @@ const projects: Project[] = [
       "Evaluates startup ideas through simulated expert personas, visualized on an interactive 3D globe.",
     tags: ["React", "Three.js", "Tailwind CSS", "FastAPI", "OpenAI"],
     linkLabel: "View Code",
-    previewImages: ["/videos/Nexus.mp4"],
+    previewImages: ["/v1/videos/Nexus.mp4"],
     githubUrl: "https://github.com/PranavReddyGaddam/Nexus",
   },
   {
@@ -176,7 +176,7 @@ const projects: Project[] = [
       "Drop-pricing group-buy marketplace where the unit price falls as more buyers commit, and every committed buyer pays the lowest tier reached by the deadline. Sharing a drop recruits more buyers, which drops the price for everyone already in.",
     tags: ["React", "TypeScript", "FastAPI", "Marketplace"],
     linkLabel: "View Website",
-    previewImages: ["/videos/Pindrop.mp4"],
+    previewImages: ["/v1/videos/Pindrop.mp4"],
     githubUrl: "https://github.com/PranavReddyGaddam/PinDrop",
     liveUrl: "https://pin-drop-six.vercel.app",
   },
@@ -193,7 +193,7 @@ const projects: Project[] = [
   {
     id: "coming-soon-2",
     title: "???",
-    image: "/Pranav_Logo.png",
+    image: "/v1/Pranav_Logo.png",
     description: "A new quest is under construction. Check back soon.",
     tags: ["TBD"],
     linkLabel: "Coming Soon",
@@ -202,7 +202,7 @@ const projects: Project[] = [
   {
     id: "coming-soon-3",
     title: "???",
-    image: "/Pranav_Logo.png",
+    image: "/v1/Pranav_Logo.png",
     description: "A new quest is under construction. Check back soon.",
     tags: ["TBD"],
     linkLabel: "Coming Soon",
@@ -884,7 +884,7 @@ Type 'github' to open main GitHub profile`;
       case "resume":
         response = `Opening resume download...`;
         setTimeout(() => {
-          window.open("/Pranav_Reddy_Gaddam_Resume_FT_Master.pdf", "_blank");
+          window.open("/v1/Pranav_Reddy_Gaddam_Resume_FT_Master.pdf", "_blank");
         }, 1000);
         break;
       case "contact":
@@ -1205,7 +1205,7 @@ Type 'help' to see available commands.`;
                       {/* Image area */}
                       <div className="flex-1 min-h-0">
                         <img
-                          src="/projects/Pranav.jpeg"
+                          src="/v1/projects/Pranav.jpeg"
                           alt="Character Portrait"
                           className="w-full h-full object-cover"
                         />
