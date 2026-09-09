@@ -83,6 +83,7 @@ export const projects: Project[] = [
   {
     id: "systemdesign",
     title: "System Design",
+    year: "2025",
     description:
       "AI study companion that teaches system design from first principles, quizzes you, and grades mock interviews on a visual canvas.",
     tags: ["React", "FastAPI", "Claude"],
@@ -94,6 +95,7 @@ export const projects: Project[] = [
   {
     id: "gitbridge",
     title: "GitBridge",
+    year: "2025",
     description:
       "Turns GitHub repositories into interactive diagrams and AI-narrated walkthroughs for fast codebase exploration.",
     tags: ["React", "ElevenLabs", "FastAPI", "AWS", "MermaidJS"],
@@ -104,6 +106,7 @@ export const projects: Project[] = [
   {
     id: "hirely",
     title: "Hirely",
+    year: "2025",
     description:
       "AI interview prep platform that scrapes live job listings and generates personalized interview questions.",
     tags: ["FastAPI", "React", "Groq", "Supabase", "ChromaDB"],
@@ -114,6 +117,7 @@ export const projects: Project[] = [
   {
     id: "prism",
     title: "Prism",
+    year: "2025",
     description:
       "LLM explainability framework using Process Reward Models to make step-by-step mathematical reasoning transparent, with real-time token confidence, attention, logit lens, and gradient attribution visualizations.",
     tags: ["PRM", "LLM", "Explainability", "PyTorch"],
@@ -124,6 +128,7 @@ export const projects: Project[] = [
   {
     id: "personalwebsite",
     title: "Personal Portfolio Website",
+    year: "2025",
     description:
       "Gamified portfolio with level progression, achievements, WebGL backgrounds, and scroll-based reveals.",
     tags: ["Vite", "Tailwind CSS", "React"],
@@ -134,6 +139,7 @@ export const projects: Project[] = [
   {
     id: "nexus",
     title: "Nexus",
+    year: "2024",
     description:
       "Evaluates startup ideas through simulated expert personas, visualized on an interactive 3D globe.",
     tags: ["React", "Three.js", "Tailwind CSS", "FastAPI", "OpenAI"],
@@ -144,6 +150,7 @@ export const projects: Project[] = [
   {
     id: "pindrop",
     title: "PinDrop",
+    year: "2025",
     description:
       "Drop-pricing group-buy marketplace where the unit price falls as more buyers commit, and every committed buyer pays the lowest tier reached by the deadline. Sharing a drop recruits more buyers, which drops the price for everyone already in.",
     tags: ["React", "TypeScript", "FastAPI", "Marketplace"],
@@ -155,6 +162,7 @@ export const projects: Project[] = [
   {
     id: "isowebapp",
     title: "ISO Web App",
+    year: "2024",
     description:
       "Volunteer and event management system with role-based access, dynamic ticketing, and QR check-in.",
     tags: ["FastAPI", "React", "Tailwind CSS", "Supabase", "Docker"],
