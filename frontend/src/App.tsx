@@ -17,6 +17,7 @@ import ProjectDeckMobile from "./components/ProjectDeckMobile";
 import TimeMachine from "./components/TimeMachine";
 import "./components/TimeMachine.css";
 import "./components/Hero.css";
+import ExperienceRows from "./components/ExperienceRows";
 import HireMeStats from "./components/HireMeStats";
 import { Button } from "@/components/ui/8bit/button";
 import { Card, CardContent } from "@/components/ui/8bit/card";
@@ -1183,38 +1184,53 @@ Type 'help' to see available commands.`;
               , building products that ship.
             </p>
 
-            <div className="space-y-4">
-              {[
+            <ExperienceRows
+              entries={[
                 {
-                  org: "VE Projects Pvt Ltd",
-                  team: "Data Engineering",
-                  role: "Software Engineer",
-                  year: "24'",
-                },
-                {
-                  org: "San Jose State University",
-                  team: "Applied Data Science",
-                  role: "Master's",
-                  year: "26'",
-                },
-                {
+                  id: "bachelors",
                   org: "St. Martin's Engineering College",
                   team: "Computer Science",
                   role: "Bachelor's",
-                  year: "23'",
+                  year: "19–23",
+                  period: "Aug 2019 – May 2023",
+                  detail:
+                    "Bachelor's in Computer Science, where I picked up the fundamentals and started building things well beyond coursework.",
+                  points: [
+                    "Data structures, algorithms, and systems foundations",
+                    "First side projects in Python and web development",
+                  ],
                 },
-              ].map((r) => (
-                <div
-                  key={r.org}
-                  className="grid grid-cols-4 gap-4 text-sm py-2 border-b border-neutral-100 last:border-0"
-                >
-                  <span className="text-neutral-900 font-normal">{r.org}</span>
-                  <span className="text-neutral-900">{r.team}</span>
-                  <span className="text-neutral-900">{r.role}</span>
-                  <span className="text-neutral-400 text-right">{r.year}</span>
-                </div>
-              ))}
-            </div>
+                {
+                  id: "ve-projects",
+                  org: "VE Projects Pvt Ltd",
+                  team: "Data Engineering",
+                  role: "Software Engineer",
+                  year: "23–24",
+                  period: "Aug 2023 – Jul 2024",
+                  detail:
+                    "Built and maintained data pipelines and warehouse infrastructure, working across ingestion, transformation, and delivery.",
+                  points: [
+                    "Migrated databases, cutting infrastructure cost",
+                    "Built data pipelines and resolved production issues",
+                    "Python, SQL, R · AWS, Docker · Snowflake, Redshift, Kafka, Spark",
+                  ],
+                },
+                {
+                  id: "masters",
+                  org: "San Jose State University",
+                  team: "Applied Data Science",
+                  role: "Master's",
+                  year: "24–26",
+                  period: "Aug 2024 – May 2026",
+                  detail:
+                    "Master's in Applied Data Science, focusing on machine learning systems and putting models into production.",
+                  points: [
+                    "CGPA 3.84 / 4.0",
+                    "Machine learning, AI systems, and large-scale data",
+                  ],
+                },
+              ]}
+            />
           </div>
         </div>
       </section>
