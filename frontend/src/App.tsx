@@ -525,7 +525,7 @@ function App() {
 
       {/* Footer */}
       <footer id="contact" className="site-footer relative z-10 px-6 md:px-16 pt-8 pb-8">
-        <div className="flex flex-col gap-16">
+        <div className="flex flex-col">
           <div className="flex flex-col gap-5 items-start w-full">
             {/* Hairline rule */}
             <div className="bg-neutral-200 h-px w-full" />
@@ -535,7 +535,7 @@ function App() {
               <div className="flex flex-col gap-0 items-start">
                 <a href="#home" className="flex gap-3 items-center transition-opacity hover:opacity-80">
                   <p className="font-display text-3xl text-neutral-700">
-                    pranav reddy gaddam
+                    Pranav Reddy Gaddam
                   </p>
                 </a>
                 <p className="text-base text-neutral-400 mt-1">
@@ -621,7 +621,7 @@ function App() {
             <div className="md:hidden flex flex-col gap-6 w-full">
               <div>
                 <p className="font-display text-2xl text-neutral-700">
-                  pranav reddy gaddam
+                  Pranav Reddy Gaddam
                 </p>
                 <p className="text-sm text-neutral-400 mt-1">
                   <LocalClock /> San Jose, CA
@@ -640,13 +640,6 @@ function App() {
                 <a href="https://twitter.com/Pranav_2801" target="_blank" rel="noopener noreferrer" aria-label="X"><RiTwitterXFill size={17} /></a>
               </div>
             </div>
-          </div>
-
-          {/* Centred credit line */}
-          <div className="flex flex-col items-center gap-1">
-            <p className="text-xs text-neutral-300 tracking-wider uppercase">
-              © {new Date().getFullYear()} Pranav Reddy Gaddam
-            </p>
           </div>
         </div>
       </footer>
