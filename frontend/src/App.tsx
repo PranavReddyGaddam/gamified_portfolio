@@ -312,7 +312,7 @@ function App() {
           <a href="/" className="hero-logo">
             Pranav Reddy Gaddam
           </a>
-          <span className="hero-meta-loc">Based in San Jose, California</span>
+          <span className="hero-meta-loc">San Jose, California</span>
           <nav className="hero-nav">
             {[
               { label: "Home", target: "#home" },

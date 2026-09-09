@@ -163,15 +163,19 @@
 
 .hero-meta-tag,
 .hero-meta-loc {
-  flex: 0 0 auto;
   padding-top: 6px;
 }
 
-.hero-meta-tag {
-  width: 26%;
+/* The location centres on the bar itself rather than sitting in a fixed
+   column, which drifted left once the role tag beside it was removed. */
+.hero-meta-loc {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
-.hero-meta-loc {
+.hero-meta-tag {
   width: 26%;
 }
 
