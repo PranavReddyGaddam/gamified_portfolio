@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { BiSolidJoystick } from "react-icons/bi";
@@ -21,6 +21,16 @@ const Navbar: React.FC<NavbarProps> = ({
   onOpenAchievements,
 }) => {
   const headerRef = useRef<HTMLElement>(null);
+  // The landing section is a clean editorial hero, so the game HUD only
+  // appears once the visitor scrolls past it.
+  const [pastHero, setPastHero] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.6);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // On mobile the navbar is tall, so hide it when scrolling down and reveal
   // it on scroll up to free the viewport
@@ -59,7 +69,7 @@ const Navbar: React.FC<NavbarProps> = ({
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 left-0 right-0 z-50 p-2 md:p-4 bg-white/90 md:bg-transparent backdrop-blur-sm"
+      className={`fixed top-0 left-0 right-0 z-50 p-2 md:p-4 bg-white/90 md:bg-transparent backdrop-blur-sm transition-opacity duration-500 ${pastHero ? "opacity-100" : "opacity-0 pointer-events-none"}`}
     >
       {/* Desktop Layout - Horizontal */}
       <div className="hidden md:flex justify-between items-center max-w-6xl mx-auto gap-3 md:gap-4">

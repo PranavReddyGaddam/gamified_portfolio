@@ -4,7 +4,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import TextType from "./backgrounds/TextAnimations/TextType/TextType";
 import emailjs from "@emailjs/browser";
 import Navbar from "./components/Navbar";
 import GitHubCommitChart from "./components/GitHubCommitChart";
@@ -1060,72 +1059,76 @@ Type 'help' to see available commands.`;
       {/* Section 1: Landing Page */}
       <section
         data-level={1}
-        className="relative z-10 flex flex-col items-center justify-center h-screen px-4 overflow-hidden pt-20"
+        className="relative z-10 min-h-screen flex flex-col justify-center px-6 sm:px-10 lg:px-16 pt-32 pb-20"
       >
-        <div className="relative z-10 max-w-2xl w-full text-center mb-16 bg-white/70 backdrop-blur-md rounded-xl">
-          <div className="p-8">
-            {/* Start Prompt */}
-            <p className="font-pressstart2p text-purple-700 text-lg mb-6">
-              PRANAV REDDY GADDAM'S
-            </p>
+        <div className="max-w-[1400px] mx-auto w-full">
+          {/* Eyebrow */}
+          <p className="font-geist font-light text-sm tracking-[0.18em] uppercase text-olive/60 mb-12">
+            Based in San Jose, California
+          </p>
 
-            {/* Main Title with Typing Effect */}
-            <div className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl lg:text-6xl text-gray-900 mb-4">
-              <TextType
-                text={["RUNTIME ODYSSEY"]}
-                typingSpeed={125}
-                pauseDuration={1000}
-                showCursor={true}
-                cursorCharacter="_"
-              />
-            </div>
+          {/* Headline */}
+          <h1 className="font-display text-olive font-normal text-[3.25rem] leading-[0.98] sm:text-7xl md:text-8xl lg:text-[5.85rem] xl:text-[7rem] max-w-[16ch]">
+            I build living,
+            <br />
+            breathing <span className="italic">software</span>
+            <br />
+            for the web
+          </h1>
 
-            {/* Subtitle */}
-            <p className="font-pressstart2p text-xl text-gray-900 mb-4">
-              LEVEL 1: INTRODUCTION
-            </p>
+          {/* Supporting copy */}
+          <p className="font-geist font-light text-lg sm:text-xl leading-[1.6] text-olive/75 mt-12 max-w-[46ch]">
+            Full-stack engineer working across AI, data pipelines, and interface
+            design — from first sketch through to production.
+          </p>
 
-            {/* Description */}
-            <p className="font-pressstart2p text-sm text-gray-600 mb-8">
-              An engineer's quest across stacks, pipelines, and pixel worlds
-            </p>
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10 mt-14">
+            <button
+              onClick={handleStartGame}
+              className="font-geist font-light text-base bg-olive text-cream px-10 py-4 rounded-full transition-opacity duration-300 hover:opacity-85"
+            >
+              View my work
+            </button>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                variant="default"
-                size="lg"
-                font="retro"
-                className="border-purple-600 bg-purple-600 hover:bg-purple-700 text-gray-900 px-6 py-3"
-                onClick={handleStartGame}
-              >
-                START GAME
-              </Button>
+            <a
+              href="mailto:pranavreddy.gaddam@sjsu.edu"
+              className="font-geist font-light text-base text-olive border-b border-olive/25 pb-1 transition-colors duration-300 hover:border-olive"
+            >
+              Get in touch
+            </a>
+          </div>
 
-              <Button
-                variant="outline"
-                size="lg"
-                font="retro"
-                className="border-gray-300 text-gray-900 hover:bg-white hover:text-black px-6 py-3"
-                onClick={handleHowToPlay}
-              >
-                HOW TO PLAY
-              </Button>
-            </div>
+          {/* Disciplines */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 sm:gap-10 mt-28 pt-12 border-t border-olive/15 max-w-5xl">
+            {[
+              { title: "Full-stack", body: "React, TypeScript, Python, FastAPI" },
+              { title: "AI & data", body: "RAG, agents, pipelines, retrieval" },
+              { title: "Cloud", body: "AWS, Docker, CI/CD, observability" },
+            ].map((d) => (
+              <div key={d.title}>
+                <h3 className="font-display text-2xl text-olive mb-3">
+                  {d.title}
+                </h3>
+                <p className="font-geist font-light text-[15px] leading-[1.65] text-olive/60">
+                  {d.body}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Transition Section - Smooth Blend */}
-      <section className="relative z-10 h-32 bg-gradient-to-b from-transparent via-blue-50 to-blue-100">
-        <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/40 to-white/0"></div>
+      <section className="relative z-10 h-32 bg-cream">
+        <div className="absolute inset-0 "></div>
       </section>
 
       {/* Section 2: Character Stats */}
       <section
         data-level={2}
         ref={nextSectionRef}
-        className="relative z-10 min-h-screen bg-gradient-to-b from-white via-blue-50 to-blue-100 px-4 py-16"
+        className="relative z-10 min-h-screen bg-cream px-4 py-16"
       >
 
         <div className="relative z-10 max-w-6xl mx-auto">
@@ -1399,7 +1402,7 @@ Type 'help' to see available commands.`;
       {/* Section 3: Progression Path */}
       <section
         data-level={3}
-        className="relative z-10 min-h-screen bg-gradient-to-b from-white via-yellow-50 to-yellow-100 px-4 py-16"
+        className="relative z-10 min-h-screen bg-cream px-4 py-16"
       >
 
         <div className="relative z-10 max-w-6xl mx-auto">
@@ -1960,7 +1963,7 @@ Type 'help' to see available commands.`;
       {/* Section 4: Skill Tree */}
       <section
         data-level={4}
-        className="relative z-10 min-h-screen bg-gradient-to-b from-white via-green-50 to-green-100 px-4 py-16"
+        className="relative z-10 min-h-screen bg-cream px-4 py-16"
       >
         {/* State for unlocked skills */}
         <script>
@@ -2475,7 +2478,7 @@ Type 'help' to see available commands.`;
       {/* Section 5: Project Quests */}
       <section
         data-level={5}
-        className="relative z-10 min-h-screen bg-gradient-to-b from-white via-red-50 to-red-100 px-4 py-16"
+        className="relative z-10 min-h-screen bg-cream px-4 py-16"
       >
 
         <div className="relative z-10 max-w-6xl mx-auto">
@@ -2532,7 +2535,7 @@ Type 'help' to see available commands.`;
       </section>
       <section
         data-level={6}
-        className="relative z-10 min-h-screen bg-gradient-to-b from-white via-teal-50 to-teal-100 px-3 py-12"
+        className="relative z-10 min-h-screen bg-cream px-3 py-12"
       >
 
         <div className="relative z-10 max-w-5xl mx-auto">
@@ -2853,7 +2856,7 @@ Type 'help' to see available commands.`;
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 bg-gradient-to-r from-white via-white/80 to-white border-t-2 border-teal-600">
+      <footer className="relative z-10 bg-cream border-t-2 border-teal-600">
         <div className="max-w-6xl mx-auto px-4 py-4 text-center">
           <TimeMachine />
           <p className="font-pixellari text-teal-700 text-sm mt-3">

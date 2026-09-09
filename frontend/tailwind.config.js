@@ -5,7 +5,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        cream: '#f0efe9',
+        olive: '#3a4a16',
+        'olive-deep': '#212e02',
+      },
       fontFamily: {
+        'display': ['Instrument Serif', 'Georgia', 'serif'],
+        'geist': ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         'taviraj': ['Taviraj', 'Georgia', 'serif'],
         'pressstart2p': ['PressStart2P', 'monospace'],
         'pixellari': ['Pixellari', 'monospace'],
