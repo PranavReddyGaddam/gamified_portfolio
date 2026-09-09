@@ -220,7 +220,9 @@
   height: 4.19vw;
   max-height: 62px;
   border-radius: 999px;
-  vertical-align: -0.16em;
+  /* Centred on the text's optical midline (~0.37em above the baseline for
+     Instrument Serif) rather than hanging below it. */
+  vertical-align: -0.01em;
   background-size: cover;
   background-position: center;
 
