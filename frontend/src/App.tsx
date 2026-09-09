@@ -26,6 +26,7 @@ const EMAILJS_TEMPLATE_ID = "template_4hg075h";
 const EMAILJS_PUBLIC_KEY = "wRXZiwguBPiyEMvoX";
 
 // Resume URL (place your PDF in public/ and update this path if needed)
+const RESUME_URL = "/Pranav_Reddy_Gaddam_Resume_FT_Master.pdf";
 
 
 // Level 5 project quests
@@ -317,15 +318,20 @@ function App() {
               { label: "Home", target: "#home" },
               { label: "About", target: "#about" },
               { label: "Work", target: "#projects" },
-              { label: "Contact", target: "#contact" },
+              // Resume is a file rather than a section, so it opens in a new tab.
+              { label: "Resume", target: RESUME_URL, external: true },
             ].map((l, i) => (
               <a
                 key={l.label}
                 href={l.target}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection(l.target);
-                }}
+                {...(l.external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {
+                      onClick: (e: React.MouseEvent) => {
+                        e.preventDefault();
+                        scrollToSection(l.target);
+                      },
+                    })}
                 className={`hero-nav-link${i === 0 ? " is-active" : ""}`}
               >
                 {l.label}
