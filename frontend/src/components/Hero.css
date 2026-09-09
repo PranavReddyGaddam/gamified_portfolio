@@ -5,6 +5,12 @@
   background: #f0efe9;
 }
 
+/* Pull the headline above the optical centre: dead centre reads low once
+   the fixed nav occupies the top of the viewport. */
+.hero-section > div:last-child {
+  margin-top: -6vh;
+}
+
 /* --- vertical column rules ------------------------------------------- */
 
 .hero-columns {
@@ -219,7 +225,7 @@
 .hero-title {
   font-family: "Instrument Serif", Georgia, serif;
   font-weight: 400;
-  font-size: clamp(2.1rem, 5.6vw, 84px);
+  font-size: clamp(2.4rem, 6.4vw, 96px);
   line-height: 1;
   color: #3a4a16;
   text-align: center;
