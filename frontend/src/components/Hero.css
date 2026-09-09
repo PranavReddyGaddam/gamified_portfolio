@@ -348,9 +348,12 @@
   background: #ffffff;
 }
 
-/* Portrait holds the reference's 3:4 frame at any column width. */
+/* Portrait holds the reference's 3:4 frame. Capped at the reference's own
+   384px rather than filling the column, so it stays a portrait and not a
+   full-bleed panel. */
 .about-portrait {
   width: 100%;
+  max-width: 384px;
   aspect-ratio: 3 / 4;
   overflow: hidden;
 }

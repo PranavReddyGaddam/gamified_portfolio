@@ -5,7 +5,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import emailjs from "@emailjs/browser";
-import Navbar from "./components/Navbar";
 import GitHubCommitChart from "./components/GitHubCommitChart";
 import AchievementToasts, {
   AchievementToast,
@@ -1039,14 +1038,6 @@ Type 'help' to see available commands.`;
 
   return (
     <div className="min-h-screen bg-white text-gray-900 relative">
-      {/* Navbar */}
-      <Navbar
-        currentLevel={currentLevel}
-        totalLevels={totalLevels}
-        score={score}
-        onOpenAchievements={() => setShowAchievementsModal(true)}
-      />
-
       {/* Spaceship Start Sound */}
       <audio
         ref={spaceshipSoundRef}
@@ -1194,12 +1185,24 @@ Type 'help' to see available commands.`;
 
             <div className="space-y-4">
               {[
-                { org: "Bloom", team: "AI Quiz Platform", role: "Founder", year: "25'" },
-                { org: "GitBridge", team: "Developer Tools", role: "Creator", year: "25'" },
-                { org: "Pindrop", team: "Geospatial", role: "Engineer", year: "25'" },
-                { org: "Prism", team: "Data Platform", role: "Engineer", year: "25'" },
-                { org: "Bay Window", team: "Real Estate AI", role: "Engineer", year: "24'" },
-                { org: "SJSU", team: "Computer Science", role: "MS Student", year: "24'" },
+                {
+                  org: "VE Projects Pvt Ltd",
+                  team: "Data Engineering",
+                  role: "Software Engineer",
+                  year: "24'",
+                },
+                {
+                  org: "San Jose State University",
+                  team: "Applied Data Science",
+                  role: "Master's",
+                  year: "26'",
+                },
+                {
+                  org: "St. Martin's Engineering College",
+                  team: "Computer Science",
+                  role: "Bachelor's",
+                  year: "23'",
+                },
               ].map((r) => (
                 <div
                   key={r.org}
