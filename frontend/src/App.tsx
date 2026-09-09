@@ -2713,12 +2713,12 @@ Type 'help' to see available commands.`;
 
       {/* Footer */}
       <footer className="relative z-10 bg-cream border-t-2 border-teal-600">
-        <div className="max-w-6xl mx-auto px-4 py-4 text-center">
-          <TimeMachine />
-          <p className="font-pixellari text-teal-700 text-sm mt-3">
+        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6">
+          <p className="font-pixellari text-teal-700 text-sm order-2 sm:order-1">
             Crafted with curiosity and caffeine — © {new Date().getFullYear()}{" "}
             Pranav Reddy Gaddam
           </p>
+          <TimeMachine />
         </div>
       </footer>
 
