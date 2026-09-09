@@ -136,16 +136,26 @@
 
 /* --- top meta bar ----------------------------------------------------- */
 
-/* The bar is fixed rather than absolute so it stays with the reader through
-   the whole page, not just the hero. */
+/* Name and location sit in the hero and scroll away with it. */
 .hero-meta {
-  position: fixed;
+  position: absolute;
   top: 50px;
   left: 50px;
   right: 50px;
   display: flex;
   align-items: flex-start;
   gap: 2rem;
+  z-index: 3;
+  font-family: "Geist", -apple-system, sans-serif;
+  font-size: 13.6px;
+  color: #3a4a16;
+}
+
+/* The section links stay on screen for the whole page. */
+.hero-navbar {
+  position: fixed;
+  top: 50px;
+  right: 50px;
   z-index: 40;
   font-family: "Geist", -apple-system, sans-serif;
   font-size: 13.6px;
@@ -182,7 +192,6 @@
 }
 
 .hero-nav {
-  margin-left: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -377,10 +386,14 @@
   }
 
   .hero-nav {
-    margin-left: 0;
     flex-direction: row;
     align-items: center;
     gap: 1rem;
+  }
+
+  .hero-navbar {
+    top: 24px;
+    right: 22px;
   }
 
   .hero-nav-link {

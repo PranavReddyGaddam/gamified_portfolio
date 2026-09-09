@@ -14,7 +14,6 @@ import { projects } from "./data/projects";
 import WorkList from "./components/WorkList";
 import Reveal from "./components/Reveal";
 import HeroNav from "./components/HeroNav";
-import useStickySections from "./components/useStickySections";
 import LocalClock from "./components/LocalClock";
 import HireMeStats from "./components/HireMeStats";
 import { RiTwitterXFill } from "react-icons/ri";
@@ -109,9 +108,6 @@ function App() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
-
-  // Pin each section so the next scrolls up over it.
-  useStickySections();
 
   // GSAP smooth scrolling for the whole page
   const smootherRef = useRef<ScrollSmoother | null>(null);
@@ -296,7 +292,6 @@ function App() {
       <section
         data-level={1}
         id="home"
-        data-sticky-section
         className="hero-section relative z-10 min-h-screen flex flex-col justify-center px-[50px] overflow-hidden"
       >
         {/* Decorative gradient shapes */}
@@ -314,15 +309,19 @@ function App() {
           <span /><span /><span /><span />
         </div>
 
-        {/* Top meta bar. Portalled to the body: ScrollSmoother puts a
-            transform on #smooth-content, which would otherwise be the
-            containing block for position:fixed. */}
+        {/* Name and location belong to the hero and scroll away with it. */}
+        <div className="hero-meta">
+          <a href="/" className="hero-logo">
+            Pranav Reddy Gaddam
+          </a>
+          <span className="hero-meta-loc">San Jose, California</span>
+        </div>
+
+        {/* Only the section links stay on screen. Portalled to the body:
+            ScrollSmoother puts a transform on #smooth-content, which would
+            otherwise be the containing block for position:fixed. */}
         {createPortal(
-          <div className="hero-meta">
-            <a href="/" className="hero-logo">
-              Pranav Reddy Gaddam
-            </a>
-            <span className="hero-meta-loc">San Jose, California</span>
+          <div className="hero-navbar">
             <HeroNav
               items={[
                 { label: "Home", target: "#home" },
@@ -379,7 +378,6 @@ function App() {
         data-level={2}
         ref={nextSectionRef}
         id="about"
-        data-sticky-section
         className="about-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-32"
       >
         <Reveal stagger={0.12} className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-32">
@@ -529,7 +527,6 @@ function App() {
       <section
         data-level={5}
         id="projects"
-        data-sticky-section
         className="work-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-32"
       >
         <div className="max-w-6xl mx-auto">
@@ -545,7 +542,7 @@ function App() {
       </section>
 
       {/* Footer */}
-      <footer id="contact" data-sticky-section className="site-footer relative z-10 px-6 md:px-16 pt-8 pb-8">
+      <footer id="contact" className="site-footer relative z-10 px-6 md:px-16 pt-8 pb-8">
         <div className="flex flex-col">
           <div className="flex flex-col gap-5 items-start w-full">
             {/* Hairline rule */}
