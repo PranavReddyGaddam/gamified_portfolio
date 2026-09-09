@@ -13,6 +13,8 @@ import TimeMachine from "./components/TimeMachine";
 import "./components/TimeMachine.css";
 import "./components/Hero.css";
 import ExperienceRows from "./components/ExperienceRows";
+import { projects } from "./data/projects";
+import WorkList from "./components/WorkList";
 import LocalClock from "./components/LocalClock";
 import HireMeStats from "./components/HireMeStats";
 import { RiTwitterXFill } from "react-icons/ri";
@@ -30,143 +32,7 @@ const EMAILJS_PUBLIC_KEY = "wRXZiwguBPiyEMvoX";
 
 
 // Level 5 project quests
-type Project = {
-  id: string;
-  title: string;
-  image?: string;
-  description: string;
-  tags: string[];
-  linkLabel: string;
-  placeholder?: boolean;
-  previewImages?: string[];
-  githubUrl?: string;
-  liveUrl?: string;
-};
 
-const projects: Project[] = [
-  {
-    id: "bloom",
-    title: "Bloom",
-    description:
-      "Generates custom quizzes from any topic for educators, with LLM-powered questions and performance analytics.",
-    tags: ["Next.js", "Python", "RAG", "Agentic Architecture"],
-    linkLabel: "View Code",
-    previewImages: ["/videos/Bloom.mp4"],
-    githubUrl: "https://github.com/pranavreddygaddam/Bloom",
-    liveUrl: "https://bloom.pranavreddygaddam.com/",
-  },
-  {
-    id: "baywindow",
-    title: "Bay Window",
-    description:
-      "Free SF building lookup with a 0-100 health score from DBI violations, evictions, crime, and permits data.",
-    tags: ["React", "MapLibre", "FastAPI"],
-    linkLabel: "View Website",
-    previewImages: ["/videos/Bay-Window.mp4"],
-    githubUrl: "https://github.com/PranavReddyGaddam/Bay-Window",
-    liveUrl: "https://baywindow.pranavreddygaddam.com/",
-  },
-  {
-    id: "systemdesign",
-    title: "System Design",
-    description:
-      "AI study companion that teaches system design from first principles, quizzes you, and grades mock interviews on a visual canvas.",
-    tags: ["React", "FastAPI", "Claude"],
-    linkLabel: "View Website",
-    previewImages: ["/videos/system_design.mp4"],
-    githubUrl: "https://github.com/PranavReddyGaddam/system-design",
-    liveUrl: "https://systemdesign.pranavreddygaddam.com/",
-  },
-  {
-    id: "gitbridge",
-    title: "GitBridge",
-    description:
-      "Turns GitHub repositories into interactive diagrams and AI-narrated walkthroughs for fast codebase exploration.",
-    tags: ["React", "ElevenLabs", "FastAPI", "AWS", "MermaidJS"],
-    linkLabel: "View Code",
-    previewImages: ["/videos/GitBridge.mp4"],
-    githubUrl: "https://github.com/pranavreddygaddam/gitbridge",
-  },
-  {
-    id: "hirely",
-    title: "Hirely",
-    description:
-      "AI interview prep platform that scrapes live job listings and generates personalized interview questions.",
-    tags: ["FastAPI", "React", "Groq", "Supabase", "ChromaDB"],
-    linkLabel: "View Code",
-    previewImages: ["/videos/Hirely.mp4"],
-    githubUrl: "https://github.com/PranavReddyGaddam/Hirely",
-  },
-  {
-    id: "prism",
-    title: "Prism",
-    description:
-      "LLM explainability framework using Process Reward Models to make step-by-step mathematical reasoning transparent, with real-time token confidence, attention, logit lens, and gradient attribution visualizations.",
-    tags: ["PRM", "LLM", "Explainability", "PyTorch"],
-    linkLabel: "View Code",
-    previewImages: ["/videos/Prism.mp4"],
-    githubUrl: "https://github.com/PranavReddyGaddam/Prism",
-  },
-  {
-    id: "personalwebsite",
-    title: "Personal Portfolio Website",
-    description:
-      "Gamified portfolio with level progression, achievements, WebGL backgrounds, and scroll-based reveals.",
-    tags: ["Vite", "Tailwind CSS", "React"],
-    linkLabel: "View Code",
-    previewImages: ["/videos/Portfolio.mp4"],
-    githubUrl: "https://github.com/PranavReddyGaddam/gamified-portfolio",
-  },
-  {
-    id: "nexus",
-    title: "Nexus",
-    description:
-      "Evaluates startup ideas through simulated expert personas, visualized on an interactive 3D globe.",
-    tags: ["React", "Three.js", "Tailwind CSS", "FastAPI", "OpenAI"],
-    linkLabel: "View Code",
-    previewImages: ["/videos/Nexus.mp4"],
-    githubUrl: "https://github.com/PranavReddyGaddam/Nexus",
-  },
-  {
-    id: "pindrop",
-    title: "PinDrop",
-    description:
-      "Drop-pricing group-buy marketplace where the unit price falls as more buyers commit, and every committed buyer pays the lowest tier reached by the deadline. Sharing a drop recruits more buyers, which drops the price for everyone already in.",
-    tags: ["React", "TypeScript", "FastAPI", "Marketplace"],
-    linkLabel: "View Website",
-    previewImages: ["/videos/Pindrop.mp4"],
-    githubUrl: "https://github.com/PranavReddyGaddam/PinDrop",
-    liveUrl: "https://pin-drop-six.vercel.app",
-  },
-  {
-    id: "isowebapp",
-    title: "ISO Web App",
-    description:
-      "Volunteer and event management system with role-based access, dynamic ticketing, and QR check-in.",
-    tags: ["FastAPI", "React", "Tailwind CSS", "Supabase", "Docker"],
-    linkLabel: "View Code",
-    githubUrl: "https://github.com/PranavReddyGaddam/ISO_Event_Registration",
-  },
-  // Placeholder slots for upcoming projects (keeps the showcase grid at 3 full rows)
-  {
-    id: "coming-soon-2",
-    title: "???",
-    image: "/Pranav_Logo.png",
-    description: "A new quest is under construction. Check back soon.",
-    tags: ["TBD"],
-    linkLabel: "Coming Soon",
-    placeholder: true,
-  },
-  {
-    id: "coming-soon-3",
-    title: "???",
-    image: "/Pranav_Logo.png",
-    description: "A new quest is under construction. Check back soon.",
-    tags: ["TBD"],
-    linkLabel: "Coming Soon",
-    placeholder: true,
-  },
-];
 
 function App() {
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -573,7 +439,7 @@ function App() {
               </a>
               <span className="text-neutral-400">,</span>
               <a
-                href="mailto:pranavreddy.gaddam@sjsu.edu"
+                href="mailto:reddy.pranav.gaddam@gmail.com"
                 className="hover:text-neutral-500 transition-colors"
               >
                 Email
@@ -677,60 +543,18 @@ function App() {
       <section
         data-level={5}
         id="projects"
-        className="relative z-10 min-h-screen bg-cream px-4 py-16"
+        className="work-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-32"
       >
-
-        <div className="relative z-10 max-w-6xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-gray-900 border-2 border-red-600 bg-white/80 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
-              LEVEL 5: PROJECT QUESTS
-            </h2>
-            <p className="font-pressstart2p text-gray-900 text-sm mt-4">
-              EXPLORE PROJECTS AND THE TECH BEHIND THEM
-            </p>
+        <div className="max-w-6xl mx-auto">
+          <div className="flex justify-between mb-10">
+            <span className="text-sm text-neutral-900">(Selected work)</span>
+            <span className="text-sm text-neutral-400">
+              ({projects.filter((p) => !p.placeholder).length} projects)
+            </span>
           </div>
 
-          {/* Project Cards Grid */}
-          {/* Desktop: horizontal accordion deck */}
-          <div className="hidden lg:block">
-            <ProjectDeck
-              label="Featured builds"
-              projects={projects.slice(0, 6)}
-              onProjectOpen={handleProjectLink}
-            />
-            {/* stays mounted so GSAP can animate it closed as well as open */}
-            <div ref={moreProjectsWrapRef} className="overflow-hidden">
-              <ProjectDeck
-                label="More projects"
-                projects={projects.slice(6)}
-                onProjectOpen={handleProjectLink}
-                paused={!showMoreProjects}
-              />
-            </div>
-            <div className="flex justify-center mt-5">
-              <button
-                onClick={() => setShowMoreProjects((current) => !current)}
-                className="group relative flex items-center gap-2 font-pressstart2p text-[10px] text-gray-900 bg-red-600 hover:bg-red-500 px-4 py-2 border-2 border-red-600 shadow-[3px_3px_0_0_rgba(0,0,0,0.6)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,0.6)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:shadow-[1px_1px_0_0_rgba(0,0,0,0.6)] active:translate-x-0.5 active:translate-y-0.5 transition-all duration-150"
-              >
-                {showMoreProjects ? "SHOW LESS" : "MORE PROJECTS"}
-                <FaChevronDown
-                  size={10}
-                  className={`transition-transform duration-300 ${
-                    showMoreProjects ? "rotate-180" : "group-hover:translate-y-0.5"
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile / tablet: vertical accordion, capped at 6 until expanded */}
-          <ProjectDeckMobile
-            projects={projects}
-            onProjectOpen={handleProjectLink}
-          />
+          <WorkList />
         </div>
-
       </section>
 
       {/* Footer */}
@@ -779,7 +603,7 @@ function App() {
                     Let&apos;s work together!
                   </p>
                   <a
-                    href="mailto:pranavreddy.gaddam@sjsu.edu"
+                    href="mailto:reddy.pranav.gaddam@gmail.com"
                     className="text-base text-neutral-700 hover:text-neutral-900 transition-colors"
                   >
                     reddy.pranav.gaddam@gmail.com
@@ -838,7 +662,7 @@ function App() {
                 </p>
               </div>
               <a
-                href="mailto:pranavreddy.gaddam@sjsu.edu"
+                href="mailto:reddy.pranav.gaddam@gmail.com"
                 className="text-sm text-neutral-700"
               >
                 reddy.pranav.gaddam@gmail.com

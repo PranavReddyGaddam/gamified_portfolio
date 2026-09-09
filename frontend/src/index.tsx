@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import App from './App';
+import ProjectFull from './components/ProjectFull';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -9,7 +11,16 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        {/* The full case study is its own page. */}
+        <Route path="/project/:projectId/full" element={<ProjectFull />} />
+        {/* Everything else renders the site; an expanded card is just a URL. */}
+        <Route path="/project/:projectId" element={<App />} />
+        <Route path="/" element={<App />} />
+        <Route path="*" element={<App />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

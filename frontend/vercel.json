@@ -15,6 +15,10 @@
     {
       "source": "/gitbridge/:path*",
       "destination": "https://git-bridge.vercel.app/:path*"
+    },
+    {
+      "source": "/((?!v1|gitbridge|assets|videos|projects|api).*)",
+      "destination": "/index.html"
     }
   ]
 }
