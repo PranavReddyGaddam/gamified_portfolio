@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 import "./App.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -308,23 +309,28 @@ function App() {
           <span /><span /><span /><span />
         </div>
 
-        {/* Top meta bar */}
-        <div className="hero-meta">
-          <a href="/" className="hero-logo">
-            Pranav Reddy Gaddam
-          </a>
-          <span className="hero-meta-loc">San Jose, California</span>
-          <HeroNav
-            items={[
-              { label: "Home", target: "#home" },
-              { label: "About", target: "#about" },
-              { label: "Work", target: "#projects" },
-              // Resume is a file rather than a section, so it opens in a new tab.
-              { label: "Resume", target: RESUME_URL, external: true },
-            ]}
-            onNavigate={scrollToSection}
-          />
-        </div>
+        {/* Top meta bar. Portalled to the body: ScrollSmoother puts a
+            transform on #smooth-content, which would otherwise be the
+            containing block for position:fixed. */}
+        {createPortal(
+          <div className="hero-meta">
+            <a href="/" className="hero-logo">
+              Pranav Reddy Gaddam
+            </a>
+            <span className="hero-meta-loc">San Jose, California</span>
+            <HeroNav
+              items={[
+                { label: "Home", target: "#home" },
+                { label: "About", target: "#about" },
+                { label: "Work", target: "#projects" },
+                // Resume is a file rather than a section, so it opens in a new tab.
+                { label: "Resume", target: RESUME_URL, external: true },
+              ]}
+              onNavigate={scrollToSection}
+            />
+          </div>,
+          document.body
+        )}
 
         {/* Centered hero content */}
         <div className="relative z-10 w-full flex flex-col items-center text-center">

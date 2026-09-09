@@ -136,15 +136,17 @@
 
 /* --- top meta bar ----------------------------------------------------- */
 
+/* The bar is fixed rather than absolute so it stays with the reader through
+   the whole page, not just the hero. */
 .hero-meta {
-  position: absolute;
+  position: fixed;
   top: 50px;
   left: 50px;
   right: 50px;
   display: flex;
   align-items: flex-start;
   gap: 2rem;
-  z-index: 3;
+  z-index: 40;
   font-family: "Geist", -apple-system, sans-serif;
   font-size: 13.6px;
   color: #3a4a16;
