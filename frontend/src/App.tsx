@@ -48,7 +48,7 @@ const EMAILJS_TEMPLATE_ID = "template_4hg075h";
 const EMAILJS_PUBLIC_KEY = "wRXZiwguBPiyEMvoX";
 
 // Resume URL (place your PDF in public/ and update this path if needed)
-const RESUME_URL = "/frontend/public/Pranav_Reddy_Gaddam_Resume_FT_Master.pdf";
+const RESUME_URL = "/Pranav_Reddy_Gaddam_Resume_FT_Master.pdf";
 
 // Achievement toast metadata (title/xp/theme shown in the popup)
 const ACHIEVEMENT_TOAST_META: Record<
@@ -2932,6 +2932,12 @@ Type 'help' to see available commands.`;
             Crafted with curiosity and caffeine — © {new Date().getFullYear()}{" "}
             Pranav Reddy Gaddam
           </p>
+          <a
+            href="/v1"
+            className="mt-2 inline-block font-pressstart2p text-[9px] text-purple-300/70 border border-purple-400/40 rounded-md px-3 py-1.5 transition-colors hover:text-purple-200 hover:border-purple-400 hover:bg-purple-600/20"
+          >
+            ◄ TIME MACHINE: PORTFOLIO V1 (2025)
+          </a>
         </div>
       </footer>
 
