@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { projects } from "../data/projects";
 import Reveal from "./Reveal";
@@ -15,6 +16,29 @@ const WorkList = () => {
   const visible = projects.filter((p) => !p.placeholder);
   const active = projects.find((p) => p.id === projectId);
   const isFull = pathname.endsWith("/full");
+
+  // Keep the modal mounted for the length of its exit animation, so closing
+  // animates out instead of vanishing the moment the route changes.
+  const [rendered, setRendered] = useState(active);
+  const [closing, setClosing] = useState(false);
+  const timer = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    window.clearTimeout(timer.current);
+    if (active) {
+      setRendered(active);
+      setClosing(false);
+      return;
+    }
+    if (rendered) {
+      setClosing(true);
+      timer.current = window.setTimeout(() => {
+        setRendered(undefined);
+        setClosing(false);
+      }, 320);
+    }
+    return () => window.clearTimeout(timer.current);
+  }, [active, rendered]);
 
   return (
     <>
@@ -45,7 +69,9 @@ const WorkList = () => {
         })}
       </Reveal>
 
-      {active ? <ProjectModal project={active} isFull={isFull} /> : null}
+      {rendered ? (
+        <ProjectModal project={rendered} isFull={isFull} closing={closing} />
+      ) : null}
     </>
   );
 };

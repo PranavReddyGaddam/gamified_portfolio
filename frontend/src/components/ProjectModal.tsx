@@ -7,6 +7,8 @@ type Props = {
   project: Project;
   /** True on /project/:id/full — the panel fills the viewport. */
   isFull: boolean;
+  /** True while the modal plays its exit animation before unmounting. */
+  closing?: boolean;
 };
 
 /**
@@ -16,7 +18,7 @@ type Props = {
  * its width, height and corner radius rather than swapping in a second view,
  * so the transition is continuous and the scroll position survives it.
  */
-const ProjectModal = ({ project, isFull }: Props) => {
+const ProjectModal = ({ project, isFull, closing = false }: Props) => {
   const navigate = useNavigate();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -46,7 +48,12 @@ const ProjectModal = ({ project, isFull }: Props) => {
   // containing block for position:fixed. Portal to the body so the overlay is
   // measured against the viewport instead of the whole scrollable page.
   return createPortal(
-    <div className="pm-overlay" role="dialog" aria-modal="true" aria-label={project.title}>
+    <div
+      className={`pm-overlay${closing ? " pm-overlay--closing" : ""}`}
+      role="dialog"
+      aria-modal="true"
+      aria-label={project.title}
+    >
       {/* Scrim — clicking it closes, but not while full screen. */}
       <div
         className={`pm-scrim${isFull ? " pm-scrim--hidden" : ""}`}

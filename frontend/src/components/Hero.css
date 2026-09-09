@@ -701,9 +701,35 @@
   color: #171717;
 }
 
+/* Exit: the panel eases back down as the scrim fades. Timings match the
+   320ms unmount delay in WorkList. */
+.pm-overlay--closing .pm-panel {
+  animation: pm-out 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.pm-overlay--closing .pm-scrim {
+  opacity: 0;
+}
+
+@keyframes pm-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pm-panel {
     animation: none;
     transition: none;
+  }
+
+  .pm-overlay--closing .pm-panel {
+    animation: none;
+    opacity: 0;
   }
 }
