@@ -1171,7 +1171,7 @@ Type 'help' to see available commands.`;
               <span className="font-['Instrument_Serif'] italic underline decoration-1 underline-offset-4">
                 full-stack engineering
               </span>
-              , AI systems, and data pipelines through hands-on work. I&apos;m
+              , backend systems, and AI through hands-on work. I&apos;m
               now a software engineer at{" "}
               <a
                 href="https://www.salesforce.com/"
@@ -1223,16 +1223,16 @@ Type 'help' to see available commands.`;
                 {
                   id: "ve-projects",
                   org: "VE Projects Pvt Ltd",
-                  team: "Engineering",
+                  team: "Backend Services",
                   role: "Software Engineer",
                   year: "23–24",
                   period: "Aug 2023 – Jul 2024",
                   detail:
-                    "Built and maintained data pipelines and warehouse infrastructure, working across ingestion, transformation, and delivery.",
+                    "Built and maintained backend services in Python and FastAPI on PostgreSQL, serving 500K+ API requests a day at 99.5% uptime.",
                   points: [
-                    "Migrated databases, cutting infrastructure cost",
-                    "Built data pipelines and resolved production issues",
-                    "Python, SQL, R · AWS, Docker · Snowflake, Redshift, Kafka, Spark",
+                    "Cut response latency 35% through query optimisation and caching",
+                    "Held 85% test coverage with pytest, and took on-call incidents",
+                    "Shipped across 10+ production deployments via Jenkins and Docker",
                   ],
                 },
                 {
