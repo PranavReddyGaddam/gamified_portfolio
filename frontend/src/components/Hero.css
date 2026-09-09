@@ -226,22 +226,60 @@
   margin: 0 auto;
 }
 
-/* Inline pill-shaped images set into the headline. */
+/* Inline pill-shaped images set into the headline.
+   They start at zero width so the line reads as pure text, then grow and
+   push the words apart — the pill appears to open out from inside the line. */
 .hero-title-img {
   display: inline-block;
-  width: 10vw;
-  max-width: 148px;
-  aspect-ratio: 1.55;
+  height: 4.52vw;
+  max-height: 67px;
   border-radius: 999px;
-  margin-right: 0.7vw;
   vertical-align: -0.16em;
   background-size: cover;
   background-position: center;
-  transition: transform 0.3s ease;
+
+  width: 0;
+  max-width: 0;
+  margin-right: 0;
+  opacity: 0;
+  transform: scaleY(0.35);
+  transform-origin: center;
+  overflow: hidden;
+  animation: hero-pill-open 1.8s cubic-bezier(0.33, 0, 0.15, 1) forwards;
+}
+
+/* Staggered so they open one after the other, in reading order. */
+.hero-title-img--me {
+  animation-delay: 1.3s;
+}
+
+.hero-title-img--work {
+  animation-delay: 2.2s;
+}
+
+@keyframes hero-pill-open {
+  from {
+    width: 0;
+    max-width: 0;
+    margin-right: 0;
+    opacity: 0;
+    transform: scaleY(0.35);
+  }
+  45% {
+    opacity: 1;
+  }
+  to {
+    width: 7vw;
+    max-width: 104px;
+    margin-right: 0.7vw;
+    opacity: 1;
+    transform: scaleY(1);
+  }
 }
 
 .hero-title-img:hover {
-  transform: scale(1.08);
+  transform: scaleY(1) scale(1.06);
+  transition: transform 0.45s cubic-bezier(0.33, 0, 0.15, 1);
 }
 
 .hero-title-img--me {
@@ -294,7 +332,7 @@
   }
 
   .hero-title-img {
-    width: 17vw;
+    width: 13vw;
   }
 }
 
@@ -303,5 +341,14 @@
   .hero-star,
   .hero-astrix {
     animation: none;
+  }
+
+  .hero-title-img {
+    animation: none;
+    width: 7vw;
+    max-width: 104px;
+    margin-right: 0.7vw;
+    opacity: 1;
+    transform: none;
   }
 }
