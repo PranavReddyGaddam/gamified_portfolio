@@ -17,6 +17,7 @@ import ProjectDeck from "./components/ProjectDeck";
 import ProjectDeckMobile from "./components/ProjectDeckMobile";
 import TimeMachine from "./components/TimeMachine";
 import "./components/TimeMachine.css";
+import "./components/Hero.css";
 import HireMeStats from "./components/HireMeStats";
 import { Button } from "@/components/ui/8bit/button";
 import { Card, CardContent } from "@/components/ui/8bit/card";
@@ -1059,63 +1060,55 @@ Type 'help' to see available commands.`;
       {/* Section 1: Landing Page */}
       <section
         data-level={1}
-        className="relative z-10 min-h-screen flex flex-col justify-center px-6 sm:px-10 lg:px-16 pt-32 pb-20"
+        className="hero-section relative z-10 min-h-screen flex flex-col justify-center px-[50px] overflow-hidden"
       >
-        <div className="max-w-[1400px] mx-auto w-full">
-          {/* Eyebrow */}
-          <p className="font-geist font-light text-sm tracking-[0.18em] uppercase text-olive/60 mb-12">
-            Based in San Jose, California
-          </p>
+        {/* Decorative gradient shapes */}
+        <div className="hero-shapes" aria-hidden="true">
+          <div className="hero-blob hero-blob--orange" />
+          <div className="hero-blob hero-blob--violet" />
+          <div className="hero-blob hero-blob--green" />
+          <div className="hero-star" />
+          <div className="hero-astrix">✳</div>
+          <div className="hero-leaf" />
+        </div>
 
-          {/* Headline */}
-          <h1 className="font-display text-olive font-normal text-[3.25rem] leading-[0.98] sm:text-7xl md:text-8xl lg:text-[5.85rem] xl:text-[7rem] max-w-[16ch]">
-            I build living,
+        {/* Vertical column rules */}
+        <div className="hero-columns" aria-hidden="true">
+          <span /><span /><span /><span />
+        </div>
+
+        {/* Top meta bar */}
+        <div className="hero-meta">
+          <a href="/" className="hero-logo">
+            pranav.
             <br />
-            breathing <span className="italic">software</span>
+            builds
+          </a>
+          <span className="hero-meta-tag">Software engineer</span>
+          <span className="hero-meta-loc">Based in San Jose, California</span>
+          <nav className="hero-nav">
+            <a href="#home" className="hero-nav-link is-active">Home</a>
+            <a href="#projects" className="hero-nav-link">Work</a>
+            <a href="#about" className="hero-nav-link">About</a>
+            <a href="#contact" className="hero-nav-link">Contact</a>
+          </nav>
+        </div>
+
+        {/* Centered hero content */}
+        <div className="relative z-10 w-full flex flex-col items-center text-center">
+          <span className="pill-button">Full-stack &amp; AI engineering</span>
+
+          <h1 className="hero-title">
+            I{" "}
+            <a href="#about" className="hero-title-img hero-title-img--me" aria-label="About me" />
+            build living, breathing
             <br />
-            for the web
+            software{" "}
+            <a href="#projects" className="hero-title-img hero-title-img--work" aria-label="My work" />
+            for teams that want
+            <br />
+            to ship, not just plan.
           </h1>
-
-          {/* Supporting copy */}
-          <p className="font-geist font-light text-lg sm:text-xl leading-[1.6] text-olive/75 mt-12 max-w-[46ch]">
-            Full-stack engineer working across AI, data pipelines, and interface
-            design — from first sketch through to production.
-          </p>
-
-          {/* Actions */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10 mt-14">
-            <button
-              onClick={handleStartGame}
-              className="font-geist font-light text-base bg-olive text-cream px-10 py-4 rounded-full transition-opacity duration-300 hover:opacity-85"
-            >
-              View my work
-            </button>
-
-            <a
-              href="mailto:pranavreddy.gaddam@sjsu.edu"
-              className="font-geist font-light text-base text-olive border-b border-olive/25 pb-1 transition-colors duration-300 hover:border-olive"
-            >
-              Get in touch
-            </a>
-          </div>
-
-          {/* Disciplines */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 sm:gap-10 mt-28 pt-12 border-t border-olive/15 max-w-5xl">
-            {[
-              { title: "Full-stack", body: "React, TypeScript, Python, FastAPI" },
-              { title: "AI & data", body: "RAG, agents, pipelines, retrieval" },
-              { title: "Cloud", body: "AWS, Docker, CI/CD, observability" },
-            ].map((d) => (
-              <div key={d.title}>
-                <h3 className="font-display text-2xl text-olive mb-3">
-                  {d.title}
-                </h3>
-                <p className="font-geist font-light text-[15px] leading-[1.65] text-olive/60">
-                  {d.body}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

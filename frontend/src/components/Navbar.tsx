@@ -69,7 +69,7 @@ const Navbar: React.FC<NavbarProps> = ({
   return (
     <header
       ref={headerRef}
-      className={`fixed top-0 left-0 right-0 z-50 p-2 md:p-4 bg-white/90 md:bg-transparent backdrop-blur-sm transition-opacity duration-500 ${pastHero ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+      className={`fixed top-0 left-0 right-0 z-50 p-2 md:p-4 bg-cream/90 md:bg-transparent backdrop-blur-sm transition-opacity duration-500 ${pastHero ? "opacity-100" : "opacity-0 pointer-events-none"}`}
     >
       {/* Desktop Layout - Horizontal */}
       <div className="hidden md:flex justify-between items-center max-w-6xl mx-auto gap-3 md:gap-4">

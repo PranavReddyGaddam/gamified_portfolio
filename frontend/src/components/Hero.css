@@ -1,0 +1,305 @@
+/* Editorial hero — centered display type over soft gradient shapes. */
+
+.hero-section {
+  min-height: 100vh;
+  background: #f0efe9;
+}
+
+/* --- vertical column rules ------------------------------------------- */
+
+.hero-columns {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-columns span {
+  border-left: 1px solid rgba(58, 74, 22, 0.07);
+}
+
+.hero-columns span:first-child {
+  border-left: none;
+}
+
+/* --- gradient shapes -------------------------------------------------- */
+
+.hero-shapes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.42;
+}
+
+.hero-blob--orange {
+  width: 46vw;
+  height: 46vw;
+  max-width: 620px;
+  max-height: 620px;
+  top: -12%;
+  left: -14%;
+  background: conic-gradient(#93dd89 0deg, #fc6a00 360deg);
+  animation: hero-drift 26s ease-in-out infinite alternate;
+}
+
+.hero-blob--violet {
+  width: 42vw;
+  height: 42vw;
+  max-width: 560px;
+  max-height: 560px;
+  top: 34%;
+  left: 46%;
+  background: conic-gradient(from 90deg, #c1e4f7 0deg, #dac6eb 360deg);
+  animation: hero-drift 32s ease-in-out infinite alternate-reverse;
+}
+
+.hero-blob--green {
+  width: 38vw;
+  height: 38vw;
+  max-width: 520px;
+  max-height: 520px;
+  bottom: -18%;
+  right: -8%;
+  background: conic-gradient(from 180deg, #dac6eb 0deg, #93dd89 360deg);
+  animation: hero-drift 29s ease-in-out infinite alternate;
+}
+
+@keyframes hero-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(3%, -4%, 0) scale(1.08);
+  }
+}
+
+/* Eight-point starburst, upper left. */
+.hero-star {
+  position: absolute;
+  top: 20%;
+  left: 3%;
+  width: 250px;
+  height: 250px;
+  background: conic-gradient(from 90deg, #f46732 0deg, #dac6eb 360deg);
+  clip-path: polygon(
+    50% 0%, 58% 35%, 79% 21%, 68% 44%, 100% 50%, 68% 56%,
+    79% 79%, 58% 65%, 50% 100%, 42% 65%, 21% 79%, 32% 56%,
+    0% 50%, 32% 44%, 21% 21%, 42% 35%
+  );
+  opacity: 0.55;
+  filter: blur(3px);
+  animation: hero-spin 48s linear infinite;
+}
+
+/* Green asterisk. */
+.hero-astrix {
+  position: absolute;
+  top: 18%;
+  left: 22%;
+  font-size: 92px;
+  line-height: 1;
+  color: #93dd89;
+  animation: hero-spin 34s linear infinite;
+}
+
+/* Leaf, right edge. */
+.hero-leaf {
+  position: absolute;
+  top: 42%;
+  right: -10%;
+  width: 300px;
+  height: 380px;
+  background: conic-gradient(from 200deg, #93dd89 0deg, #c1e4f7 360deg);
+  border-radius: 0 100% 0 100%;
+  opacity: 0.32;
+  filter: blur(26px);
+}
+
+@keyframes hero-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- top meta bar ----------------------------------------------------- */
+
+.hero-meta {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  right: 50px;
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  z-index: 3;
+  font-family: "Geist", -apple-system, sans-serif;
+  font-size: 13.6px;
+  color: #3a4a16;
+}
+
+.hero-logo {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 26px;
+  line-height: 1.05;
+  font-style: italic;
+  color: #3a4a16;
+  text-decoration: none;
+  flex: 0 0 auto;
+  width: 22%;
+}
+
+.hero-meta-tag,
+.hero-meta-loc {
+  flex: 0 0 auto;
+  padding-top: 6px;
+}
+
+.hero-meta-tag {
+  width: 26%;
+}
+
+.hero-meta-loc {
+  width: 26%;
+}
+
+.hero-nav {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+
+.hero-nav-link {
+  font-size: 15.2px;
+  font-weight: 500;
+  color: #3a4a16;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.hero-nav-link:hover {
+  opacity: 0.6;
+}
+
+.hero-nav-link.is-active::before {
+  content: "• ";
+}
+
+/* --- pill ------------------------------------------------------------- */
+
+.pill-button {
+  display: inline-block;
+  font-family: "Geist", -apple-system, sans-serif;
+  font-size: 14.4px;
+  color: #3a4a16;
+  border: 1px solid #3a4a16;
+  border-radius: 50px;
+  padding: 4.8px 16px 3.2px;
+  margin-bottom: 2.2rem;
+  background: transparent;
+}
+
+/* --- headline --------------------------------------------------------- */
+
+.hero-title {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.1rem, 5.6vw, 84px);
+  line-height: 1;
+  color: #3a4a16;
+  text-align: center;
+  max-width: 26ch;
+  margin: 0 auto;
+}
+
+/* Inline circular images set into the headline. */
+.hero-title-img {
+  display: inline-block;
+  width: 6.5vw;
+  max-width: 94px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  margin-right: 0.7vw;
+  vertical-align: -0.12em;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease;
+}
+
+.hero-title-img:hover {
+  transform: scale(1.08);
+}
+
+.hero-title-img--me {
+  background-image: url("/projects/Pranav.jpeg");
+}
+
+.hero-title-img--work {
+  background: conic-gradient(from 90deg, #c1e4f7 0deg, #dac6eb 360deg);
+}
+
+/* --- responsive ------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .hero-meta {
+    gap: 1rem;
+    font-size: 12px;
+  }
+
+  .hero-meta-tag,
+  .hero-meta-loc {
+    display: none;
+  }
+
+  .hero-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-section {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .hero-meta {
+    left: 22px;
+    right: 22px;
+    top: 26px;
+  }
+
+  .hero-nav {
+    flex-direction: row;
+    gap: 0.8rem;
+  }
+
+  .hero-title {
+    max-width: 100%;
+  }
+
+  .hero-title-img {
+    width: 11vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-blob,
+  .hero-star,
+  .hero-astrix {
+    animation: none;
+  }
+}
