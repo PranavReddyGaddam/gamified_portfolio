@@ -18,6 +18,8 @@ import GameInstructionsModal from "./components/GameInstructionsModal";
 import CodeRequestModal from "./components/CodeRequestModal";
 import ProjectDeck from "./components/ProjectDeck";
 import ProjectDeckMobile from "./components/ProjectDeckMobile";
+import TimeMachine from "./components/TimeMachine";
+import "./components/TimeMachine.css";
 import HireMeStats from "./components/HireMeStats";
 import { Button } from "@/components/ui/8bit/button";
 import { Card, CardContent } from "@/components/ui/8bit/card";
@@ -2928,16 +2930,11 @@ Type 'help' to see available commands.`;
       {/* Footer */}
       <footer className="relative z-10 bg-gradient-to-r from-black via-black/80 to-black border-t-2 border-teal-400">
         <div className="max-w-6xl mx-auto px-4 py-4 text-center">
-          <p className="font-pixellari text-teal-300 text-sm">
+          <TimeMachine />
+          <p className="font-pixellari text-teal-300 text-sm mt-3">
             Crafted with curiosity and caffeine — © {new Date().getFullYear()}{" "}
             Pranav Reddy Gaddam
           </p>
-          <a
-            href="/v1"
-            className="mt-2 inline-block font-pressstart2p text-[9px] text-purple-300/70 border border-purple-400/40 rounded-md px-3 py-1.5 transition-colors hover:text-purple-200 hover:border-purple-400 hover:bg-purple-600/20"
-          >
-            ◄ TIME MACHINE: PORTFOLIO V1 (2025)
-          </a>
         </div>
       </footer>
 
