@@ -396,7 +396,7 @@ function App() {
               </a>
               <span className="text-neutral-400">,</span>
               <a
-                href="https://www.linkedin.com/in/pranav-reddy-gaddam-69338321b/"
+                href="https://www.linkedin.com/in/pranav-reddy-gaddam"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-neutral-500 transition-colors"
@@ -578,7 +578,7 @@ function App() {
 
                 <div className="flex gap-4 items-center text-neutral-300">
                   <a
-                    href="https://www.linkedin.com/in/pranav-reddy-gaddam-69338321b/"
+                    href="https://www.linkedin.com/in/pranav-reddy-gaddam"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="LinkedIn"
@@ -634,7 +634,7 @@ function App() {
                 reddy.pranav.gaddam@gmail.com
               </a>
               <div className="flex gap-4 items-center text-neutral-300">
-                <a href="https://www.linkedin.com/in/pranav-reddy-gaddam-69338321b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedin size={18} /></a>
+                <a href="https://www.linkedin.com/in/pranav-reddy-gaddam" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedin size={18} /></a>
                 <a href="https://github.com/PranavReddyGaddam" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><FaGithub size={18} /></a>
                 <a href="https://www.instagram.com/__pranav.reddy__" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram size={18} /></a>
                 <a href="https://twitter.com/Pranav_2801" target="_blank" rel="noopener noreferrer" aria-label="X"><RiTwitterXFill size={17} /></a>

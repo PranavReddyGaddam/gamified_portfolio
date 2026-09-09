@@ -27,7 +27,7 @@ const WorkList = () => {
               type="button"
               onClick={() => navigate(`/project/${p.id}`)}
               className="work-card"
-              aria-label={`${p.title}${p.year ? `, ${p.year}` : ""}`}
+              aria-label={p.title}
             >
               <span className="work-card-media">
                 {media ? (
@@ -38,10 +38,7 @@ const WorkList = () => {
                   )
                 ) : null}
 
-                <span className="work-card-pill">
-                  {p.title}
-                  {p.year ? <span className="work-card-year"> • {p.year}</span> : null}
-                </span>
+                <span className="work-card-pill">{p.title}</span>
               </span>
             </button>
           );
