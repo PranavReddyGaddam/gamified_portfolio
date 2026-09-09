@@ -24,13 +24,13 @@
 
 ::-webkit-scrollbar-thumb {
   /* Neutral thumb color */
-  background: #666;
+  background: #c7c7c7;
   border-radius: 5px;
   border: none;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #a3a3a3;
   box-shadow: none;
 }
 

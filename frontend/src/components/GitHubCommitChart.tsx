@@ -158,7 +158,7 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
   if (loading) {
     return (
       <div className={`flex items-center justify-center p-4 ${className}`}>
-        <p className="font-pixellari text-blue-300 text-sm">Loading GitHub stats...</p>
+        <p className="font-pixellari text-blue-700 text-sm">Loading GitHub stats...</p>
       </div>
     );
   }
@@ -166,18 +166,18 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
   if (error || !stats) {
     return (
       <div className={`flex items-center justify-center p-4 ${className}`}>
-        <p className="font-pixellari text-red-300 text-sm">{error}</p>
+        <p className="font-pixellari text-red-700 text-sm">{error}</p>
       </div>
     );
   }
 
   const statTiles = [
-    { label: 'CONTRIBS', value: stats.totalContributions, accent: 'text-green-400' },
-    { label: 'STREAK', value: `${stats.currentStreak}d`, accent: 'text-yellow-400' },
-    { label: 'BEST RUN', value: `${stats.longestStreak}d`, accent: 'text-orange-400' },
-    { label: 'ACTIVE DAYS', value: stats.activeDays, accent: 'text-cyan-400' },
-    { label: 'PULL REQS', value: stats.pullRequests, accent: 'text-purple-400' },
-    { label: 'FOLLOWERS', value: stats.followers, accent: 'text-pink-400' },
+    { label: 'CONTRIBS', value: stats.totalContributions, accent: 'text-green-700' },
+    { label: 'STREAK', value: `${stats.currentStreak}d`, accent: 'text-yellow-700' },
+    { label: 'BEST RUN', value: `${stats.longestStreak}d`, accent: 'text-orange-700' },
+    { label: 'ACTIVE DAYS', value: stats.activeDays, accent: 'text-cyan-700' },
+    { label: 'PULL REQS', value: stats.pullRequests, accent: 'text-purple-700' },
+    { label: 'FOLLOWERS', value: stats.followers, accent: 'text-pink-700' },
   ];
 
   return (
@@ -245,7 +245,7 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
       `}</style>
       <div
         ref={containerRef}
-        className="overflow-x-auto overflow-y-visible bg-gradient-to-br from-slate-900/50 to-blue-900/30 rounded-lg border border-blue-400/30 pt-4 px-3 pb-3 backdrop-blur-sm relative flex-shrink-0"
+        className="overflow-x-auto overflow-y-visible bg-gradient-to-br from-slate-100 to-blue-100 rounded-lg border border-blue-500/30 pt-4 px-3 pb-3 backdrop-blur-sm relative flex-shrink-0"
       >
         <CalendarHeatmap
           startDate={oneYearAgo}
@@ -270,7 +270,7 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
       </div>
       {tooltip && createPortal(
         <div
-          className="fixed pointer-events-none z-[9999] bg-gray-900 text-white text-xs font-pixellari px-3 py-2 rounded border border-gray-700 shadow-xl whitespace-nowrap"
+          className="fixed pointer-events-none z-[9999] bg-gray-100 text-gray-900 text-xs font-pixellari px-3 py-2 rounded border border-gray-300 shadow-xl whitespace-nowrap"
           style={{
             left: `${tooltip.x}px`,
             top: `${tooltip.y}px`,
@@ -284,16 +284,16 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
         </div>,
         document.body
       )}
-      <div className="flex items-center justify-center gap-3 mt-3 text-xs font-pixellari text-blue-300 flex-shrink-0">
-        <span className="text-blue-400">Less</span>
+      <div className="flex items-center justify-center gap-3 mt-3 text-xs font-pixellari text-blue-700 flex-shrink-0">
+        <span className="text-blue-700">Less</span>
         <div className="flex gap-1.5 items-center">
-          <div className="w-3.5 h-3.5 rounded border border-gray-600 bg-[#0d1117] hover:border-blue-400 transition-colors"></div>
-          <div className="w-3.5 h-3.5 rounded border border-green-900 bg-[#0e4429] hover:border-blue-400 transition-colors"></div>
-          <div className="w-3.5 h-3.5 rounded border border-green-800 bg-[#006d32] hover:border-blue-400 transition-colors"></div>
-          <div className="w-3.5 h-3.5 rounded border border-green-600 bg-[#26a641] hover:border-blue-400 transition-colors"></div>
-          <div className="w-3.5 h-3.5 rounded border border-green-400 bg-[#39d353] hover:border-green-300 transition-colors shadow-sm shadow-green-400/50"></div>
+          <div className="w-3.5 h-3.5 rounded border border-gray-300 bg-[#0d1117] hover:border-blue-600 transition-colors"></div>
+          <div className="w-3.5 h-3.5 rounded border border-green-600 bg-[#0e4429] hover:border-blue-600 transition-colors"></div>
+          <div className="w-3.5 h-3.5 rounded border border-green-600 bg-[#006d32] hover:border-blue-600 transition-colors"></div>
+          <div className="w-3.5 h-3.5 rounded border border-green-600 bg-[#26a641] hover:border-blue-600 transition-colors"></div>
+          <div className="w-3.5 h-3.5 rounded border border-green-600 bg-[#39d353] hover:border-green-500 transition-colors shadow-sm shadow-green-400/50"></div>
         </div>
-        <span className="text-blue-400">More</span>
+        <span className="text-blue-700">More</span>
       </div>
 
       {/* Stat tiles */}
@@ -301,10 +301,10 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
         {statTiles.map((tile) => (
           <div
             key={tile.label}
-            className="bg-slate-900/50 border border-blue-400/30 rounded p-2 text-center"
+            className="bg-slate-100 border border-blue-500/30 rounded p-2 text-center"
           >
             <div className={`font-pressstart2p text-sm ${tile.accent}`}>{tile.value}</div>
-            <div className="font-pixellari text-blue-300 text-[10px] mt-1 leading-tight">
+            <div className="font-pixellari text-blue-700 text-[10px] mt-1 leading-tight">
               {tile.label}
             </div>
           </div>
@@ -314,8 +314,8 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
       {/* Top languages */}
       {stats.languages.length > 0 && (
         <div className="mt-4 flex-shrink-0">
-          <h4 className="font-pressstart2p text-white text-[10px] mb-2">TOP LANGUAGES</h4>
-          <div className="flex h-3 w-full rounded-sm overflow-hidden border border-blue-400/30">
+          <h4 className="font-pressstart2p text-gray-900 text-[10px] mb-2">TOP LANGUAGES</h4>
+          <div className="flex h-3 w-full rounded-sm overflow-hidden border border-blue-500/30">
             {stats.languages.map((lang) => (
               <div
                 key={lang.name}
@@ -334,7 +334,7 @@ const GitHubCommitChart: React.FC<GitHubCommitChartProps> = ({ className = '' })
                   className="w-2 h-2 rounded-sm flex-shrink-0"
                   style={{ backgroundColor: lang.color || '#60a5fa' }}
                 />
-                <span className="font-pixellari text-blue-300 text-[10px]">
+                <span className="font-pixellari text-blue-700 text-[10px]">
                   {lang.name} {lang.percent.toFixed(0)}%
                 </span>
               </div>

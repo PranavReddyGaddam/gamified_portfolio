@@ -4,8 +4,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import Galaxy from "./backgrounds/Backgrounds/Galaxy";
-import Squares from "./backgrounds/Backgrounds/Squares";
 import TextType from "./backgrounds/TextAnimations/TextType/TextType";
 import emailjs from "@emailjs/browser";
 import Navbar from "./components/Navbar";
@@ -1040,7 +1038,7 @@ Type 'help' to see available commands.`;
   };
 
   return (
-    <div className="min-h-screen bg-black text-white relative">
+    <div className="min-h-screen bg-white text-gray-900 relative">
       {/* Navbar */}
       <Navbar
         currentLevel={currentLevel}
@@ -1064,32 +1062,15 @@ Type 'help' to see available commands.`;
         data-level={1}
         className="relative z-10 flex flex-col items-center justify-center h-screen px-4 overflow-hidden pt-20"
       >
-        {/* Galaxy Background for Section 1 */}
-        <div className="absolute inset-0 z-0">
-          {isSection1Visible && (
-            <Galaxy
-              density={1.5}
-              starSpeed={0.7}
-              glowIntensity={0.3}
-              twinkleIntensity={0.2}
-              mouseInteraction={false}
-              mouseRepulsion={false}
-              transparent={true}
-              disableAnimation={!isSection1Visible}
-            />
-          )}
-          {/* Fade out overlay */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-        </div>
-        <div className="relative z-10 max-w-2xl w-full text-center mb-16 bg-black/40 backdrop-blur-md rounded-xl">
+        <div className="relative z-10 max-w-2xl w-full text-center mb-16 bg-white/70 backdrop-blur-md rounded-xl">
           <div className="p-8">
             {/* Start Prompt */}
-            <p className="font-pressstart2p text-purple-400 text-lg mb-6">
+            <p className="font-pressstart2p text-purple-700 text-lg mb-6">
               PRANAV REDDY GADDAM'S
             </p>
 
             {/* Main Title with Typing Effect */}
-            <div className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl lg:text-6xl text-white mb-4">
+            <div className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl lg:text-6xl text-gray-900 mb-4">
               <TextType
                 text={["RUNTIME ODYSSEY"]}
                 typingSpeed={125}
@@ -1100,12 +1081,12 @@ Type 'help' to see available commands.`;
             </div>
 
             {/* Subtitle */}
-            <p className="font-pressstart2p text-xl text-white mb-4">
+            <p className="font-pressstart2p text-xl text-gray-900 mb-4">
               LEVEL 1: INTRODUCTION
             </p>
 
             {/* Description */}
-            <p className="font-pressstart2p text-sm text-gray-300 mb-8">
+            <p className="font-pressstart2p text-sm text-gray-600 mb-8">
               An engineer's quest across stacks, pipelines, and pixel worlds
             </p>
 
@@ -1115,7 +1096,7 @@ Type 'help' to see available commands.`;
                 variant="default"
                 size="lg"
                 font="retro"
-                className="border-purple-400 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3"
+                className="border-purple-600 bg-purple-600 hover:bg-purple-700 text-gray-900 px-6 py-3"
                 onClick={handleStartGame}
               >
                 START GAME
@@ -1125,7 +1106,7 @@ Type 'help' to see available commands.`;
                 variant="outline"
                 size="lg"
                 font="retro"
-                className="border-white text-white hover:bg-white hover:text-black px-6 py-3"
+                className="border-gray-300 text-gray-900 hover:bg-white hover:text-black px-6 py-3"
                 onClick={handleHowToPlay}
               >
                 HOW TO PLAY
@@ -1136,34 +1117,21 @@ Type 'help' to see available commands.`;
       </section>
 
       {/* Transition Section - Smooth Blend */}
-      <section className="relative z-10 h-32 bg-gradient-to-b from-transparent via-blue-900/5 to-blue-900/20">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/20 to-black/0"></div>
+      <section className="relative z-10 h-32 bg-gradient-to-b from-transparent via-blue-50 to-blue-100">
+        <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/40 to-white/0"></div>
       </section>
 
       {/* Section 2: Character Stats */}
       <section
         data-level={2}
         ref={nextSectionRef}
-        className="relative z-10 min-h-screen bg-gradient-to-b from-black via-blue-900/10 to-blue-900/30 px-4 py-16"
+        className="relative z-10 min-h-screen bg-gradient-to-b from-white via-blue-50 to-blue-100 px-4 py-16"
       >
-        {/* Squares Background */}
-        <div className="absolute inset-0 z-0">
-          {isSection2Visible && (
-            <Squares
-              speed={0.3}
-              squareSize={40}
-              direction="diagonal"
-              borderColor="rgba(255,255,255,0.25)"
-              hoverFillColor="#222"
-              paused={!isSection2Visible}
-            />
-          )}
-        </div>
 
         <div className="relative z-10 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-white border-2 border-blue-400 bg-black/50 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
+            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-gray-900 border-2 border-blue-600 bg-white/80 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
               LEVEL 2: CHARACTER STATS
             </h2>
           </div>
@@ -1180,20 +1148,20 @@ Type 'help' to see available commands.`;
                 >
                   {/* Card Back (Hidden Side) */}
                   <div className="absolute inset-0 w-full h-full backface-hidden">
-                    <div className="border border-blue-400 bg-blue-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
+                    <div className="border border-blue-600 bg-blue-50 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
                       <div className="text-center">
                         <div className="flex justify-center mb-4">
-                          <ShieldUser className="w-16 h-16 text-blue-400" />
+                          <ShieldUser className="w-16 h-16 text-blue-700" />
                         </div>
-                        <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                        <h3 className="font-pressstart2p text-gray-900 text-base md:text-lg mb-4">
                           HIDDEN CHARACTER
                         </h3>
-                        <p className="font-pixellari text-blue-300 text-xs md:text-sm mb-6">
+                        <p className="font-pixellari text-blue-700 text-xs md:text-sm mb-6">
                           Click to reveal the character
                         </p>
                         <button
                           onClick={handleRevealAvatar}
-                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-blue-400 transition-colors text-xs md:text-sm"
+                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-gray-900 px-4 py-2 md:px-6 md:py-3 rounded border border-blue-600 transition-colors text-xs md:text-sm"
                         >
                           REVEAL AVATAR
                         </button>
@@ -1203,7 +1171,7 @@ Type 'help' to see available commands.`;
 
                   {/* Card Front (Character Portrait) */}
                   <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                    <div className="bg-blue-900/80 border border-blue-400 rounded-lg overflow-hidden h-full flex flex-col">
+                    <div className="bg-blue-50 border border-blue-600 rounded-lg overflow-hidden h-full flex flex-col">
                       {/* Image area */}
                       <div className="flex-1 min-h-0">
                         <img
@@ -1214,13 +1182,13 @@ Type 'help' to see available commands.`;
                       </div>
 
                       {/* Bottom stats section */}
-                      <div className="flex-shrink-0 p-3 bg-blue-900/90 flex flex-col justify-center">
+                      <div className="flex-shrink-0 p-3 bg-blue-50 flex flex-col justify-center">
                         {/* Name & Level */}
                         <div className="flex items-center justify-between mb-2">
-                          <h4 className="text-white font-pressstart2p text-xs">
+                          <h4 className="text-gray-900 font-pressstart2p text-xs">
                             Pranav Reddy Gaddam
                           </h4>
-                          <p className="text-blue-300 font-pressstart2p text-xs">
+                          <p className="text-blue-700 font-pressstart2p text-xs">
                             LVL 24
                           </p>
                         </div>
@@ -1229,7 +1197,7 @@ Type 'help' to see available commands.`;
                         <div className="flex items-center gap-2 md:gap-4">
                           {/* HP */}
                           <div className="flex items-center gap-1">
-                            <span className="text-green-400 text-xs font-pressstart2p">
+                            <span className="text-green-700 text-xs font-pressstart2p">
                               HP
                             </span>
                             <div className="w-16 md:w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
@@ -1239,7 +1207,7 @@ Type 'help' to see available commands.`;
 
                           {/* MP */}
                           <div className="flex items-center gap-1">
-                            <span className="text-cyan-400 text-xs font-pressstart2p">
+                            <span className="text-cyan-700 text-xs font-pressstart2p">
                               MP
                             </span>
                             <div className="w-16 md:w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
@@ -1268,31 +1236,31 @@ Type 'help' to see available commands.`;
                           }}
                         >
                           {/* Stamp shadow effect */}
-                          <div className="absolute inset-0 bg-red-900/40 blur-lg transform translate-x-1 translate-y-1"></div>
+                          <div className="absolute inset-0 bg-red-50 blur-lg transform translate-x-1 translate-y-1"></div>
 
                           {/* Main stamp card - smaller size for lanyard */}
-                          <div className="relative bg-gradient-to-br from-red-600 to-red-800 border-3 border-red-900 rounded-md p-3 shadow-xl">
+                          <div className="relative bg-gradient-to-br from-red-600 to-red-800 border-3 border-red-600 rounded-md p-3 shadow-xl">
                             {/* Stamp texture overlay */}
-                            <div className="absolute inset-0 bg-red-900/20 rounded-md"></div>
+                            <div className="absolute inset-0 bg-red-50 rounded-md"></div>
 
                             {/* Ink splatter effects */}
-                            <div className="absolute top-1 left-1 w-2 h-2 bg-red-900/60 rounded-full blur-xs"></div>
-                            <div className="absolute bottom-1 right-1 w-1.5 h-1.5 bg-red-900/50 rounded-full blur-xs"></div>
+                            <div className="absolute top-1 left-1 w-2 h-2 bg-red-50 rounded-full blur-xs"></div>
+                            <div className="absolute bottom-1 right-1 w-1.5 h-1.5 bg-red-50 rounded-full blur-xs"></div>
 
                             {/* Main content */}
                             <div className="relative z-10 text-center">
                               <div className="transform -rotate-1">
-                                <h3 className="font-pressstart2p text-white text-[10px] mb-1 tracking-wider">
+                                <h3 className="font-pressstart2p text-gray-900 text-[10px] mb-1 tracking-wider">
                                   WHY YOU
                                 </h3>
-                                <div className="border-t border-white/60 border-b border-white/60 py-1 my-1">
-                                  <h4 className="font-pressstart2p text-yellow-300 text-[8px] font-bold tracking-widest">
+                                <div className="border-t border-gray-300 border-b border-gray-300 py-1 my-1">
+                                  <h4 className="font-pressstart2p text-yellow-700 text-[8px] font-bold tracking-widest">
                                     SHOULD HIRE ME
                                   </h4>
                                 </div>
                                 <div className="flex justify-center items-center gap-1 mt-1">
                                   <div className="w-4 h-px bg-white/60"></div>
-                                  <span className="font-pixellari text-white/80 text-[8px]">
+                                  <span className="font-pixellari text-gray-700 text-[8px]">
                                     CLICK ME
                                   </span>
                                   <div className="w-4 h-px bg-white/60"></div>
@@ -1301,11 +1269,11 @@ Type 'help' to see available commands.`;
                             </div>
 
                             {/* Stamp edges */}
-                            <div className="absolute inset-0 border border-white/30 rounded-md pointer-events-none"></div>
+                            <div className="absolute inset-0 border border-gray-200 rounded-md pointer-events-none"></div>
                           </div>
 
                           {/* Additional ink drops */}
-                          <div className="absolute -top-0.5 -right-1 w-3 h-3 bg-red-900/50 rounded-full blur-sm"></div>
+                          <div className="absolute -top-0.5 -right-1 w-3 h-3 bg-red-50 rounded-full blur-sm"></div>
                         </div>
                       </div>
                     )}
@@ -1324,20 +1292,20 @@ Type 'help' to see available commands.`;
                 >
                   {/* Card Back (Hidden Side) */}
                   <div className="absolute inset-0 w-full h-full backface-hidden">
-                    <div className="border border-blue-400 bg-blue-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
+                    <div className="border border-blue-600 bg-blue-50 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
                       <div className="text-center">
                         <div className="flex justify-center mb-4">
-                          <BookOpenText className="w-16 h-16 text-blue-400" />
+                          <BookOpenText className="w-16 h-16 text-blue-700" />
                         </div>
-                        <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                        <h3 className="font-pressstart2p text-gray-900 text-base md:text-lg mb-4">
                           CHARACTER LORE
                         </h3>
-                        <p className="font-pixellari text-blue-300 text-xs md:text-sm mb-6">
+                        <p className="font-pixellari text-blue-700 text-xs md:text-sm mb-6">
                           Uncover backstory
                         </p>
                         <button
                           onClick={handleUnlockLore}
-                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-blue-400 transition-colors text-xs md:text-sm"
+                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-gray-900 px-4 py-2 md:px-6 md:py-3 rounded border border-blue-600 transition-colors text-xs md:text-sm"
                         >
                           UNLOCK LORE
                         </button>
@@ -1347,13 +1315,13 @@ Type 'help' to see available commands.`;
 
                   {/* Card Front (Character Info) */}
                   <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                    <div className="bg-blue-900/80 border border-blue-400 rounded-lg p-4 h-full flex flex-col">
+                    <div className="bg-blue-50 border border-blue-600 rounded-lg p-4 h-full flex flex-col">
                       <div className="flex items-center gap-2 mb-3 flex-shrink-0">
-                        <h3 className="font-pressstart2p text-white text-base">
+                        <h3 className="font-pressstart2p text-gray-900 text-base">
                           CHARACTER INFO
                         </h3>
                       </div>
-                      <div className="font-pressstart2p space-y-3 text-gray-300 text-xs md:text-[10px] text-left leading-relaxed overflow-y-auto flex-1 min-h-0">
+                      <div className="font-pressstart2p space-y-3 text-gray-600 text-xs md:text-[10px] text-left leading-relaxed overflow-y-auto flex-1 min-h-0">
                         <p className="break-words">
                           A full-stack engineer drawn to the hard parts of AI
                           systems, the agent loops, the tool orchestration,
@@ -1389,20 +1357,20 @@ Type 'help' to see available commands.`;
                 >
                   {/* Card Back (Hidden Side) */}
                   <div className="absolute inset-0 w-full h-full backface-hidden">
-                    <div className="border border-blue-400 bg-blue-900/80 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
+                    <div className="border border-blue-600 bg-blue-50 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
                       <div className="text-center">
                         <div className="flex justify-center mb-4">
-                          <ChartColumnIncreasing className="w-16 h-16 text-blue-400" />
+                          <ChartColumnIncreasing className="w-16 h-16 text-blue-700" />
                         </div>
-                        <h3 className="font-pressstart2p text-white text-base md:text-lg mb-4">
+                        <h3 className="font-pressstart2p text-gray-900 text-base md:text-lg mb-4">
                           POWER METRICS
                         </h3>
-                        <p className="font-pixellari text-blue-300 text-xs md:text-sm mb-6">
+                        <p className="font-pixellari text-blue-700 text-xs md:text-sm mb-6">
                           See True Power
                         </p>
                         <button
                           onClick={handleUnlockMetrics}
-                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 md:px-6 md:py-3 rounded border border-blue-400 transition-colors text-xs md:text-sm"
+                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-gray-900 px-4 py-2 md:px-6 md:py-3 rounded border border-blue-600 transition-colors text-xs md:text-sm"
                         >
                           UNLOCK METRICS
                         </button>
@@ -1412,8 +1380,8 @@ Type 'help' to see available commands.`;
 
                   {/* Card Front (Attributes) */}
                   <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                    <div className="bg-blue-900/80 border border-blue-400 rounded-lg p-4 h-full flex flex-col">
-                      <h3 className="font-pressstart2p text-white text-base mb-3 flex-shrink-0">
+                    <div className="bg-blue-50 border border-blue-600 rounded-lg p-4 h-full flex flex-col">
+                      <h3 className="font-pressstart2p text-gray-900 text-base mb-3 flex-shrink-0">
                         GITHUB STATS
                       </h3>
                       <div className="flex-1 min-h-0 overflow-y-auto">
@@ -1431,29 +1399,16 @@ Type 'help' to see available commands.`;
       {/* Section 3: Progression Path */}
       <section
         data-level={3}
-        className="relative z-10 min-h-screen bg-gradient-to-b from-black via-yellow-900/10 to-yellow-900/30 px-4 py-16"
+        className="relative z-10 min-h-screen bg-gradient-to-b from-white via-yellow-50 to-yellow-100 px-4 py-16"
       >
-        {/* Squares Background */}
-        <div className="absolute inset-0 z-0">
-          {isSection3Visible && (
-            <Squares
-              speed={0.3}
-              squareSize={40}
-              direction="diagonal"
-              borderColor="rgba(255,255,255,0.25)"
-              hoverFillColor="#222"
-              paused={!isSection3Visible}
-            />
-          )}
-        </div>
 
         <div className="relative z-10 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-white border-2 border-yellow-400 bg-black/50 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
+            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-gray-900 border-2 border-yellow-600 bg-white/80 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
               LEVEL 3: CAREER PATH
             </h2>
-            <p className="font-pressstart2p text-white text-sm mt-4">
+            <p className="font-pressstart2p text-gray-900 text-sm mt-4">
               ACADEMIC ACHIEVEMENTS AND PROFESSIONAL JOURNEY
             </p>
           </div>
@@ -1499,8 +1454,8 @@ Type 'help' to see available commands.`;
                         : item.id === "masters"
                         ? 1
                         : 2)
-                        ? `bg-${item.color}-600 border-${item.color}-400 text-white`
-                        : `border-${item.color}-400 text-${item.color}-400 hover:bg-${item.color}-600 hover:text-white`
+                        ? `bg-${item.color}-600 border-${item.color}-400 text-gray-900`
+                        : `border-${item.color}-400 text-${item.color}-400 hover:bg-${item.color}-600 hover:text-gray-900`
                     } px-6 py-3 transition-all duration-300 hover:scale-105`}
                   >
                     {item.title}
@@ -1524,56 +1479,56 @@ Type 'help' to see available commands.`;
                         : "scale-95 opacity-60"
                     }`}
                   >
-                    <Card className="bg-yellow-900/80 border-yellow-400 h-full hover:border-yellow-300">
+                    <Card className="bg-yellow-50 border-yellow-600 h-full hover:border-yellow-500">
                       <CardContent className="p-4 h-full">
                         <div className="flex items-center gap-3 mb-3">
-                          <h3 className="font-pressstart2p text-white text-lg">
+                          <h3 className="font-pressstart2p text-gray-900 text-lg">
                             MASTER'S
                           </h3>
                         </div>
 
                         <div className="space-y-3">
                           <div>
-                            <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-yellow-700 text-xs mb-1">
                               Current Quest
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               Master's in Applied Data Science
                             </p>
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-yellow-700 text-xs mb-1">
                               Training Grounds
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               San Jose State University
                             </p>
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-yellow-700 text-xs mb-1">
                               Campaign Duration
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               Aug 2024 – May 2026
                             </p>
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-yellow-700 text-xs mb-1">
                               Stats
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               CGPA: 3.84 / 4.0
                             </p>
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-yellow-400 text-xs mb-2">
+                            <h4 className="font-pressstart2p text-yellow-700 text-xs mb-2">
                               Skills Unlocked
                             </h4>
-                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <ul className="space-y-1 font-pixellari text-gray-900 text-xs">
                               <li>- Big Data, Machine Learning</li>
                               <li>- Data Warehousing & Pipelines</li>
                               <li>- Applied Statistics, Analytics Strategy</li>
@@ -1597,56 +1552,56 @@ Type 'help' to see available commands.`;
                         : "scale-95 opacity-60"
                     }`}
                   >
-                    <Card className="bg-green-900/80 border-green-400 h-full hover:border-green-300">
+                    <Card className="bg-green-50 border-green-600 h-full hover:border-green-500">
                       <CardContent className="p-4 h-full">
                         <div className="flex items-center gap-3 mb-3">
-                          <h3 className="font-pressstart2p text-white text-lg">
+                          <h3 className="font-pressstart2p text-gray-900 text-lg">
                             BACHELOR'S
                           </h3>
                         </div>
 
                         <div className="space-y-3">
                           <div>
-                            <h4 className="font-pressstart2p text-green-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-green-700 text-xs mb-1">
                               Quest Title
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               Bachelor's in Computer Science
                             </p>
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-green-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-green-700 text-xs mb-1">
                               Training Grounds
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               St. Martin's Engineering College
                             </p>
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-green-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-green-700 text-xs mb-1">
                               Campaign Duration
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               Aug 2019 – May 2023
                             </p>
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-green-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-green-700 text-xs mb-1">
                               Stats
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               B. Tech in Computer Science
                             </p>
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-green-400 text-xs mb-2">
+                            <h4 className="font-pressstart2p text-green-700 text-xs mb-2">
                               Skills Unlocked
                             </h4>
-                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <ul className="space-y-1 font-pixellari text-gray-900 text-xs">
                               <li>- Data Structures & Algorithms</li>
                               <li>- Web Development, Databases</li>
                               <li>- Machine Learning, AI Basics</li>
@@ -1670,47 +1625,47 @@ Type 'help' to see available commands.`;
                         : "scale-95 opacity-60"
                     }`}
                   >
-                    <Card className="bg-blue-900/80 border-blue-400 h-full hover:border-blue-300">
+                    <Card className="bg-blue-50 border-blue-600 h-full hover:border-blue-500">
                       <CardContent className="p-4 h-full">
                         <div className="flex items-center gap-3 mb-3">
-                          <h3 className="font-pressstart2p text-white text-lg">
+                          <h3 className="font-pressstart2p text-gray-900 text-lg">
                             EXPERIENCE
                           </h3>
                         </div>
 
                         <div className="space-y-3">
                           <div>
-                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-blue-700 text-xs mb-1">
                               Quest Title
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               Software Engineer (Data)
                             </p>
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-blue-700 text-xs mb-1">
                               Guild Location
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               VE Projects Pvt Ltd
                             </p>
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-blue-700 text-xs mb-1">
                               Campaign Duration
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               Aug 2023 – Jul 2024
                             </p>
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-2">
+                            <h4 className="font-pressstart2p text-blue-700 text-xs mb-2">
                               Core Technologies
                             </h4>
-                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <ul className="space-y-1 font-pixellari text-gray-900 text-xs">
                               <li>- Python,SQL,R</li>
                               <li>- AWS, Docker</li>
                               <li>- Snowflake, RedShift, Kafka, Spark</li>
@@ -1719,10 +1674,10 @@ Type 'help' to see available commands.`;
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-2">
+                            <h4 className="font-pressstart2p text-blue-700 text-xs mb-2">
                               Key Contributions
                             </h4>
-                            <ul className="space-y-1 font-pixellari text-white text-xs">
+                            <ul className="space-y-1 font-pixellari text-gray-900 text-xs">
                               <li>- Migrated Databases, Saved Money</li>
                               <li>- Built Data Pipelines, Resolved Bugs</li>
                               <li>
@@ -1732,10 +1687,10 @@ Type 'help' to see available commands.`;
                           </div>
 
                           <div>
-                            <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">
+                            <h4 className="font-pressstart2p text-blue-700 text-xs mb-1">
                               Expertise Level
                             </h4>
-                            <p className="font-pixellari text-white text-sm">
+                            <p className="font-pixellari text-gray-900 text-sm">
                               {" "}
                               SDE-1
                             </p>
@@ -1761,56 +1716,56 @@ Type 'help' to see available commands.`;
                       : "scale-95 opacity-60"
                   }`}
                 >
-                  <Card className="bg-green-900/80 border-green-400 h-full hover:border-green-300">
+                  <Card className="bg-green-50 border-green-600 h-full hover:border-green-500">
                     <CardContent className="p-4 h-full">
                       <div className="flex items-center gap-3 mb-3">
-                        <h3 className="font-pressstart2p text-white text-lg">
+                        <h3 className="font-pressstart2p text-gray-900 text-lg">
                           BACHELOR'S
                         </h3>
                       </div>
 
                       <div className="space-y-3">
                         <div>
-                          <h4 className="font-pressstart2p text-green-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-green-700 text-xs mb-1">
                             Quest Title
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             Bachelor's in Computer Science
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-green-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-green-700 text-xs mb-1">
                             Training Grounds
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             St. Martin's Engineering College
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-green-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-green-700 text-xs mb-1">
                             Campaign Duration
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             Aug 2019 – May 2023
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-green-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-green-700 text-xs mb-1">
                             Stats
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             B. Tech in Computer Science
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-green-400 text-xs mb-2">
+                          <h4 className="font-pressstart2p text-green-700 text-xs mb-2">
                             Skills Unlocked
                           </h4>
-                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                          <ul className="space-y-1 font-pixellari text-gray-900 text-xs">
                             <li>- Data Structures & Algorithms</li>
                             <li>- Web Development, Databases</li>
                             <li>- Machine Learning, AI Basics</li>
@@ -1834,56 +1789,56 @@ Type 'help' to see available commands.`;
                       : "scale-95 opacity-60"
                   }`}
                 >
-                  <Card className="bg-yellow-900/80 border-yellow-400 h-full hover:border-yellow-300">
+                  <Card className="bg-yellow-50 border-yellow-600 h-full hover:border-yellow-500">
                     <CardContent className="p-4 h-full">
                       <div className="flex items-center gap-3 mb-3">
-                        <h3 className="font-pressstart2p text-white text-lg">
+                        <h3 className="font-pressstart2p text-gray-900 text-lg">
                           MASTER'S
                         </h3>
                       </div>
 
                       <div className="space-y-3">
                         <div>
-                          <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-yellow-700 text-xs mb-1">
                             Current Quest
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             Master's in Applied Data Science
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-yellow-700 text-xs mb-1">
                             Training Grounds
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             San Jose State University
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-yellow-700 text-xs mb-1">
                             Campaign Duration
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             Aug 2024 – May 2026
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-yellow-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-yellow-700 text-xs mb-1">
                             Stats
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             CGPA: 3.84 / 4.0
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-yellow-400 text-xs mb-2">
+                          <h4 className="font-pressstart2p text-yellow-700 text-xs mb-2">
                             Skills Unlocked
                           </h4>
-                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                          <ul className="space-y-1 font-pixellari text-gray-900 text-xs">
                             <li>- Big Data, Machine Learning</li>
                             <li>- Data Warehousing & Pipelines</li>
                             <li>- Applied Statistics, Analytics Strategy</li>
@@ -1907,47 +1862,47 @@ Type 'help' to see available commands.`;
                       : "scale-95 opacity-60"
                   }`}
                 >
-                  <Card className="bg-blue-900/80 border-blue-400 h-full hover:border-blue-300">
+                  <Card className="bg-blue-50 border-blue-600 h-full hover:border-blue-500">
                     <CardContent className="p-4 h-full">
                       <div className="flex items-center gap-3 mb-3">
-                        <h3 className="font-pressstart2p text-white text-lg">
+                        <h3 className="font-pressstart2p text-gray-900 text-lg">
                           EXPERIENCE
                         </h3>
                       </div>
 
                       <div className="space-y-3">
                         <div>
-                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-blue-700 text-xs mb-1">
                             Quest Title
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             Software Engineer (Data)
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-blue-700 text-xs mb-1">
                             Guild Location
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             VE Projects Pvt Ltd
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-blue-700 text-xs mb-1">
                             Campaign Duration
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             Aug 2023 – Jul 2024
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-2">
+                          <h4 className="font-pressstart2p text-blue-700 text-xs mb-2">
                             Core Technologies
                           </h4>
-                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                          <ul className="space-y-1 font-pixellari text-gray-900 text-xs">
                             <li>- Python,SQL</li>
                             <li>- AWS, Docker</li>
                             <li>- Snowflake, RedShift, Kafka, Spark</li>
@@ -1956,10 +1911,10 @@ Type 'help' to see available commands.`;
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-2">
+                          <h4 className="font-pressstart2p text-blue-700 text-xs mb-2">
                             Key Contributions
                           </h4>
-                          <ul className="space-y-1 font-pixellari text-white text-xs">
+                          <ul className="space-y-1 font-pixellari text-gray-900 text-xs">
                             <li>- Migrated Databases, Saved Money</li>
                             <li>- Built Data Pipelines, Resolved Bugs</li>
                             <li>
@@ -1969,10 +1924,10 @@ Type 'help' to see available commands.`;
                         </div>
 
                         <div>
-                          <h4 className="font-pressstart2p text-blue-400 text-xs mb-1">
+                          <h4 className="font-pressstart2p text-blue-700 text-xs mb-1">
                             Expertise Level
                           </h4>
-                          <p className="font-pixellari text-white text-sm">
+                          <p className="font-pixellari text-gray-900 text-sm">
                             SDE-1
                           </p>
                         </div>
@@ -2005,7 +1960,7 @@ Type 'help' to see available commands.`;
       {/* Section 4: Skill Tree */}
       <section
         data-level={4}
-        className="relative z-10 min-h-screen bg-gradient-to-b from-black via-green-900/10 to-green-900/30 px-4 py-16"
+        className="relative z-10 min-h-screen bg-gradient-to-b from-white via-green-50 to-green-100 px-4 py-16"
       >
         {/* State for unlocked skills */}
         <script>
@@ -2013,24 +1968,14 @@ Type 'help' to see available commands.`;
              window.unlockedSkills = window.unlockedSkills || {};
            `}
         </script>
-        {/* Squares Background */}
-        <div className="absolute inset-0 z-0">
-          <Squares
-            speed={0.3}
-            squareSize={40}
-            direction="diagonal"
-            borderColor="rgba(255,255,255,0.25)"
-            hoverFillColor="#222"
-          />
-        </div>
 
         <div className="relative z-10 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12 relative">
-            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-white border-2 border-green-400 bg-black/50 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
+            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-gray-900 border-2 border-green-600 bg-white/80 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
               LEVEL 4: SKILL TREE
             </h2>
-            <p className="font-pressstart2p text-white text-sm mt-4">
+            <p className="font-pressstart2p text-gray-900 text-sm mt-4">
               CLICK ON SKILLS TO UNLOCK THEM AND EARN EXPERIENCE POINTS
             </p>
 
@@ -2042,8 +1987,8 @@ Type 'help' to see available commands.`;
             <div
               className={`border rounded-lg p-6 transition-all duration-300 cursor-pointer relative overflow-hidden ${
                 unlockedSkills.frontend
-                  ? "bg-blue-900/80 border-blue-400 hover:border-blue-300"
-                  : "bg-black/90 border-green-400 hover:border-green-300 shadow-lg shadow-green-500/20"
+                  ? "bg-blue-50 border-blue-600 hover:border-blue-500"
+                  : "bg-white border-green-600 hover:border-green-500 shadow-lg shadow-green-500/20"
               }`}
               onClick={() => handleSkillClick("frontend")}
             >
@@ -2051,12 +1996,12 @@ Type 'help' to see available commands.`;
               <div className="flex items-center gap-3 mb-4 relative z-10">
                 <span
                   className={`text-2xl ${
-                    unlockedSkills.frontend ? "text-blue-400" : "text-white"
+                    unlockedSkills.frontend ? "text-blue-700" : "text-gray-900"
                   }`}
                 >
                   &lt;/&gt;
                 </span>
-                <h3 className="font-pressstart2p text-white text-lg">
+                <h3 className="font-pressstart2p text-gray-900 text-lg">
                   Frontend
                 </h3>
               </div>
@@ -2071,7 +2016,7 @@ Type 'help' to see available commands.`;
 
                     {/* Bouncing UNLOCK text */}
                     <div className="absolute inset-0 flex items-center justify-center pt-12">
-                      <span className="font-pressstart2p text-white text-sm animate-bounce">
+                      <span className="font-pressstart2p text-gray-900 text-sm animate-bounce">
                         UNLOCK
                       </span>
                     </div>
@@ -2079,38 +2024,38 @@ Type 'help' to see available commands.`;
                 ) : (
                   /* Unlocked state - Show skills */
                   <div className="relative z-10">
-                    <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
+                    <ul className="space-y-2 text-gray-600 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         React 18 & TypeScript
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         Vite & Modern Build Tools
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         Tailwind CSS & Responsive Design
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         Three.js & React Three Fiber
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         React Router & State Management
                       </li>
                     </ul>
 
                     {/* Bottom status text */}
                     <div className="flex justify-between items-end mt-8">
-                      <span className="font-pixellari text-white text-sm">
+                      <span className="font-pixellari text-gray-900 text-sm">
                         +50 XP
                       </span>
                       <Badge
                         variant="default"
                         font="retro"
-                        className="bg-green-600 border-green-400 text-green-400 text-sm"
+                        className="bg-green-600 border-green-600 text-green-700 text-sm"
                       >
                         UNLOCKED
                       </Badge>
@@ -2124,8 +2069,8 @@ Type 'help' to see available commands.`;
             <div
               className={`border rounded-lg p-6 transition-all duration-300  cursor-pointer relative overflow-hidden ${
                 unlockedSkills.backend
-                  ? "bg-cyan-900/80 border-cyan-400 hover:border-cyan-300"
-                  : "bg-black/90 border-green-400 hover:border-green-300 shadow-lg shadow-green-500/20"
+                  ? "bg-cyan-50 border-cyan-600 hover:border-cyan-500"
+                  : "bg-white border-green-600 hover:border-green-500 shadow-lg shadow-green-500/20"
               }`}
               onClick={() => handleSkillClick("backend")}
             >
@@ -2133,12 +2078,12 @@ Type 'help' to see available commands.`;
               <div className="flex items-center gap-3 mb-4 relative z-10">
                 <span
                   className={`text-2xl ${
-                    unlockedSkills.backend ? "text-cyan-400" : "text-white"
+                    unlockedSkills.backend ? "text-cyan-700" : "text-gray-900"
                   }`}
                 >
                   <RxGear />
                 </span>
-                <h3 className="font-pressstart2p text-white text-lg">
+                <h3 className="font-pressstart2p text-gray-900 text-lg">
                   Backend
                 </h3>
               </div>
@@ -2153,7 +2098,7 @@ Type 'help' to see available commands.`;
 
                     {/* Bouncing UNLOCK text */}
                     <div className="absolute inset-0 flex items-center justify-center pt-12">
-                      <span className="font-pressstart2p text-white text-sm animate-bounce">
+                      <span className="font-pressstart2p text-gray-900 text-sm animate-bounce">
                         UNLOCK
                       </span>
                     </div>
@@ -2161,38 +2106,38 @@ Type 'help' to see available commands.`;
                 ) : (
                   /* Unlocked state - Show skills */
                   <div className="relative z-10">
-                    <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
+                    <ul className="space-y-2 text-gray-600 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         FastAPI & Python
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         PostgreSQL & Database Design
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         REST APIs & Pydantic
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         WebSocket & Real-time Communication
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         Authentication & Security
                       </li>
                     </ul>
 
                     {/* Bottom status text */}
                     <div className="flex justify-between items-end mt-8">
-                      <span className="font-pixellari text-white text-sm">
+                      <span className="font-pixellari text-gray-900 text-sm">
                         +50 XP
                       </span>
                       <Badge
                         variant="default"
                         font="retro"
-                        className="bg-green-600 border-green-400 text-green-400 text-sm"
+                        className="bg-green-600 border-green-600 text-green-700 text-sm"
                       >
                         UNLOCKED
                       </Badge>
@@ -2206,8 +2151,8 @@ Type 'help' to see available commands.`;
             <div
               className={`border rounded-lg p-6 transition-all duration-300 cursor-pointer relative overflow-hidden ${
                 unlockedSkills.database
-                  ? "bg-green-900/80 border-green-400 hover:border-green-300"
-                  : "bg-black/90 border-green-400 hover:border-green-300 shadow-lg shadow-green-500/20"
+                  ? "bg-green-50 border-green-600 hover:border-green-500"
+                  : "bg-white border-green-600 hover:border-green-500 shadow-lg shadow-green-500/20"
               }`}
               onClick={() => handleSkillClick("database")}
             >
@@ -2215,12 +2160,12 @@ Type 'help' to see available commands.`;
               <div className="flex items-center gap-3 mb-4 relative z-10">
                 <span
                   className={`text-2xl ${
-                    unlockedSkills.database ? "text-green-400" : "text-white"
+                    unlockedSkills.database ? "text-green-700" : "text-gray-900"
                   }`}
                 >
                   <BsDatabaseAdd />
                 </span>
-                <h3 className="font-pressstart2p text-white text-lg">
+                <h3 className="font-pressstart2p text-gray-900 text-lg">
                   Database
                 </h3>
               </div>
@@ -2235,7 +2180,7 @@ Type 'help' to see available commands.`;
 
                     {/* Bouncing UNLOCK text */}
                     <div className="absolute inset-0 flex items-center justify-center pt-12">
-                      <span className="font-pressstart2p text-white text-sm animate-bounce">
+                      <span className="font-pressstart2p text-gray-900 text-sm animate-bounce">
                         UNLOCK
                       </span>
                     </div>
@@ -2243,38 +2188,38 @@ Type 'help' to see available commands.`;
                 ) : (
                   /* Unlocked state - Show skills */
                   <div className="relative z-10">
-                    <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
+                    <ul className="space-y-2 text-gray-600 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         PostgreSQL
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         MySQL
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         MongoDB
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         Redis
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-green-400">●</span>
+                        <span className="text-green-700">●</span>
                         Snowflake
                       </li>
                     </ul>
 
                     {/* Bottom status text */}
                     <div className="flex justify-between items-end mt-8">
-                      <span className="font-pixellari text-white text-sm">
+                      <span className="font-pixellari text-gray-900 text-sm">
                         +50 XP
                       </span>
                       <Badge
                         variant="default"
                         font="retro"
-                        className="bg-green-600 border-green-400 text-green-400 text-sm"
+                        className="bg-green-600 border-green-600 text-green-700 text-sm"
                       >
                         UNLOCKED
                       </Badge>
@@ -2288,8 +2233,8 @@ Type 'help' to see available commands.`;
             <div
               className={`border rounded-lg p-6 transition-all duration-300 cursor-pointer relative overflow-hidden ${
                 unlockedSkills.devops
-                  ? "bg-yellow-900/80 border-yellow-400 hover:border-yellow-300"
-                  : "bg-black/90 border-green-400 hover:border-green-300 shadow-lg shadow-green-500/20"
+                  ? "bg-yellow-50 border-yellow-600 hover:border-yellow-500"
+                  : "bg-white border-green-600 hover:border-green-500 shadow-lg shadow-green-500/20"
               }`}
               onClick={() => handleSkillClick("devops")}
             >
@@ -2297,12 +2242,12 @@ Type 'help' to see available commands.`;
               <div className="flex items-center gap-3 mb-4 relative z-10">
                 <span
                   className={`text-2xl ${
-                    unlockedSkills.devops ? "text-yellow-400" : "text-white"
+                    unlockedSkills.devops ? "text-yellow-700" : "text-gray-900"
                   }`}
                 >
                   <FaDocker />
                 </span>
-                <h3 className="font-pressstart2p text-white text-lg">DevOps</h3>
+                <h3 className="font-pressstart2p text-gray-900 text-lg">DevOps</h3>
               </div>
 
               {/* Content area */}
@@ -2315,7 +2260,7 @@ Type 'help' to see available commands.`;
 
                     {/* Bouncing UNLOCK text */}
                     <div className="absolute inset-0 flex items-center justify-center pt-12">
-                      <span className="font-pressstart2p text-white text-sm animate-bounce">
+                      <span className="font-pressstart2p text-gray-900 text-sm animate-bounce">
                         UNLOCK
                       </span>
                     </div>
@@ -2323,38 +2268,38 @@ Type 'help' to see available commands.`;
                 ) : (
                   /* Unlocked state - Show skills */
                   <div className="relative z-10">
-                    <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
+                    <ul className="space-y-2 text-gray-600 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
-                        <span className="text-yellow-400">●</span>
+                        <span className="text-yellow-700">●</span>
                         Docker & Containerization
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-yellow-400">●</span>
+                        <span className="text-yellow-700">●</span>
                         Streaming Systems & Real-time Data
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-yellow-400">●</span>
+                        <span className="text-yellow-700">●</span>
                         Data Pipeline Engineering
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-yellow-400">●</span>
+                        <span className="text-yellow-700">●</span>
                         API Design & Microservices
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-yellow-400">●</span>
+                        <span className="text-yellow-700">●</span>
                         Performance Optimization
                       </li>
                     </ul>
 
                     {/* Bottom status text */}
                     <div className="flex justify-between items-end mt-8">
-                      <span className="font-pixellari text-white text-sm">
+                      <span className="font-pixellari text-gray-900 text-sm">
                         +50 XP
                       </span>
                       <Badge
                         variant="default"
                         font="retro"
-                        className="bg-green-600 border-green-400 text-green-400 text-sm"
+                        className="bg-green-600 border-green-600 text-green-700 text-sm"
                       >
                         UNLOCKED
                       </Badge>
@@ -2368,8 +2313,8 @@ Type 'help' to see available commands.`;
             <div
               className={`border rounded-lg p-6 transition-all duration-300 cursor-pointer relative overflow-hidden ${
                 unlockedSkills.ai
-                  ? "bg-purple-900/80 border-purple-400 hover:border-purple-300"
-                  : "bg-black/90 border-green-400 hover:border-green-300 shadow-lg shadow-green-500/20"
+                  ? "bg-purple-50 border-purple-600 hover:border-purple-500"
+                  : "bg-white border-green-600 hover:border-green-500 shadow-lg shadow-green-500/20"
               }`}
               onClick={() => handleSkillClick("ai")}
             >
@@ -2377,12 +2322,12 @@ Type 'help' to see available commands.`;
               <div className="flex items-center gap-3 mb-4 relative z-10">
                 <span
                   className={`text-2xl ${
-                    unlockedSkills.ai ? "text-purple-400" : "text-white"
+                    unlockedSkills.ai ? "text-purple-700" : "text-gray-900"
                   }`}
                 >
                   <BsRobot />
                 </span>
-                <h3 className="font-pressstart2p text-white text-lg">AI/ML</h3>
+                <h3 className="font-pressstart2p text-gray-900 text-lg">AI/ML</h3>
               </div>
 
               {/* Content area */}
@@ -2395,7 +2340,7 @@ Type 'help' to see available commands.`;
 
                     {/* Bouncing UNLOCK text */}
                     <div className="absolute inset-0 flex items-center justify-center pt-12">
-                      <span className="font-pressstart2p text-white text-sm animate-bounce">
+                      <span className="font-pressstart2p text-gray-900 text-sm animate-bounce">
                         UNLOCK
                       </span>
                     </div>
@@ -2403,38 +2348,38 @@ Type 'help' to see available commands.`;
                 ) : (
                   /* Unlocked state - Show skills */
                   <div className="relative z-10">
-                    <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
+                    <ul className="space-y-2 text-gray-600 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
-                        <span className="text-purple-400">●</span>
+                        <span className="text-purple-700">●</span>
                         OpenAI & Anthropic API Integration
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-purple-400">●</span>
+                        <span className="text-purple-700">●</span>
                         Real-time Data Processing Pipelines
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-purple-400">●</span>
+                        <span className="text-purple-700">●</span>
                         Social Media Intelligence & Sentiment Analysis
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-purple-400">●</span>
+                        <span className="text-purple-700">●</span>
                         ML Model Deployment & Streaming
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-purple-400">●</span>
+                        <span className="text-purple-700">●</span>
                         Data Visualization & Topic Modeling
                       </li>
                     </ul>
 
                     {/* Bottom status text */}
                     <div className="flex justify-between items-end mt-8">
-                      <span className="font-pixellari text-white text-sm">
+                      <span className="font-pixellari text-gray-900 text-sm">
                         +50 XP
                       </span>
                       <Badge
                         variant="default"
                         font="retro"
-                        className="bg-green-600 border-green-400 text-green-400 text-sm"
+                        className="bg-green-600 border-green-600 text-green-700 text-sm"
                       >
                         UNLOCKED
                       </Badge>
@@ -2448,8 +2393,8 @@ Type 'help' to see available commands.`;
             <div
               className={`border rounded-lg p-6 transition-all duration-300 cursor-pointer relative overflow-hidden ${
                 unlockedSkills.tools
-                  ? "bg-pink-900/80 border-pink-400 hover:border-pink-300"
-                  : "bg-black/90 border-green-400 hover:border-green-300 shadow-lg shadow-green-500/20"
+                  ? "bg-pink-50 border-pink-600 hover:border-pink-500"
+                  : "bg-white border-green-600 hover:border-green-500 shadow-lg shadow-green-500/20"
               }`}
               onClick={() => handleSkillClick("tools")}
             >
@@ -2457,12 +2402,12 @@ Type 'help' to see available commands.`;
               <div className="flex items-center gap-3 mb-4 relative z-10">
                 <span
                   className={`text-2xl ${
-                    unlockedSkills.tools ? "text-pink-400" : "text-white"
+                    unlockedSkills.tools ? "text-pink-700" : "text-gray-900"
                   }`}
                 >
                   <BsTools />
                 </span>
-                <h3 className="font-pressstart2p text-white text-lg">Tools</h3>
+                <h3 className="font-pressstart2p text-gray-900 text-lg">Tools</h3>
               </div>
 
               {/* Content area */}
@@ -2475,7 +2420,7 @@ Type 'help' to see available commands.`;
 
                     {/* Bouncing UNLOCK text */}
                     <div className="absolute inset-0 flex items-center justify-center pt-12">
-                      <span className="font-pressstart2p text-white text-sm animate-bounce">
+                      <span className="font-pressstart2p text-gray-900 text-sm animate-bounce">
                         UNLOCK
                       </span>
                     </div>
@@ -2483,38 +2428,38 @@ Type 'help' to see available commands.`;
                 ) : (
                   /* Unlocked state - Show skills */
                   <div className="relative z-10">
-                    <ul className="space-y-2 text-gray-300 font-pixellari text-sm mb-8">
+                    <ul className="space-y-2 text-gray-600 font-pixellari text-sm mb-8">
                       <li className="flex items-center gap-2">
-                        <span className="text-pink-400">●</span>
+                        <span className="text-pink-700">●</span>
                         Git & Version Control
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-pink-400">●</span>
+                        <span className="text-pink-700">●</span>
                         VS Code & Development Tools
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-pink-400">●</span>
+                        <span className="text-pink-700">●</span>
                         API Testing & Documentation
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-pink-400">●</span>
+                        <span className="text-pink-700">●</span>
                         Data Analysis & Visualization
                       </li>
                       <li className="flex items-center gap-2">
-                        <span className="text-pink-400">●</span>
+                        <span className="text-pink-700">●</span>
                         Project Management & Collaboration
                       </li>
                     </ul>
 
                     {/* Bottom status text */}
                     <div className="flex justify-between items-end mt-8">
-                      <span className="font-pixellari text-white text-sm">
+                      <span className="font-pixellari text-gray-900 text-sm">
                         +50 XP
                       </span>
                       <Badge
                         variant="default"
                         font="retro"
-                        className="bg-green-600 border-green-400 text-green-400 text-sm"
+                        className="bg-green-600 border-green-600 text-green-700 text-sm"
                       >
                         UNLOCKED
                       </Badge>
@@ -2530,26 +2475,16 @@ Type 'help' to see available commands.`;
       {/* Section 5: Project Quests */}
       <section
         data-level={5}
-        className="relative z-10 min-h-screen bg-gradient-to-b from-black via-red-900/10 to-red-900/30 px-4 py-16"
+        className="relative z-10 min-h-screen bg-gradient-to-b from-white via-red-50 to-red-100 px-4 py-16"
       >
-        {/* Squares Background */}
-        <div className="absolute inset-0 z-0">
-          <Squares
-            speed={0.3}
-            squareSize={40}
-            direction="diagonal"
-            borderColor="rgba(255,255,255,0.25)"
-            hoverFillColor="#222"
-          />
-        </div>
 
         <div className="relative z-10 max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-white border-2 border-red-400 bg-black/50 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
+            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-gray-900 border-2 border-red-600 bg-white/80 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
               LEVEL 5: PROJECT QUESTS
             </h2>
-            <p className="font-pressstart2p text-white text-sm mt-4">
+            <p className="font-pressstart2p text-gray-900 text-sm mt-4">
               EXPLORE PROJECTS AND THE TECH BEHIND THEM
             </p>
           </div>
@@ -2574,7 +2509,7 @@ Type 'help' to see available commands.`;
             <div className="flex justify-center mt-5">
               <button
                 onClick={() => setShowMoreProjects((current) => !current)}
-                className="group relative flex items-center gap-2 font-pressstart2p text-[10px] text-white bg-red-600 hover:bg-red-500 px-4 py-2 border-2 border-red-400 shadow-[3px_3px_0_0_rgba(0,0,0,0.6)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,0.6)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:shadow-[1px_1px_0_0_rgba(0,0,0,0.6)] active:translate-x-0.5 active:translate-y-0.5 transition-all duration-150"
+                className="group relative flex items-center gap-2 font-pressstart2p text-[10px] text-gray-900 bg-red-600 hover:bg-red-500 px-4 py-2 border-2 border-red-600 shadow-[3px_3px_0_0_rgba(0,0,0,0.6)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,0.6)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:shadow-[1px_1px_0_0_rgba(0,0,0,0.6)] active:translate-x-0.5 active:translate-y-0.5 transition-all duration-150"
               >
                 {showMoreProjects ? "SHOW LESS" : "MORE PROJECTS"}
                 <FaChevronDown
@@ -2597,26 +2532,16 @@ Type 'help' to see available commands.`;
       </section>
       <section
         data-level={6}
-        className="relative z-10 min-h-screen bg-gradient-to-b from-black via-teal-900/10 to-teal-900/30 px-3 py-12"
+        className="relative z-10 min-h-screen bg-gradient-to-b from-white via-teal-50 to-teal-100 px-3 py-12"
       >
-        {/* Squares Background */}
-        <div className="absolute inset-0 z-0">
-          <Squares
-            speed={0.3}
-            squareSize={40}
-            direction="diagonal"
-            borderColor="rgba(255,255,255,0.25)"
-            hoverFillColor="#222"
-          />
-        </div>
 
         <div className="relative z-10 max-w-5xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-white border-2 border-teal-400 bg-black/50 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
+            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-gray-900 border-2 border-teal-600 bg-white/80 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
               LEVEL 6: COMMAND CENTER
             </h2>
-            <p className="font-pressstart2p text-white text-sm mt-4">
+            <p className="font-pressstart2p text-gray-900 text-sm mt-4">
               INTERACTIVE TERMINAL • CONNECT • EXPLORE
             </p>
           </div>
@@ -2625,13 +2550,13 @@ Type 'help' to see available commands.`;
           <div className="max-w-6xl mx-auto px-4">
             {/* Tab Navigation */}
             <div className="flex justify-center mb-6">
-              <div className="bg-black/80 border border-teal-400 rounded-lg p-1 flex gap-1 flex-wrap justify-center max-w-sm mx-auto">
+              <div className="bg-white border border-teal-600 rounded-lg p-1 flex gap-1 flex-wrap justify-center max-w-sm mx-auto">
                 <button
                   onClick={() => setActiveTab("socials")}
                   className={`px-3 py-2 rounded font-pressstart2p text-xs transition-all duration-300 min-w-[80px] ${
                     activeTab === "socials"
-                      ? "bg-teal-600 text-white"
-                      : "text-teal-300 hover:text-white hover:bg-teal-800/50"
+                      ? "bg-teal-600 text-gray-900"
+                      : "text-teal-700 hover:text-gray-900 hover:bg-teal-100"
                   }`}
                 >
                   SOCIALS
@@ -2640,8 +2565,8 @@ Type 'help' to see available commands.`;
                   onClick={() => setActiveTab("quests")}
                   className={`px-3 py-2 rounded font-pressstart2p text-xs transition-all duration-300 min-w-[80px] ${
                     activeTab === "quests"
-                      ? "bg-teal-600 text-white"
-                      : "text-teal-300 hover:text-white hover:bg-teal-800/50"
+                      ? "bg-teal-600 text-gray-900"
+                      : "text-teal-700 hover:text-gray-900 hover:bg-teal-100"
                   }`}
                 >
                   QUESTS
@@ -2650,8 +2575,8 @@ Type 'help' to see available commands.`;
                   onClick={() => setActiveTab("terminal")}
                   className={`px-3 py-2 rounded font-pressstart2p text-xs transition-all duration-300 min-w-[80px] ${
                     activeTab === "terminal"
-                      ? "bg-teal-600 text-white"
-                      : "text-teal-300 hover:text-white hover:bg-teal-800/50"
+                      ? "bg-teal-600 text-gray-900"
+                      : "text-teal-700 hover:text-gray-900 hover:bg-teal-100"
                   }`}
                 >
                   TERMINAL
@@ -2661,20 +2586,20 @@ Type 'help' to see available commands.`;
 
             {/* Terminal Tab */}
             {activeTab === "terminal" && (
-              <div className="bg-black/90 border-2 border-teal-400 rounded-lg overflow-hidden">
+              <div className="bg-white border-2 border-teal-600 rounded-lg overflow-hidden">
                 {/* Terminal Header */}
-                <div className="bg-teal-900/50 px-4 py-2 flex items-center justify-between border-b border-teal-400/50">
+                <div className="bg-teal-50 px-4 py-2 flex items-center justify-between border-b border-teal-500/50">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                     <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="font-pixellari text-teal-300 text-xs ml-2">
+                    <span className="font-pixellari text-teal-700 text-xs ml-2">
                       pranav@portfolio:~
                     </span>
                   </div>
                   <button
                     onClick={() => setTerminalHistory([])}
-                    className="font-pixellari text-teal-300 text-xs hover:text-white transition-colors"
+                    className="font-pixellari text-teal-700 text-xs hover:text-gray-900 transition-colors"
                   >
                     CLEAR
                   </button>
@@ -2685,10 +2610,10 @@ Type 'help' to see available commands.`;
                   {/* Welcome Message */}
                   {terminalHistory.length === 0 && (
                     <div className="mb-4">
-                      <p className="font-pixellari text-teal-300 text-sm mb-2">
+                      <p className="font-pixellari text-teal-700 text-sm mb-2">
                         Welcome to Pranav's Interactive Terminal v2.0
                       </p>
-                      <p className="font-pixellari text-teal-300 text-sm mb-4">
+                      <p className="font-pixellari text-teal-700 text-sm mb-4">
                         Type 'help' to explore available commands
                       </p>
                     </div>
@@ -2700,8 +2625,8 @@ Type 'help' to see available commands.`;
                       <p
                         className={`font-pixellari text-sm ${
                           line.startsWith(">")
-                            ? "text-teal-400"
-                            : "text-gray-300"
+                            ? "text-teal-700"
+                            : "text-gray-600"
                         } whitespace-pre-line`}
                       >
                         {line}
@@ -2711,7 +2636,7 @@ Type 'help' to see available commands.`;
 
                   {/* Command Input */}
                   <div className="flex items-center gap-2 mt-4">
-                    <span className="font-pixellari text-teal-400 text-sm flex-shrink-0">
+                    <span className="font-pixellari text-teal-700 text-sm flex-shrink-0">
                       $
                     </span>
                     <input
@@ -2725,11 +2650,11 @@ Type 'help' to see available commands.`;
                         }
                       }}
                       placeholder="Type a command..."
-                      className="flex-1 bg-transparent text-teal-300 font-pixellari text-xs sm:text-sm outline-none placeholder-teal-300/50 min-w-0"
+                      className="flex-1 bg-transparent text-teal-700 font-pixellari text-xs sm:text-sm outline-none placeholder-teal-300/50 min-w-0"
                       autoFocus
                     />
                     {isTyping && (
-                      <span className="text-teal-400 animate-pulse flex-shrink-0">
+                      <span className="text-teal-700 animate-pulse flex-shrink-0">
                         _
                       </span>
                     )}
@@ -2737,8 +2662,8 @@ Type 'help' to see available commands.`;
                 </div>
 
                 {/* Terminal Footer */}
-                <div className="bg-teal-900/30 px-4 py-2 border-t border-teal-400/30">
-                  <p className="font-pixellari text-teal-300 text-xs">
+                <div className="bg-teal-50 px-4 py-2 border-t border-teal-500/30">
+                  <p className="font-pixellari text-teal-700 text-xs">
                     Press Enter to execute • Type 'help' for commands
                   </p>
                 </div>
@@ -2747,8 +2672,8 @@ Type 'help' to see available commands.`;
 
             {/* Socials Tab */}
             {activeTab === "socials" && (
-              <div className="bg-black/90 border-2 border-teal-400 rounded-lg p-4 sm:p-6">
-                <h3 className="font-pressstart2p text-white text-base sm:text-lg mb-4 sm:mb-6 text-center">
+              <div className="bg-white border-2 border-teal-600 rounded-lg p-4 sm:p-6">
+                <h3 className="font-pressstart2p text-gray-900 text-base sm:text-lg mb-4 sm:mb-6 text-center">
                   SOCIAL COMMAND CENTER
                 </h3>
 
@@ -2757,13 +2682,13 @@ Type 'help' to see available commands.`;
                     href="https://github.com/PranavReddyGaddam"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-teal-900/30 border border-teal-400/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-800/50 hover:border-teal-300 hover:scale-105 group"
+                    className="bg-teal-50 border border-teal-500/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-100 hover:border-teal-500 hover:scale-105 group"
                   >
-                    <Github className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-300 group-hover:text-white" />
-                    <p className="font-pressstart2p text-white text-xs">
+                    <Github className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-700 group-hover:text-gray-900" />
+                    <p className="font-pressstart2p text-gray-900 text-xs">
                       GitHub
                     </p>
-                    <p className="font-pixellari text-teal-300 text-xs mt-1">
+                    <p className="font-pixellari text-teal-700 text-xs mt-1">
                       Code Repository
                     </p>
                   </a>
@@ -2772,13 +2697,13 @@ Type 'help' to see available commands.`;
                     href="https://www.linkedin.com/in/pranav-reddy-gaddam-69338321b/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-teal-900/30 border border-teal-400/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-800/50 hover:border-teal-300 hover:scale-105 group"
+                    className="bg-teal-50 border border-teal-500/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-100 hover:border-teal-500 hover:scale-105 group"
                   >
-                    <Linkedin className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-300 group-hover:text-white" />
-                    <p className="font-pressstart2p text-white text-xs">
+                    <Linkedin className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-700 group-hover:text-gray-900" />
+                    <p className="font-pressstart2p text-gray-900 text-xs">
                       LinkedIn
                     </p>
-                    <p className="font-pixellari text-teal-300 text-xs mt-1">
+                    <p className="font-pixellari text-teal-700 text-xs mt-1">
                       Professional
                     </p>
                   </a>
@@ -2787,13 +2712,13 @@ Type 'help' to see available commands.`;
                     href="https://www.instagram.com/__pranav.reddy__"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-teal-900/30 border border-teal-400/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-800/50 hover:border-teal-300 hover:scale-105 group"
+                    className="bg-teal-50 border border-teal-500/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-100 hover:border-teal-500 hover:scale-105 group"
                   >
-                    <Instagram className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-300 group-hover:text-white" />
-                    <p className="font-pressstart2p text-white text-xs">
+                    <Instagram className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-700 group-hover:text-gray-900" />
+                    <p className="font-pressstart2p text-gray-900 text-xs">
                       Instagram
                     </p>
-                    <p className="font-pixellari text-teal-300 text-xs mt-1">
+                    <p className="font-pixellari text-teal-700 text-xs mt-1">
                       Personal
                     </p>
                   </a>
@@ -2802,33 +2727,33 @@ Type 'help' to see available commands.`;
                     href="https://twitter.com/Pranav_2801"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-teal-900/30 border border-teal-400/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-800/50 hover:border-teal-300 hover:scale-105 group"
+                    className="bg-teal-50 border border-teal-500/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-100 hover:border-teal-500 hover:scale-105 group"
                   >
                     {React.createElement(RiTwitterXFill as any, {
                       className:
-                        "w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-300 group-hover:text-white",
+                        "w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-700 group-hover:text-gray-900",
                     })}
-                    <p className="font-pressstart2p text-white text-xs">
+                    <p className="font-pressstart2p text-gray-900 text-xs">
                       Twitter
                     </p>
-                    <p className="font-pixellari text-teal-300 text-xs mt-1">
+                    <p className="font-pixellari text-teal-700 text-xs mt-1">
                       Insights
                     </p>
                   </a>
                 </div>
 
                 {/* Direct Contact */}
-                <div className="bg-teal-900/20 border border-teal-400/30 rounded-lg p-3 sm:p-4">
-                  <h4 className="font-pressstart2p text-teal-300 text-sm mb-2 sm:mb-3">
+                <div className="bg-teal-50 border border-teal-500/30 rounded-lg p-3 sm:p-4">
+                  <h4 className="font-pressstart2p text-teal-700 text-sm mb-2 sm:mb-3">
                     DIRECT COMMS CHANNEL
                   </h4>
                   <div className="space-y-1 sm:space-y-2">
-                    <p className="font-pixellari text-gray-300 text-xs sm:text-sm break-words">
-                      <span className="text-teal-400">Email:</span>{" "}
+                    <p className="font-pixellari text-gray-600 text-xs sm:text-sm break-words">
+                      <span className="text-teal-700">Email:</span>{" "}
                       pranavreddy.gaddam@sjsu.edu
                     </p>
-                    <p className="font-pixellari text-gray-300 text-xs sm:text-sm">
-                      <span className="text-teal-400">Location:</span> San Jose,
+                    <p className="font-pixellari text-gray-600 text-xs sm:text-sm">
+                      <span className="text-teal-700">Location:</span> San Jose,
                       California
                     </p>
                   </div>
@@ -2838,67 +2763,67 @@ Type 'help' to see available commands.`;
 
             {/* Quests Tab */}
             {activeTab === "quests" && (
-              <div className="bg-black/90 border-2 border-teal-400 rounded-lg p-4 sm:p-6">
-                <h3 className="font-pressstart2p text-white text-base sm:text-lg mb-4 sm:mb-6 text-center">
+              <div className="bg-white border-2 border-teal-600 rounded-lg p-4 sm:p-6">
+                <h3 className="font-pressstart2p text-gray-900 text-base sm:text-lg mb-4 sm:mb-6 text-center">
                   HOBBIES & INTERESTS
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div className="bg-teal-900/20 border border-teal-400/30 rounded-lg p-3 sm:p-4">
+                  <div className="bg-teal-50 border border-teal-500/30 rounded-lg p-3 sm:p-4">
                     <div>
-                      <h4 className="font-pressstart2p text-teal-300 text-sm mb-1">
+                      <h4 className="font-pressstart2p text-teal-700 text-sm mb-1">
                         Movie Enthusiast
                       </h4>
-                      <p className="font-pixellari text-gray-400 text-xs mb-3">
+                      <p className="font-pixellari text-gray-500 text-xs mb-3">
                         Film Buff
                       </p>
                     </div>
-                    <p className="font-pixellari text-gray-300 text-xs leading-relaxed">
+                    <p className="font-pixellari text-gray-600 text-xs leading-relaxed">
                       Love watching a wide variety of movies - from classic
                       films to modern cinema across all genres.
                     </p>
                   </div>
 
-                  <div className="bg-teal-900/20 border border-teal-400/30 rounded-lg p-3 sm:p-4">
+                  <div className="bg-teal-50 border border-teal-500/30 rounded-lg p-3 sm:p-4">
                     <div>
-                      <h4 className="font-pressstart2p text-teal-300 text-sm mb-1">
+                      <h4 className="font-pressstart2p text-teal-700 text-sm mb-1">
                         Weekend Coding
                       </h4>
-                      <p className="font-pixellari text-gray-400 text-xs mb-3">
+                      <p className="font-pixellari text-gray-500 text-xs mb-3">
                         Passion Projects
                       </p>
                     </div>
-                    <p className="font-pixellari text-gray-300 text-xs leading-relaxed">
+                    <p className="font-pixellari text-gray-600 text-xs leading-relaxed">
                       Enjoy vibe coding on weekends - exploring new technologies
                       and building creative side projects.
                     </p>
                   </div>
 
-                  <div className="bg-teal-900/20 border border-teal-400/30 rounded-lg p-3 sm:p-4">
+                  <div className="bg-teal-50 border border-teal-500/30 rounded-lg p-3 sm:p-4">
                     <div>
-                      <h4 className="font-pressstart2p text-teal-300 text-sm mb-1">
+                      <h4 className="font-pressstart2p text-teal-700 text-sm mb-1">
                         Sports Fan
                       </h4>
-                      <p className="font-pixellari text-gray-400 text-xs mb-3">
+                      <p className="font-pixellari text-gray-500 text-xs mb-3">
                         Cricket, Basketball & Tennis
                       </p>
                     </div>
-                    <p className="font-pixellari text-gray-300 text-xs leading-relaxed">
+                    <p className="font-pixellari text-gray-600 text-xs leading-relaxed">
                       Passionate about watching cricket, basketball, and tennis.
                       Also enjoy following various other sports.
                     </p>
                   </div>
 
-                  <div className="bg-teal-900/20 border border-teal-400/30 rounded-lg p-3 sm:p-4">
+                  <div className="bg-teal-50 border border-teal-500/30 rounded-lg p-3 sm:p-4">
                     <div>
-                      <h4 className="font-pressstart2p text-teal-300 text-sm mb-1">
+                      <h4 className="font-pressstart2p text-teal-700 text-sm mb-1">
                         Baking
                       </h4>
-                      <p className="font-pixellari text-gray-400 text-xs mb-3">
+                      <p className="font-pixellari text-gray-500 text-xs mb-3">
                         Home Chef
                       </p>
                     </div>
-                    <p className="font-pixellari text-gray-300 text-xs leading-relaxed">
+                    <p className="font-pixellari text-gray-600 text-xs leading-relaxed">
                       Enjoy baking as a creative outlet - experimenting with
                       recipes and creating delicious treats.
                     </p>
@@ -2906,17 +2831,17 @@ Type 'help' to see available commands.`;
                 </div>
 
                 {/* Collaboration Section */}
-                <div className="mt-4 sm:mt-6 bg-gradient-to-r from-teal-900/30 to-cyan-900/30 border border-teal-400 rounded-lg p-3 sm:p-4">
-                  <h4 className="font-pressstart2p text-teal-300 text-sm mb-2 sm:mb-3 text-center">
+                <div className="mt-4 sm:mt-6 bg-gradient-to-r from-teal-50 to-cyan-100 border border-teal-600 rounded-lg p-3 sm:p-4">
+                  <h4 className="font-pressstart2p text-teal-700 text-sm mb-2 sm:mb-3 text-center">
                     LET'S COLLABORATE
                   </h4>
-                  <p className="font-pixellari text-gray-300 text-xs sm:text-sm text-center mb-3 sm:mb-4">
+                  <p className="font-pixellari text-gray-600 text-xs sm:text-sm text-center mb-3 sm:mb-4">
                     Have an interesting project or idea? I'd love to hear about
                     it and work together!
                   </p>
                   <button
                     onClick={() => setActiveTab("terminal")}
-                    className="w-full font-pressstart2p bg-teal-600 hover:bg-teal-700 text-white px-3 sm:px-4 py-2 rounded border border-teal-400 transition-all duration-300 hover:scale-105 text-xs"
+                    className="w-full font-pressstart2p bg-teal-600 hover:bg-teal-700 text-gray-900 px-3 sm:px-4 py-2 rounded border border-teal-600 transition-all duration-300 hover:scale-105 text-xs"
                   >
                     GET IN TOUCH →
                   </button>
@@ -2928,10 +2853,10 @@ Type 'help' to see available commands.`;
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 bg-gradient-to-r from-black via-black/80 to-black border-t-2 border-teal-400">
+      <footer className="relative z-10 bg-gradient-to-r from-white via-white/80 to-white border-t-2 border-teal-600">
         <div className="max-w-6xl mx-auto px-4 py-4 text-center">
           <TimeMachine />
-          <p className="font-pixellari text-teal-300 text-sm mt-3">
+          <p className="font-pixellari text-teal-700 text-sm mt-3">
             Crafted with curiosity and caffeine — © {new Date().getFullYear()}{" "}
             Pranav Reddy Gaddam
           </p>
@@ -2947,7 +2872,7 @@ Type 'help' to see available commands.`;
           <div className="fixed right-2 top-1/2 -translate-y-1/2 z-50 group">
             <button
               onClick={handleUnlockAllSkills}
-              className="bg-green-900/90 hover:bg-green-800 text-white p-3 rounded-l-lg border-2 border-r-0 border-green-400 hover:border-green-300 transition-all duration-300 hover:scale-105 hover:translate-x-2 shadow-lg hover:shadow-green-500/50 backdrop-blur-sm relative"
+              className="bg-green-50 hover:bg-green-800 text-gray-900 p-3 rounded-l-lg border-2 border-r-0 border-green-600 hover:border-green-500 transition-all duration-300 hover:scale-105 hover:translate-x-2 shadow-lg hover:shadow-green-500/50 backdrop-blur-sm relative"
               title="Unlock all skills"
             >
               {Object.values(unlockedSkills).every((skill) => skill) ? (
@@ -2957,7 +2882,7 @@ Type 'help' to see available commands.`;
               )}
             </button>
             {/* Tooltip */}
-            <div className="absolute right-full top-1/2 -translate-y-1/2 mr-2 px-3 py-1 bg-black/90 text-white text-xs font-pressstart2p rounded border border-green-400 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            <div className="absolute right-full top-1/2 -translate-y-1/2 mr-2 px-3 py-1 bg-white text-gray-900 text-xs font-pressstart2p rounded border border-green-600 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
               Unlock all skills
               <div className="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-t-4 border-t-transparent border-b-4 border-b-transparent border-l-4 border-l-black/90"></div>
             </div>
@@ -2970,35 +2895,35 @@ Type 'help' to see available commands.`;
       {/* Why You Should Hire Me Modal */}
       {showWhyHireMeModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/90"
           onClick={() => setShowWhyHireMeModal(false)}
         >
           <div
-            className="relative bg-gradient-to-br from-red-600 to-red-800 border-3 border-red-900 rounded-lg p-8 max-w-5xl w-full shadow-2xl"
+            className="relative bg-gradient-to-br from-red-600 to-red-800 border-3 border-red-600 rounded-lg p-8 max-w-5xl w-full shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Stamp texture overlay to match the lanyard card */}
-            <div className="absolute inset-0 bg-red-900/20 rounded-lg pointer-events-none"></div>
-            <div className="absolute inset-0 border border-white/30 rounded-lg pointer-events-none"></div>
+            <div className="absolute inset-0 bg-red-50 rounded-lg pointer-events-none"></div>
+            <div className="absolute inset-0 border border-gray-200 rounded-lg pointer-events-none"></div>
 
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="font-pressstart2p text-yellow-300 text-lg md:text-2xl tracking-widest">
+                <h2 className="font-pressstart2p text-yellow-700 text-lg md:text-2xl tracking-widest">
                   WHY YOU SHOULD HIRE ME
                 </h2>
                 <button
                   onClick={() => setShowWhyHireMeModal(false)}
                   aria-label="Close"
-                  className="text-white/70 hover:text-white text-3xl transition-colors"
+                  className="text-gray-600 hover:text-gray-900 text-3xl transition-colors"
                 >
                   <IoClose />
                 </button>
               </div>
-              <div className="font-pixellari text-white text-base leading-relaxed max-h-[75vh] overflow-y-auto space-y-6 pr-2">
+              <div className="font-pixellari text-gray-900 text-base leading-relaxed max-h-[75vh] overflow-y-auto space-y-6 pr-2">
                 <HireMeStats />
 
                 <div>
-                  <h3 className="font-pressstart2p text-yellow-300 text-sm mb-3 tracking-wider">
+                  <h3 className="font-pressstart2p text-yellow-700 text-sm mb-3 tracking-wider">
                     WHAT MAKES ME DIFFERENT
                   </h3>
                   <p>
@@ -3009,21 +2934,21 @@ Type 'help' to see available commands.`;
                   </p>
                   <ul className="mt-4 space-y-3">
                     <li className="flex gap-2">
-                      <span className="text-yellow-300">◆</span>
+                      <span className="text-yellow-700">◆</span>
                       <span>
                         I close the loop — deploy it, monitor it, own what
                         breaks at 2 AM.
                       </span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="text-yellow-300">◆</span>
+                      <span className="text-yellow-700">◆</span>
                       <span>
                         AI-native. I build agentic systems and use them daily,
                         so I move at the speed of the tooling.
                       </span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="text-yellow-300">◆</span>
+                      <span className="text-yellow-700">◆</span>
                       <span>
                         Early career: still hungry, still fast, and I will
                         outwork anyone in the room.
@@ -3054,20 +2979,20 @@ Type 'help' to see available commands.`;
       {/* Achievements Modal */}
       {showAchievementsModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="bg-black border-2 border-yellow-400 rounded-lg p-6 max-w-3xl w-full shadow-lg">
+          <div className="bg-white border-2 border-yellow-600 rounded-lg p-6 max-w-3xl w-full shadow-lg">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-pressstart2p text-yellow-400 text-xl">
+              <h2 className="font-pressstart2p text-yellow-700 text-xl">
                 ACHIEVEMENTS
               </h2>
               <button
                 onClick={() => setShowAchievementsModal(false)}
-                className="font-pressstart2p bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded border border-yellow-400"
+                className="font-pressstart2p bg-yellow-600 hover:bg-yellow-700 text-gray-900 px-4 py-2 rounded border border-yellow-600"
               >
                 CLOSE
               </button>
             </div>
-            <div className="mb-4 p-3 bg-yellow-900/20 border border-yellow-400/50 rounded-lg">
-              <p className="font-pixellari text-yellow-300 text-sm">
+            <div className="mb-4 p-3 bg-yellow-50 border border-yellow-500/50 rounded-lg">
+              <p className="font-pixellari text-yellow-700 text-sm">
                 Click on locked achievements to navigate to where you can
                 unlock them!
               </p>
@@ -3086,18 +3011,18 @@ Type 'help' to see available commands.`;
                     onClick={() => isClickable && handleAchievementClick(a.id)}
                     className={`flex items-center justify-between border-2 rounded-lg px-4 py-3 transition-all duration-200 h-20 ${
                       isUnlocked
-                        ? "border-green-400 bg-green-900/30"
-                        : "border-gray-600 bg-black/40"
+                        ? "border-green-600 bg-green-50"
+                        : "border-gray-300 bg-white/70"
                     } ${
                       isClickable
-                        ? "cursor-pointer hover:border-yellow-400 hover:bg-yellow-900/20 hover:scale-105"
+                        ? "cursor-pointer hover:border-yellow-600 hover:bg-yellow-50 hover:scale-105"
                         : "cursor-default"
                     }`}
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <span
                         className={`flex-shrink-0 ${
-                          isUnlocked ? "text-green-400" : "text-gray-400"
+                          isUnlocked ? "text-green-700" : "text-gray-500"
                         }`}
                       >
                         <GoTrophy />
@@ -3105,16 +3030,16 @@ Type 'help' to see available commands.`;
                       <div className="flex-1 min-w-0">
                         <div
                           className={`font-pressstart2p text-sm truncate ${
-                            isUnlocked ? "text-white" : "text-gray-400"
+                            isUnlocked ? "text-gray-900" : "text-gray-500"
                           }`}
                           title={a.title}
                         >
                           {a.title}
                         </div>
-                        <div className="font-pixellari text-xs text-gray-300/80 truncate">
+                        <div className="font-pixellari text-xs text-gray-600 truncate">
                           {a.section} • +{a.xp} XP
                           {isClickable && !isUnlocked && (
-                            <span className="text-yellow-400 ml-2">
+                            <span className="text-yellow-700 ml-2">
                               (Click to navigate)
                             </span>
                           )}
@@ -3123,15 +3048,15 @@ Type 'help' to see available commands.`;
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {isClickable && !isUnlocked && (
-                        <span className="text-yellow-400 text-xs">→</span>
+                        <span className="text-yellow-700 text-xs">→</span>
                       )}
                       <Badge
                         variant={isUnlocked ? "default" : "outline"}
                         font="retro"
                         className={`${
                           isUnlocked
-                            ? "bg-green-600 border-green-400 text-green-400"
-                            : "bg-gray-600 border-gray-400 text-gray-400"
+                            ? "bg-green-600 border-green-600 text-green-700"
+                            : "bg-gray-600 border-gray-300 text-gray-500"
                         } text-sm`}
                       >
                         {isUnlocked ? "UNLOCKED" : "LOCKED"}

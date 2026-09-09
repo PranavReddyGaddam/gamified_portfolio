@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        'taviraj': ['Taviraj', 'Georgia', 'serif'],
         'pressstart2p': ['PressStart2P', 'monospace'],
         'pixellari': ['Pixellari', 'monospace'],
       },

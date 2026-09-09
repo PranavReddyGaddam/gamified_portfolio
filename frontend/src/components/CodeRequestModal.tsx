@@ -44,21 +44,21 @@ const CodeRequestModal: React.FC<CodeRequestModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-      <div className="absolute inset-0 bg-black/80 animate-fade-in" onClick={onClose} />
-      <Card className="bg-black border-red-400 max-w-lg w-full relative z-10 transform transition-all duration-300 scale-100 hover:scale-[1.02] animate-slide-up">
+      <div className="absolute inset-0 bg-white animate-fade-in" onClick={onClose} />
+      <Card className="bg-white border-red-600 max-w-lg w-full relative z-10 transform transition-all duration-300 scale-100 hover:scale-[1.02] animate-slide-up">
         <CardContent className="p-8">
           <div className="text-center mb-6">
-            <h2 className="font-pressstart2p text-red-400 text-xl mb-3">
+            <h2 className="font-pressstart2p text-red-700 text-xl mb-3">
               Request Code Access
             </h2>
-            <p className="font-pixellari text-white text-sm leading-relaxed">
+            <p className="font-pixellari text-gray-900 text-sm leading-relaxed">
               This repository is private. Request access by filling out the form below.
             </p>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <Label htmlFor="name" className="text-red-300 text-sm font-pixellari">
+              <Label htmlFor="name" className="text-red-700 text-sm font-pixellari">
                 Your Name *
               </Label>
               <Input
@@ -67,13 +67,13 @@ const CodeRequestModal: React.FC<CodeRequestModalProps> = ({
                 value={formData.name}
                 onChange={handleInputChange("name")}
                 placeholder="Enter your full name"
-                className="border-red-400 bg-black/50 text-white placeholder-gray-400 font-pixellari"
+                className="border-red-600 bg-white/80 text-gray-900 placeholder-gray-400 font-pixellari"
                 required
               />
             </div>
 
             <div>
-              <Label htmlFor="from" className="text-red-300 text-sm font-pixellari">
+              <Label htmlFor="from" className="text-red-700 text-sm font-pixellari">
                 Where are you from? *
               </Label>
               <Input
@@ -82,13 +82,13 @@ const CodeRequestModal: React.FC<CodeRequestModalProps> = ({
                 value={formData.from}
                 onChange={handleInputChange("from")}
                 placeholder="Company, University, or Independent"
-                className="border-red-400 bg-black/50 text-white placeholder-gray-400 font-pixellari"
+                className="border-red-600 bg-white/80 text-gray-900 placeholder-gray-400 font-pixellari"
                 required
               />
             </div>
 
             <div>
-              <Label htmlFor="reason" className="text-red-300 text-sm font-pixellari">
+              <Label htmlFor="reason" className="text-red-700 text-sm font-pixellari">
                 Why do you need the code? *
               </Label>
               <Textarea
@@ -96,7 +96,7 @@ const CodeRequestModal: React.FC<CodeRequestModalProps> = ({
                 value={formData.reason}
                 onChange={handleInputChange("reason")}
                 placeholder="Please explain why you'd like access to this portfolio website code..."
-                className="border-red-400 bg-black/50 text-white placeholder-gray-400 font-pixellari min-h-[120px]"
+                className="border-red-600 bg-white/80 text-gray-900 placeholder-gray-400 font-pixellari min-h-[120px]"
                 required
               />
             </div>
@@ -108,7 +108,7 @@ const CodeRequestModal: React.FC<CodeRequestModalProps> = ({
                 variant="outline"
                 size="sm"
                 font="retro"
-                className="flex-1 border-red-400 text-red-400 hover:bg-red-900/20 font-pixellari"
+                className="flex-1 border-red-600 text-red-700 hover:bg-red-50 font-pixellari"
                 disabled={isSubmitting}
               >
                 Cancel
@@ -118,7 +118,7 @@ const CodeRequestModal: React.FC<CodeRequestModalProps> = ({
                 variant="default"
                 size="sm"
                 font="retro"
-                className="flex-1 bg-red-600 hover:bg-red-700 text-white border-red-400 font-pixellari"
+                className="flex-1 bg-red-600 hover:bg-red-700 text-gray-900 border-red-600 font-pixellari"
                 disabled={isSubmitting || !formData.name || !formData.from || !formData.reason}
               >
                 {isSubmitting ? "Sending..." : "Send Request"}

@@ -13,12 +13,12 @@ const HireMeStats: React.FC = () => (
     {kpis.map((kpi) => (
       <div
         key={kpi.label}
-        className="bg-red-900/40 border border-white/30 rounded-lg px-2 py-3 text-center"
+        className="bg-red-50 border border-gray-200 rounded-lg px-2 py-3 text-center"
       >
-        <p className="font-pressstart2p text-yellow-300 text-xs md:text-base mb-1">
+        <p className="font-pressstart2p text-yellow-700 text-xs md:text-base mb-1">
           {kpi.value}
         </p>
-        <p className="font-pixellari text-white/90 text-[10px] md:text-xs leading-snug">
+        <p className="font-pixellari text-gray-800 text-[10px] md:text-xs leading-snug">
           {kpi.label}
         </p>
       </div>

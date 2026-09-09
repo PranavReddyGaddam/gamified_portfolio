@@ -15,32 +15,32 @@ const GameInstructionsModal: React.FC<GameInstructionsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <Card className="bg-black border-green-400 max-w-md w-full">
+      <Card className="bg-white border-green-600 max-w-md w-full">
         <CardContent className="p-6">
           <div className="text-center mb-4">
-            <h2 className="font-pressstart2p text-green-400 text-xl mb-2">
+            <h2 className="font-pressstart2p text-green-700 text-xl mb-2">
               Game Instructions:
             </h2>
           </div>
-          <ul className="space-y-2 text-white font-pixellari text-sm">
+          <ul className="space-y-2 text-gray-900 font-pixellari text-sm">
             <li className="flex items-start gap-2">
-              <span className="text-green-400 mt-1">•</span>
+              <span className="text-green-700 mt-1">•</span>
               <span>Scroll down to explore different levels</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-green-400 mt-1">•</span>
+              <span className="text-green-700 mt-1">•</span>
               <span>Click on skills to unlock them and earn XP</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-green-400 mt-1">•</span>
+              <span className="text-green-700 mt-1">•</span>
               <span>Unlock projects to view details and links</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-green-400 mt-1">•</span>
+              <span className="text-green-700 mt-1">•</span>
               <span>Collect achievements by exploring the portfolio</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-green-400 mt-1">•</span>
+              <span className="text-green-700 mt-1">•</span>
               <span>Complete all levels to reach the contact form</span>
             </li>
           </ul>
@@ -50,7 +50,7 @@ const GameInstructionsModal: React.FC<GameInstructionsModalProps> = ({
               variant="default"
               size="lg"
               font="retro"
-              className="border-green-400 bg-green-600 hover:bg-green-700 text-white"
+              className="border-green-600 bg-green-600 hover:bg-green-700 text-gray-900"
             >
               GOT IT!
             </Button>

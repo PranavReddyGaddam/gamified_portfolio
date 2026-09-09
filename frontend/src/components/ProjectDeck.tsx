@@ -35,10 +35,10 @@ const THEME_STYLES: Record<
   Theme,
   { bg: string; text: string; buttonBg: string }
 > = {
-  red: { bg: "#7f1d1d", text: "#fff", buttonBg: "rgba(0,0,0,0.35)" },
-  black: { bg: "#0a0a0a", text: "#fff", buttonBg: "rgba(255,255,255,0.1)" },
-  crimson: { bg: "#450a0a", text: "#fff", buttonBg: "rgba(255,255,255,0.08)" },
-  charcoal: { bg: "#27272a", text: "#fff", buttonBg: "rgba(255,255,255,0.1)" },
+  red: { bg: "#fef2f2", text: "#111827", buttonBg: "rgba(0,0,0,0.06)" },
+  black: { bg: "#f4f4f5", text: "#111827", buttonBg: "rgba(0,0,0,0.06)" },
+  crimson: { bg: "#fff1f2", text: "#111827", buttonBg: "rgba(0,0,0,0.06)" },
+  charcoal: { bg: "#f4f4f5", text: "#111827", buttonBg: "rgba(0,0,0,0.06)" },
 };
 
 const PLACEHOLDER_PREVIEW = "/projects/Pranav.jpeg";
@@ -111,7 +111,7 @@ const ProjectDeck: React.FC<{
 
   return (
     <div className="mb-14">
-      <h2 className="font-pressstart2p text-sm md:text-base mb-4 text-white">
+      <h2 className="font-pressstart2p text-sm md:text-base mb-4 text-gray-900">
         {label}
       </h2>
 
@@ -162,7 +162,7 @@ const ProjectDeck: React.FC<{
                 }}
                 className="absolute inset-0 grid grid-cols-1 md:grid-cols-[3fr_1fr]"
               >
-                <div className="relative bg-black">
+                <div className="relative bg-white">
                   {video ? (
                     <video
                       ref={(el) => {

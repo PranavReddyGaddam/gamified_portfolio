@@ -20,10 +20,10 @@ const THEME_STYLES: Record<
   Theme,
   { bg: string; text: string; buttonBg: string }
 > = {
-  red: { bg: "#7f1d1d", text: "#fff", buttonBg: "rgba(0,0,0,0.35)" },
-  black: { bg: "#0a0a0a", text: "#fff", buttonBg: "rgba(255,255,255,0.1)" },
-  crimson: { bg: "#450a0a", text: "#fff", buttonBg: "rgba(255,255,255,0.08)" },
-  charcoal: { bg: "#27272a", text: "#fff", buttonBg: "rgba(255,255,255,0.1)" },
+  red: { bg: "#fef2f2", text: "#111827", buttonBg: "rgba(0,0,0,0.06)" },
+  black: { bg: "#f4f4f5", text: "#111827", buttonBg: "rgba(0,0,0,0.06)" },
+  crimson: { bg: "#fff1f2", text: "#111827", buttonBg: "rgba(0,0,0,0.06)" },
+  charcoal: { bg: "#f4f4f5", text: "#111827", buttonBg: "rgba(0,0,0,0.06)" },
 };
 
 const PLACEHOLDER_PREVIEW = "/projects/Pranav.jpeg";
@@ -182,7 +182,7 @@ const ProjectDeckMobile: React.FC<{
                 }}
                 className="relative flex flex-col"
               >
-                <div className="relative bg-black h-48 sm:h-56">
+                <div className="relative bg-white h-48 sm:h-56">
                   {video ? (
                     <video
                       ref={(el) => {
@@ -294,7 +294,7 @@ const ProjectDeckMobile: React.FC<{
             }
             setShowAll((current) => !current);
           }}
-          className="w-full mt-4 font-pressstart2p text-xs text-white bg-red-900/40 border border-red-400 rounded-lg py-3 hover:bg-red-900/60 transition-colors"
+          className="w-full mt-4 font-pressstart2p text-xs text-gray-900 bg-red-50 border border-red-600 rounded-lg py-3 hover:bg-red-50 transition-colors"
         >
           {showAll ? "SHOW LESS" : "MORE PROJECTS"}
         </button>

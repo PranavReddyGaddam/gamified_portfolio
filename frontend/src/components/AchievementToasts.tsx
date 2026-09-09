@@ -22,40 +22,40 @@ const THEME_COLORS: Record<
   { border: string; bg: string; text: string; icon: string }
 > = {
   purple: {
-    border: "border-purple-400",
-    bg: "bg-purple-900/80",
-    text: "text-purple-300",
-    icon: "text-purple-400",
+    border: "border-purple-600",
+    bg: "bg-purple-50",
+    text: "text-purple-700",
+    icon: "text-purple-700",
   },
   blue: {
-    border: "border-blue-400",
-    bg: "bg-blue-900/80",
-    text: "text-blue-300",
-    icon: "text-blue-400",
+    border: "border-blue-600",
+    bg: "bg-blue-50",
+    text: "text-blue-700",
+    icon: "text-blue-700",
   },
   yellow: {
-    border: "border-yellow-400",
-    bg: "bg-yellow-900/80",
-    text: "text-yellow-300",
-    icon: "text-yellow-400",
+    border: "border-yellow-600",
+    bg: "bg-yellow-50",
+    text: "text-yellow-700",
+    icon: "text-yellow-700",
   },
   green: {
-    border: "border-green-400",
-    bg: "bg-green-900/80",
-    text: "text-green-300",
-    icon: "text-green-400",
+    border: "border-green-600",
+    bg: "bg-green-50",
+    text: "text-green-700",
+    icon: "text-green-700",
   },
   red: {
-    border: "border-red-400",
-    bg: "bg-red-900/80",
-    text: "text-red-300",
-    icon: "text-red-400",
+    border: "border-red-600",
+    bg: "bg-red-50",
+    text: "text-red-700",
+    icon: "text-red-700",
   },
   teal: {
-    border: "border-teal-400",
-    bg: "bg-teal-900/80",
-    text: "text-teal-300",
-    icon: "text-teal-400",
+    border: "border-teal-600",
+    bg: "bg-teal-50",
+    text: "text-teal-700",
+    icon: "text-teal-700",
   },
 };
 
@@ -88,7 +88,7 @@ const AchievementToasts: React.FC<{ toasts: AchievementToast[] }> = ({
                   <GoTrophy />
                 </span>
                 <div className="flex-1">
-                  <h3 className="font-pressstart2p text-white text-sm sm:text-base">
+                  <h3 className="font-pressstart2p text-gray-900 text-sm sm:text-base">
                     {toast.title}
                   </h3>
                   <p className={`font-pixellari text-sm ${colors.text}`}>
@@ -96,7 +96,7 @@ const AchievementToasts: React.FC<{ toasts: AchievementToast[] }> = ({
                   </p>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <p className="font-pressstart2p text-white text-xs leading-tight">
+                  <p className="font-pressstart2p text-gray-900 text-xs leading-tight">
                     UNLOCKED
                   </p>
                 </div>
