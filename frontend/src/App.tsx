@@ -1113,10 +1113,10 @@ Type 'help' to see available commands.`;
         ref={nextSectionRef}
         className="about-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-32"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32">
+        <div className="grid grid-cols-1 lg:grid-cols-[384px_1fr] gap-10 lg:gap-16">
           {/* Left: portrait + labels */}
           <div>
-            <div className="flex justify-between mb-4">
+            <div className="about-portrait-head flex justify-between mb-4">
               <a
                 href="#about"
                 className="text-sm text-neutral-900 hover:text-neutral-500 transition-colors"
@@ -1187,17 +1187,17 @@ Type 'help' to see available commands.`;
             <ExperienceRows
               entries={[
                 {
-                  id: "bachelors",
-                  org: "St. Martin's Engineering College",
-                  team: "Computer Science",
-                  role: "Bachelor's",
-                  year: "19–23",
-                  period: "Aug 2019 – May 2023",
+                  id: "masters",
+                  org: "San Jose State University",
+                  team: "Applied Data Science",
+                  role: "Master's",
+                  year: "24–26",
+                  period: "Aug 2024 – May 2026",
                   detail:
-                    "Bachelor's in Computer Science, where I picked up the fundamentals and started building things well beyond coursework.",
+                    "Master's in Applied Data Science, focusing on machine learning systems and putting models into production.",
                   points: [
-                    "Data structures, algorithms, and systems foundations",
-                    "First side projects in Python and web development",
+                    "CGPA 3.84 / 4.0",
+                    "Machine learning, AI systems, and large-scale data",
                   ],
                 },
                 {
@@ -1216,17 +1216,17 @@ Type 'help' to see available commands.`;
                   ],
                 },
                 {
-                  id: "masters",
-                  org: "San Jose State University",
-                  team: "Applied Data Science",
-                  role: "Master's",
-                  year: "24–26",
-                  period: "Aug 2024 – May 2026",
+                  id: "bachelors",
+                  org: "St. Martin's Engineering College",
+                  team: "Computer Science",
+                  role: "Bachelor's",
+                  year: "19–23",
+                  period: "Aug 2019 – May 2023",
                   detail:
-                    "Master's in Applied Data Science, focusing on machine learning systems and putting models into production.",
+                    "Bachelor's in Computer Science, where I picked up the fundamentals and started building things well beyond coursework.",
                   points: [
-                    "CGPA 3.84 / 4.0",
-                    "Machine learning, AI systems, and large-scale data",
+                    "Data structures, algorithms, and systems foundations",
+                    "First side projects in Python and web development",
                   ],
                 },
               ]}

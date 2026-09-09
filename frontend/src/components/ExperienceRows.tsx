@@ -103,7 +103,7 @@ const ExperienceRows = ({ entries }: Props) => {
   }, []);
 
   return (
-    <div className="space-y-4" ref={rootRef}>
+    <div className="space-y-4 exp-table" ref={rootRef}>
       {entries.map((e) => {
         const isOpen = openId === e.id;
         return (

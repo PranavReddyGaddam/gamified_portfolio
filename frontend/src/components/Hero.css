@@ -348,14 +348,18 @@
   background: #ffffff;
 }
 
-/* Portrait holds the reference's 3:4 frame. Capped at the reference's own
-   384px rather than filling the column, so it stays a portrait and not a
-   full-bleed panel. */
+/* Portrait: softly rounded rather than a hard rectangle. */
 .about-portrait {
   width: 100%;
   max-width: 384px;
   aspect-ratio: 3 / 4;
   overflow: hidden;
+  border-radius: 14px;
+}
+
+/* Keep the label row aligned with the frame rather than the column. */
+.about-portrait-head {
+  max-width: 384px;
 }
 
 .about-portrait img {
@@ -375,4 +379,10 @@
 
 .about-section p {
   font-weight: 300;
+}
+
+/* Keep the experience table to a comfortable measure rather than letting it
+   stretch the full width of the right-hand column. */
+.about-section .exp-table {
+  max-width: 640px;
 }
