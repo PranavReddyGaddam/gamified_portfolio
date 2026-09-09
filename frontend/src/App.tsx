@@ -12,6 +12,7 @@ import ExperienceRows from "./components/ExperienceRows";
 import { projects } from "./data/projects";
 import WorkList from "./components/WorkList";
 import Reveal from "./components/Reveal";
+import HeroNav from "./components/HeroNav";
 import LocalClock from "./components/LocalClock";
 import HireMeStats from "./components/HireMeStats";
 import { RiTwitterXFill } from "react-icons/ri";
@@ -313,31 +314,16 @@ function App() {
             Pranav Reddy Gaddam
           </a>
           <span className="hero-meta-loc">San Jose, California</span>
-          <nav className="hero-nav">
-            {[
+          <HeroNav
+            items={[
               { label: "Home", target: "#home" },
               { label: "About", target: "#about" },
               { label: "Work", target: "#projects" },
               // Resume is a file rather than a section, so it opens in a new tab.
               { label: "Resume", target: RESUME_URL, external: true },
-            ].map((l, i) => (
-              <a
-                key={l.label}
-                href={l.target}
-                {...(l.external
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {
-                      onClick: (e: React.MouseEvent) => {
-                        e.preventDefault();
-                        scrollToSection(l.target);
-                      },
-                    })}
-                className={`hero-nav-link${i === 0 ? " is-active" : ""}`}
-              >
-                {l.label}
-              </a>
-            ))}
-          </nav>
+            ]}
+            onNavigate={scrollToSection}
+          />
         </div>
 
         {/* Centered hero content */}

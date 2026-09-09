@@ -820,3 +820,110 @@
     }
   }
 }
+
+/* --- Hero nav: hamburger + full-screen menu --------------------------- */
+
+/* The burger only exists on phones; the inline links carry desktop. */
+.hero-burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  border-radius: 6px;
+  color: #3a4a16;
+  cursor: pointer;
+}
+
+.hero-burger svg {
+  width: 24px;
+  height: 24px;
+}
+
+.hero-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  background: #f0efe9;
+  animation: hero-menu-in 0.28s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes hero-menu-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-menu-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 22px;
+}
+
+.hero-menu-logo {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-size: 20px;
+  color: #3a4a16;
+}
+
+.hero-menu .hero-burger--close {
+  display: flex;
+  margin-left: 0;
+}
+
+/* Links sit right-aligned and vertically centred, as on the reference. */
+.hero-menu-links {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 24px;
+  padding: 0 32px 96px;
+}
+
+.hero-menu-link {
+  font-family: "Geist", -apple-system, sans-serif;
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 600;
+  letter-spacing: 0.75px;
+  text-transform: uppercase;
+  color: #3a4a16;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.hero-menu-link:active {
+  opacity: 0.6;
+}
+
+@media (max-width: 640px) {
+  .hero-nav {
+    display: none;
+  }
+
+  .hero-burger {
+    display: flex;
+  }
+
+  /* The meta bar goes back to a single row: logo left, burger right. */
+  .hero-meta {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-menu {
+    animation: none;
+  }
+}
