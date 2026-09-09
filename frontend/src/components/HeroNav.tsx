@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { gsap } from "gsap";
 
 export type NavItem = {
   label: string;
@@ -19,6 +20,7 @@ type Props = {
  */
 const HeroNav = ({ items, onNavigate }: Props) => {
   const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   // Lock the page behind the menu, and let Escape close it.
   useEffect(() => {
@@ -33,6 +35,31 @@ const HeroNav = ({ items, onNavigate }: Props) => {
       document.body.style.overflow = previous;
       window.removeEventListener("keydown", onKey);
     };
+  }, [open]);
+
+  // The panel fades while each link slides in from the right, staggered —
+  // matching the reference menu's entrance.
+  useLayoutEffect(() => {
+    if (!open || !menuRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        menuRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.28, ease: "power2.out" }
+      );
+      gsap.fromTo(
+        ".hero-menu-link",
+        { opacity: 0, x: 30 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.7,
+          stagger: 0.06,
+          ease: "power3.out",
+        }
+      );
+    }, menuRef);
+    return () => ctx.revert();
   }, [open]);
 
   const activate = (item: NavItem) => {
@@ -81,7 +108,13 @@ const HeroNav = ({ items, onNavigate }: Props) => {
 
       {open
         ? createPortal(
-            <div className="hero-menu" role="dialog" aria-modal="true" aria-label="Menu">
+            <div
+              ref={menuRef}
+              className="hero-menu"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Menu"
+            >
               <div className="hero-menu-bar">
                 <span className="hero-menu-logo">Pranav Reddy Gaddam</span>
                 <button
