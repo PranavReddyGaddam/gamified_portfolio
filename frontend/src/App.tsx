@@ -18,6 +18,7 @@ import TimeMachine from "./components/TimeMachine";
 import "./components/TimeMachine.css";
 import "./components/Hero.css";
 import ExperienceRows from "./components/ExperienceRows";
+import LocalClock from "./components/LocalClock";
 import HireMeStats from "./components/HireMeStats";
 import { Button } from "@/components/ui/8bit/button";
 import { Card, CardContent } from "@/components/ui/8bit/card";
@@ -36,7 +37,7 @@ import {
 import { RiTwitterXFill } from "react-icons/ri";
 import { BsRobot, BsTools, BsDatabaseAdd } from "react-icons/bs";
 import { RxGear } from "react-icons/rx";
-import { FaDocker, FaLock, FaUnlock, FaChevronDown } from "react-icons/fa";
+import { FaDocker, FaLock, FaUnlock, FaChevronDown, FaLinkedin, FaGithub } from "react-icons/fa";
 import { GoTrophy } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 
@@ -2389,336 +2390,121 @@ Type 'help' to see available commands.`;
         </div>
 
       </section>
-      <section
-        data-level={6}
-        className="relative z-10 min-h-screen bg-cream px-3 py-12"
-      >
 
-        <div className="relative z-10 max-w-5xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-gray-900 border-2 border-teal-600 bg-white/80 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
-              LEVEL 6: COMMAND CENTER
-            </h2>
-            <p className="font-pressstart2p text-gray-900 text-sm mt-4">
-              INTERACTIVE TERMINAL • CONNECT • EXPLORE
-            </p>
-          </div>
+      {/* Footer */}
+      <footer className="site-footer relative z-10 px-6 md:px-16 pt-8 pb-8">
+        <div className="flex flex-col gap-16">
+          <div className="flex flex-col gap-5 items-start w-full">
+            {/* Hairline rule */}
+            <div className="bg-neutral-200 h-px w-full" />
 
-          {/* Interactive Command Center */}
-          <div className="max-w-6xl mx-auto px-4">
-            {/* Tab Navigation */}
-            <div className="flex justify-center mb-6">
-              <div className="bg-white border border-teal-600 rounded-lg p-1 flex gap-1 flex-wrap justify-center max-w-sm mx-auto">
-                <button
-                  onClick={() => setActiveTab("socials")}
-                  className={`px-3 py-2 rounded font-pressstart2p text-xs transition-all duration-300 min-w-[80px] ${
-                    activeTab === "socials"
-                      ? "bg-teal-600 text-gray-900"
-                      : "text-teal-700 hover:text-gray-900 hover:bg-teal-100"
-                  }`}
-                >
-                  SOCIALS
-                </button>
-                <button
-                  onClick={() => setActiveTab("quests")}
-                  className={`px-3 py-2 rounded font-pressstart2p text-xs transition-all duration-300 min-w-[80px] ${
-                    activeTab === "quests"
-                      ? "bg-teal-600 text-gray-900"
-                      : "text-teal-700 hover:text-gray-900 hover:bg-teal-100"
-                  }`}
-                >
-                  QUESTS
-                </button>
-                <button
-                  onClick={() => setActiveTab("terminal")}
-                  className={`px-3 py-2 rounded font-pressstart2p text-xs transition-all duration-300 min-w-[80px] ${
-                    activeTab === "terminal"
-                      ? "bg-teal-600 text-gray-900"
-                      : "text-teal-700 hover:text-gray-900 hover:bg-teal-100"
-                  }`}
-                >
-                  TERMINAL
-                </button>
-              </div>
-            </div>
-
-            {/* Terminal Tab */}
-            {activeTab === "terminal" && (
-              <div className="bg-white border-2 border-teal-600 rounded-lg overflow-hidden">
-                {/* Terminal Header */}
-                <div className="bg-teal-50 px-4 py-2 flex items-center justify-between border-b border-teal-500/50">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="font-pixellari text-teal-700 text-xs ml-2">
-                      pranav@portfolio:~
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => setTerminalHistory([])}
-                    className="font-pixellari text-teal-700 text-xs hover:text-gray-900 transition-colors"
-                  >
-                    CLEAR
-                  </button>
-                </div>
-
-                {/* Terminal Body */}
-                <div className="p-3 sm:p-4 h-64 sm:h-80 md:h-96 overflow-y-auto">
-                  {/* Welcome Message */}
-                  {terminalHistory.length === 0 && (
-                    <div className="mb-4">
-                      <p className="font-pixellari text-teal-700 text-sm mb-2">
-                        Welcome to Pranav's Interactive Terminal v2.0
-                      </p>
-                      <p className="font-pixellari text-teal-700 text-sm mb-4">
-                        Type 'help' to explore available commands
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Command History */}
-                  {terminalHistory.map((line, index) => (
-                    <div key={index} className="mb-2">
-                      <p
-                        className={`font-pixellari text-sm ${
-                          line.startsWith(">")
-                            ? "text-teal-700"
-                            : "text-gray-600"
-                        } whitespace-pre-line`}
-                      >
-                        {line}
-                      </p>
-                    </div>
-                  ))}
-
-                  {/* Command Input */}
-                  <div className="flex items-center gap-2 mt-4">
-                    <span className="font-pixellari text-teal-700 text-sm flex-shrink-0">
-                      $
-                    </span>
-                    <input
-                      type="text"
-                      value={currentCommand}
-                      onChange={(e) => setCurrentCommand(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          handleTerminalCommand(currentCommand);
-                          setCurrentCommand("");
-                        }
-                      }}
-                      placeholder="Type a command..."
-                      className="flex-1 bg-transparent text-teal-700 font-pixellari text-xs sm:text-sm outline-none placeholder-teal-300/50 min-w-0"
-                      autoFocus
-                    />
-                    {isTyping && (
-                      <span className="text-teal-700 animate-pulse flex-shrink-0">
-                        _
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Terminal Footer */}
-                <div className="bg-teal-50 px-4 py-2 border-t border-teal-500/30">
-                  <p className="font-pixellari text-teal-700 text-xs">
-                    Press Enter to execute • Type 'help' for commands
+            <div className="hidden md:grid gap-5 grid-cols-4 w-full">
+              {/* Name + local time */}
+              <div className="flex flex-col gap-0 items-start">
+                <a href="#home" className="flex gap-3 items-center transition-opacity hover:opacity-80">
+                  <p className="font-display text-3xl text-neutral-700">
+                    pranav reddy gaddam
                   </p>
-                </div>
+                </a>
+                <p className="text-base text-neutral-400 mt-1">
+                  <LocalClock /> San Jose, CA
+                </p>
               </div>
-            )}
 
-            {/* Socials Tab */}
-            {activeTab === "socials" && (
-              <div className="bg-white border-2 border-teal-600 rounded-lg p-4 sm:p-6">
-                <h3 className="font-pressstart2p text-gray-900 text-base sm:text-lg mb-4 sm:mb-6 text-center">
-                  SOCIAL COMMAND CENTER
-                </h3>
+              <div />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+              {/* Nav */}
+              <div className="flex flex-col gap-2 items-start">
+                {[
+                  { label: "Work", href: "#projects" },
+                  { label: "About", href: "#about" },
+                  { label: "Archive", href: "/v1" },
+                ].map((l) => (
                   <a
-                    href="https://github.com/PranavReddyGaddam"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-teal-50 border border-teal-500/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-100 hover:border-teal-500 hover:scale-105 group"
+                    key={l.label}
+                    href={l.href}
+                    className="text-base text-neutral-400 tracking-[0.01em] hover:text-neutral-900 transition-colors duration-200"
                   >
-                    <Github className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-700 group-hover:text-gray-900" />
-                    <p className="font-pressstart2p text-gray-900 text-xs">
-                      GitHub
-                    </p>
-                    <p className="font-pixellari text-teal-700 text-xs mt-1">
-                      Code Repository
-                    </p>
+                    {l.label}
                   </a>
+                ))}
+              </div>
 
+              {/* Contact + socials */}
+              <div className="flex flex-col gap-4 items-start">
+                <div>
+                  <p className="text-base text-neutral-400">
+                    Let&apos;s work together!
+                  </p>
+                  <a
+                    href="mailto:pranavreddy.gaddam@sjsu.edu"
+                    className="text-base text-neutral-700 hover:text-neutral-900 transition-colors"
+                  >
+                    reddy.pranav.gaddam@gmail.com
+                  </a>
+                </div>
+
+                <div className="flex gap-4 items-center text-neutral-300">
                   <a
                     href="https://www.linkedin.com/in/pranav-reddy-gaddam-69338321b/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-teal-50 border border-teal-500/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-100 hover:border-teal-500 hover:scale-105 group"
+                    aria-label="LinkedIn"
+                    className="hover:text-neutral-600 transition-colors"
                   >
-                    <Linkedin className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-700 group-hover:text-gray-900" />
-                    <p className="font-pressstart2p text-gray-900 text-xs">
-                      LinkedIn
-                    </p>
-                    <p className="font-pixellari text-teal-700 text-xs mt-1">
-                      Professional
-                    </p>
+                    <FaLinkedin size={20} />
                   </a>
-
                   <a
-                    href="https://www.instagram.com/__pranav.reddy__"
+                    href="https://github.com/PranavReddyGaddam"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-teal-50 border border-teal-500/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-100 hover:border-teal-500 hover:scale-105 group"
+                    aria-label="GitHub"
+                    className="hover:text-neutral-600 transition-colors"
                   >
-                    <Instagram className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-700 group-hover:text-gray-900" />
-                    <p className="font-pressstart2p text-gray-900 text-xs">
-                      Instagram
-                    </p>
-                    <p className="font-pixellari text-teal-700 text-xs mt-1">
-                      Personal
-                    </p>
-                  </a>
-
-                  <a
-                    href="https://twitter.com/Pranav_2801"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-teal-50 border border-teal-500/50 rounded-lg p-3 sm:p-4 text-center transition-all duration-300 hover:bg-teal-100 hover:border-teal-500 hover:scale-105 group"
-                  >
-                    {React.createElement(RiTwitterXFill as any, {
-                      className:
-                        "w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-teal-700 group-hover:text-gray-900",
-                    })}
-                    <p className="font-pressstart2p text-gray-900 text-xs">
-                      Twitter
-                    </p>
-                    <p className="font-pixellari text-teal-700 text-xs mt-1">
-                      Insights
-                    </p>
+                    <FaGithub size={20} />
                   </a>
                 </div>
-
-                {/* Direct Contact */}
-                <div className="bg-teal-50 border border-teal-500/30 rounded-lg p-3 sm:p-4">
-                  <h4 className="font-pressstart2p text-teal-700 text-sm mb-2 sm:mb-3">
-                    DIRECT COMMS CHANNEL
-                  </h4>
-                  <div className="space-y-1 sm:space-y-2">
-                    <p className="font-pixellari text-gray-600 text-xs sm:text-sm break-words">
-                      <span className="text-teal-700">Email:</span>{" "}
-                      pranavreddy.gaddam@sjsu.edu
-                    </p>
-                    <p className="font-pixellari text-gray-600 text-xs sm:text-sm">
-                      <span className="text-teal-700">Location:</span> San Jose,
-                      California
-                    </p>
-                  </div>
-                </div>
               </div>
-            )}
+            </div>
 
-            {/* Quests Tab */}
-            {activeTab === "quests" && (
-              <div className="bg-white border-2 border-teal-600 rounded-lg p-4 sm:p-6">
-                <h3 className="font-pressstart2p text-gray-900 text-base sm:text-lg mb-4 sm:mb-6 text-center">
-                  HOBBIES & INTERESTS
-                </h3>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div className="bg-teal-50 border border-teal-500/30 rounded-lg p-3 sm:p-4">
-                    <div>
-                      <h4 className="font-pressstart2p text-teal-700 text-sm mb-1">
-                        Movie Enthusiast
-                      </h4>
-                      <p className="font-pixellari text-gray-500 text-xs mb-3">
-                        Film Buff
-                      </p>
-                    </div>
-                    <p className="font-pixellari text-gray-600 text-xs leading-relaxed">
-                      Love watching a wide variety of movies - from classic
-                      films to modern cinema across all genres.
-                    </p>
-                  </div>
-
-                  <div className="bg-teal-50 border border-teal-500/30 rounded-lg p-3 sm:p-4">
-                    <div>
-                      <h4 className="font-pressstart2p text-teal-700 text-sm mb-1">
-                        Weekend Coding
-                      </h4>
-                      <p className="font-pixellari text-gray-500 text-xs mb-3">
-                        Passion Projects
-                      </p>
-                    </div>
-                    <p className="font-pixellari text-gray-600 text-xs leading-relaxed">
-                      Enjoy vibe coding on weekends - exploring new technologies
-                      and building creative side projects.
-                    </p>
-                  </div>
-
-                  <div className="bg-teal-50 border border-teal-500/30 rounded-lg p-3 sm:p-4">
-                    <div>
-                      <h4 className="font-pressstart2p text-teal-700 text-sm mb-1">
-                        Sports Fan
-                      </h4>
-                      <p className="font-pixellari text-gray-500 text-xs mb-3">
-                        Cricket, Basketball & Tennis
-                      </p>
-                    </div>
-                    <p className="font-pixellari text-gray-600 text-xs leading-relaxed">
-                      Passionate about watching cricket, basketball, and tennis.
-                      Also enjoy following various other sports.
-                    </p>
-                  </div>
-
-                  <div className="bg-teal-50 border border-teal-500/30 rounded-lg p-3 sm:p-4">
-                    <div>
-                      <h4 className="font-pressstart2p text-teal-700 text-sm mb-1">
-                        Baking
-                      </h4>
-                      <p className="font-pixellari text-gray-500 text-xs mb-3">
-                        Home Chef
-                      </p>
-                    </div>
-                    <p className="font-pixellari text-gray-600 text-xs leading-relaxed">
-                      Enjoy baking as a creative outlet - experimenting with
-                      recipes and creating delicious treats.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Collaboration Section */}
-                <div className="mt-4 sm:mt-6 bg-gradient-to-r from-teal-50 to-cyan-100 border border-teal-600 rounded-lg p-3 sm:p-4">
-                  <h4 className="font-pressstart2p text-teal-700 text-sm mb-2 sm:mb-3 text-center">
-                    LET'S COLLABORATE
-                  </h4>
-                  <p className="font-pixellari text-gray-600 text-xs sm:text-sm text-center mb-3 sm:mb-4">
-                    Have an interesting project or idea? I'd love to hear about
-                    it and work together!
-                  </p>
-                  <button
-                    onClick={() => setActiveTab("terminal")}
-                    className="w-full font-pressstart2p bg-teal-600 hover:bg-teal-700 text-gray-900 px-3 sm:px-4 py-2 rounded border border-teal-600 transition-all duration-300 hover:scale-105 text-xs"
-                  >
-                    GET IN TOUCH →
-                  </button>
-                </div>
+            {/* Mobile: stacked */}
+            <div className="md:hidden flex flex-col gap-6 w-full">
+              <div>
+                <p className="font-display text-2xl text-neutral-700">
+                  pranav reddy gaddam
+                </p>
+                <p className="text-sm text-neutral-400 mt-1">
+                  <LocalClock /> San Jose, CA
+                </p>
               </div>
-            )}
+              <a
+                href="mailto:pranavreddy.gaddam@sjsu.edu"
+                className="text-sm text-neutral-700"
+              >
+                reddy.pranav.gaddam@gmail.com
+              </a>
+              <div className="flex gap-4 items-center text-neutral-300">
+                <a href="https://www.linkedin.com/in/pranav-reddy-gaddam-69338321b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedin size={18} /></a>
+                <a href="https://github.com/PranavReddyGaddam" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><FaGithub size={18} /></a>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 bg-cream border-t-2 border-teal-600">
-        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6">
-          <p className="font-pixellari text-teal-700 text-sm order-2 sm:order-1">
-            Crafted with curiosity and caffeine — © {new Date().getFullYear()}{" "}
-            Pranav Reddy Gaddam
-          </p>
-          <TimeMachine />
+          {/* Centred credit line */}
+          <div className="flex flex-col items-center gap-1 relative">
+            <p className="text-sm text-neutral-400">
+              Built with React &amp;{" "}
+              <span className="text-neutral-700">too much coffee.</span> ☕
+            </p>
+            <p className="text-xs text-neutral-300 tracking-wider uppercase">
+              © {new Date().getFullYear()} Pranav Reddy Gaddam
+            </p>
+
+            {/* Time machine tucked into the corner */}
+            <div className="absolute right-0 bottom-0">
+              <TimeMachine />
+            </div>
+          </div>
         </div>
       </footer>
 

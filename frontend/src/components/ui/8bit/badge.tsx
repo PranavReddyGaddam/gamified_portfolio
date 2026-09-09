@@ -22,8 +22,10 @@ export const badgeVariants = cva("", {
   },
 });
 
+// Props are spread onto shadcn's Badge, which renders a div, so they must be
+// div attributes rather than button attributes.
 export interface BitButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {
   asChild?: boolean;
 }

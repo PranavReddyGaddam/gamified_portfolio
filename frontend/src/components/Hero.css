@@ -389,3 +389,13 @@
     padding-top: calc(20px + 1rem);
   }
 }
+
+/* --- Footer ----------------------------------------------------------- */
+
+/* Light, quiet footer: a hairline rule rather than a heavy border, and the
+   sans face used through the lower half of the page. */
+.site-footer {
+  background: #ffffff;
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 400;
+}
