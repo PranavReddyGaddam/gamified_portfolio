@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import App from './App';
-import ProjectFull from './components/ProjectFull';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -13,9 +12,10 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        {/* The full case study is its own page. */}
-        <Route path="/project/:projectId/full" element={<ProjectFull />} />
-        {/* Everything else renders the site; an expanded card is just a URL. */}
+        {/* Every route renders the same page: the detail modal and its full
+            screen state are driven by the URL, so the panel animates between
+            them instead of one view being swapped for another. */}
+        <Route path="/project/:projectId/full" element={<App />} />
         <Route path="/project/:projectId" element={<App />} />
         <Route path="/" element={<App />} />
         <Route path="*" element={<App />} />
