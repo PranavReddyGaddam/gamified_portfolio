@@ -1113,7 +1113,7 @@ Type 'help' to see available commands.`;
         ref={nextSectionRef}
         className="about-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-32"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-[384px_1fr] gap-10 lg:gap-32">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-32">
           {/* Left: portrait + labels */}
           <div>
             <div className="about-portrait-head flex justify-between mb-4">
@@ -1171,8 +1171,17 @@ Type 'help' to see available commands.`;
               <span className="font-['Instrument_Serif'] italic underline decoration-1 underline-offset-4">
                 full-stack engineering
               </span>
-              , AI systems, and data pipelines through hands-on work. Currently
-              I&apos;m completing my master&apos;s at{" "}
+              , AI systems, and data pipelines through hands-on work. I&apos;m
+              now a software engineer at{" "}
+              <a
+                href="https://www.salesforce.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-1 underline-offset-4"
+              >
+                Salesforce
+              </a>
+              , alongside finishing my master&apos;s at{" "}
               <a
                 href="https://www.sjsu.edu/"
                 target="_blank"
@@ -1181,11 +1190,22 @@ Type 'help' to see available commands.`;
               >
                 San Jose State University
               </a>
-              , building products that ship.
+              .
             </p>
 
             <ExperienceRows
               entries={[
+                {
+                  id: "salesforce",
+                  org: "Salesforce",
+                  team: "Platform Radio",
+                  role: "Software Engineer",
+                  year: "26–",
+                  period: "Sep 2026 – Present",
+                  detail:
+                    "Building on the Platform Radio team, working on the infrastructure that Salesforce products are built on.",
+                  points: ["Distributed systems and platform services"],
+                },
                 {
                   id: "masters",
                   org: "San Jose State University",
