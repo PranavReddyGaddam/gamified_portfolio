@@ -1096,8 +1096,6 @@ Type 'help' to see available commands.`;
 
         {/* Centered hero content */}
         <div className="relative z-10 w-full flex flex-col items-center text-center">
-          <span className="pill-button">Full-stack &amp; AI engineering</span>
-
           <h1 className="hero-title">
             I{" "}
             <a href="#about" className="hero-title-img hero-title-img--me" aria-label="About me" />

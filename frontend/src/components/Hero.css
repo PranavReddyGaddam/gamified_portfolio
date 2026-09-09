@@ -199,20 +199,6 @@
   content: "• ";
 }
 
-/* --- pill ------------------------------------------------------------- */
-
-.pill-button {
-  display: inline-block;
-  font-family: "Geist", -apple-system, sans-serif;
-  font-size: 14.4px;
-  color: #3a4a16;
-  border: 1px solid #3a4a16;
-  border-radius: 50px;
-  padding: 4.8px 16px 3.2px;
-  margin-bottom: 2.2rem;
-  background: transparent;
-}
-
 /* --- headline --------------------------------------------------------- */
 
 .hero-title {
@@ -231,8 +217,8 @@
    push the words apart — the pill appears to open out from inside the line. */
 .hero-title-img {
   display: inline-block;
-  height: 4.52vw;
-  max-height: 67px;
+  height: 4.19vw;
+  max-height: 62px;
   border-radius: 999px;
   vertical-align: -0.16em;
   background-size: cover;
@@ -245,16 +231,16 @@
   transform: scaleY(0.35);
   transform-origin: center;
   overflow: hidden;
-  animation: hero-pill-open 1.8s cubic-bezier(0.33, 0, 0.15, 1) forwards;
+  animation: hero-pill-open 0.85s cubic-bezier(0.33, 0, 0.15, 1) forwards;
 }
 
 /* Staggered so they open one after the other, in reading order. */
 .hero-title-img--me {
-  animation-delay: 1.3s;
+  animation-delay: 0.45s;
 }
 
 .hero-title-img--work {
-  animation-delay: 2.2s;
+  animation-delay: 0.75s;
 }
 
 @keyframes hero-pill-open {
@@ -269,8 +255,8 @@
     opacity: 1;
   }
   to {
-    width: 7vw;
-    max-width: 104px;
+    width: 6.5vw;
+    max-width: 96px;
     margin-right: 0.7vw;
     opacity: 1;
     transform: scaleY(1);
@@ -345,8 +331,8 @@
 
   .hero-title-img {
     animation: none;
-    width: 7vw;
-    max-width: 104px;
+    width: 6.5vw;
+    max-width: 96px;
     margin-right: 0.7vw;
     opacity: 1;
     transform: none;
