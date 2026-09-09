@@ -340,3 +340,36 @@
     transform: none;
   }
 }
+
+/* --- About section ---------------------------------------------------- */
+
+/* The reference is black-on-white rather than the hero's cream. */
+.about-section {
+  background: #ffffff;
+}
+
+/* Portrait holds the reference's 3:4 frame at any column width. */
+.about-portrait {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.about-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Sans face for this section, per the reference. The page body is weight
+   300; the reference sets small text at 400 and only the lead paragraph
+   light, so restore the normal weight here. */
+.about-section {
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 400;
+}
+
+.about-section p {
+  font-weight: 300;
+}

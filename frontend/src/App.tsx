@@ -1080,9 +1080,9 @@ Type 'help' to see available commands.`;
         {/* Top meta bar */}
         <div className="hero-meta">
           <a href="/" className="hero-logo">
-            pranav reddy
+            Pranav Reddy
             <br />
-            gaddam
+            Gaddam
           </a>
           <span className="hero-meta-tag">Software engineer</span>
           <span className="hero-meta-loc">Based in San Jose, California</span>
@@ -1115,276 +1115,102 @@ Type 'help' to see available commands.`;
         <div className="absolute inset-0 "></div>
       </section>
 
-      {/* Section 2: Character Stats */}
+      {/* Section 2: About */}
       <section
         data-level={2}
         ref={nextSectionRef}
-        className="relative z-10 min-h-screen bg-cream px-4 py-16"
+        className="about-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-32"
       >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32">
+          {/* Left: portrait + labels */}
+          <div>
+            <div className="flex justify-between mb-4">
+              <a
+                href="#about"
+                className="text-sm text-neutral-900 hover:text-neutral-500 transition-colors"
+              >
+                (About me)
+              </a>
+              <span className="text-sm text-neutral-400">
+                (Software Engineer)
+              </span>
+            </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-12">
-            <h2 className="font-pressstart2p text-2xl sm:text-3xl md:text-4xl text-gray-900 border-2 border-blue-600 bg-white/80 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 rounded-lg inline-block">
-              LEVEL 2: CHARACTER STATS
-            </h2>
+            <div className="about-portrait">
+              <img
+                src="/projects/Pranav.jpeg"
+                alt="Pranav Reddy Gaddam"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <div className="flex gap-1 mt-4 text-sm text-neutral-900">
+              <a
+                href="https://github.com/PranavReddyGaddam"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-neutral-500 transition-colors"
+              >
+                GitHub
+              </a>
+              <span className="text-neutral-400">,</span>
+              <a
+                href="https://www.linkedin.com/in/pranav-reddy-gaddam-69338321b/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-neutral-500 transition-colors"
+              >
+                LinkedIn
+              </a>
+              <span className="text-neutral-400">,</span>
+              <a
+                href="mailto:pranavreddy.gaddam@sjsu.edu"
+                className="hover:text-neutral-500 transition-colors"
+              >
+                Email
+              </a>
+            </div>
           </div>
 
-          {/* Character Card Container */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6 items-stretch max-w-7xl mx-auto px-4">
-            {/* Left Column: Character Portrait */}
-            <div className="col-span-1 flex">
-              <div className="relative w-full min-h-[400px] perspective-1000 flex-1">
+          {/* Right: paragraph + experience table */}
+          <div>
+            <p className="text-xl md:text-2xl font-light leading-relaxed text-neutral-900 mb-16 md:mb-24">
+              Starting with side projects, I built a versatile skill set across{" "}
+              <span className="font-['Instrument_Serif'] italic underline decoration-1 underline-offset-4">
+                full-stack engineering
+              </span>
+              , AI systems, and data pipelines through hands-on work. Currently
+              I&apos;m completing my master&apos;s at{" "}
+              <a
+                href="https://www.sjsu.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-1 underline-offset-4"
+              >
+                San Jose State University
+              </a>
+              , building products that ship.
+            </p>
+
+            <div className="space-y-4">
+              {[
+                { org: "Bloom", team: "AI Quiz Platform", role: "Founder", year: "25'" },
+                { org: "GitBridge", team: "Developer Tools", role: "Creator", year: "25'" },
+                { org: "Pindrop", team: "Geospatial", role: "Engineer", year: "25'" },
+                { org: "Prism", team: "Data Platform", role: "Engineer", year: "25'" },
+                { org: "Bay Window", team: "Real Estate AI", role: "Engineer", year: "24'" },
+                { org: "SJSU", team: "Computer Science", role: "MS Student", year: "24'" },
+              ].map((r) => (
                 <div
-                  className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                    isCardFlipped ? "rotate-y-180" : ""
-                  }`}
+                  key={r.org}
+                  className="grid grid-cols-4 gap-4 text-sm py-2 border-b border-neutral-100 last:border-0"
                 >
-                  {/* Card Back (Hidden Side) */}
-                  <div className="absolute inset-0 w-full h-full backface-hidden">
-                    <div className="border border-blue-600 bg-blue-50 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
-                      <div className="text-center">
-                        <div className="flex justify-center mb-4">
-                          <ShieldUser className="w-16 h-16 text-blue-700" />
-                        </div>
-                        <h3 className="font-pressstart2p text-gray-900 text-base md:text-lg mb-4">
-                          HIDDEN CHARACTER
-                        </h3>
-                        <p className="font-pixellari text-blue-700 text-xs md:text-sm mb-6">
-                          Click to reveal the character
-                        </p>
-                        <button
-                          onClick={handleRevealAvatar}
-                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-gray-900 px-4 py-2 md:px-6 md:py-3 rounded border border-blue-600 transition-colors text-xs md:text-sm"
-                        >
-                          REVEAL AVATAR
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card Front (Character Portrait) */}
-                  <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                    <div className="bg-blue-50 border border-blue-600 rounded-lg overflow-hidden h-full flex flex-col">
-                      {/* Image area */}
-                      <div className="flex-1 min-h-0">
-                        <img
-                          src="/projects/Pranav.jpeg"
-                          alt="Character Portrait"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-
-                      {/* Bottom stats section */}
-                      <div className="flex-shrink-0 p-3 bg-blue-50 flex flex-col justify-center">
-                        {/* Name & Level */}
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="text-gray-900 font-pressstart2p text-xs">
-                            Pranav Reddy Gaddam
-                          </h4>
-                          <p className="text-blue-700 font-pressstart2p text-xs">
-                            LVL 24
-                          </p>
-                        </div>
-
-                        {/* HP & MP side by side */}
-                        <div className="flex items-center gap-2 md:gap-4">
-                          {/* HP */}
-                          <div className="flex items-center gap-1">
-                            <span className="text-green-700 text-xs font-pressstart2p">
-                              HP
-                            </span>
-                            <div className="w-16 md:w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
-                              <div className="w-4/5 h-full bg-green-500 rounded-full"></div>
-                            </div>
-                          </div>
-
-                          {/* MP */}
-                          <div className="flex items-center gap-1">
-                            <span className="text-cyan-700 text-xs font-pressstart2p">
-                              MP
-                            </span>
-                            <div className="w-16 md:w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
-                              <div className="w-2/3 h-full bg-cyan-500 rounded-full"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Lanyard "Techie for Hire" Card - Appears when portrait is unlocked */}
-                    {isCardFlipped && (
-                      <div className="absolute -top-2 -right-2 z-20">
-                        {/* Lanyard cord */}
-                        <div className="absolute top-2 left-2 w-1 h-16 bg-gray-600 rounded-full transform rotate-45 origin-top"></div>
-
-                        {/* Stamped card hanging from lanyard */}
-                        <div
-                          className="relative transform rotate-6 hover:rotate-3 transition-transform duration-300 cursor-pointer"
-                          role="button"
-                          tabIndex={0}
-                          onClick={() => setShowWhyHireMeModal(true)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ")
-                              setShowWhyHireMeModal(true);
-                          }}
-                        >
-                          {/* Stamp shadow effect */}
-                          <div className="absolute inset-0 bg-red-50 blur-lg transform translate-x-1 translate-y-1"></div>
-
-                          {/* Main stamp card - smaller size for lanyard */}
-                          <div className="relative bg-gradient-to-br from-red-600 to-red-800 border-3 border-red-600 rounded-md p-3 shadow-xl">
-                            {/* Stamp texture overlay */}
-                            <div className="absolute inset-0 bg-red-50 rounded-md"></div>
-
-                            {/* Ink splatter effects */}
-                            <div className="absolute top-1 left-1 w-2 h-2 bg-red-50 rounded-full blur-xs"></div>
-                            <div className="absolute bottom-1 right-1 w-1.5 h-1.5 bg-red-50 rounded-full blur-xs"></div>
-
-                            {/* Main content */}
-                            <div className="relative z-10 text-center">
-                              <div className="transform -rotate-1">
-                                <h3 className="font-pressstart2p text-gray-900 text-[10px] mb-1 tracking-wider">
-                                  WHY YOU
-                                </h3>
-                                <div className="border-t border-gray-300 border-b border-gray-300 py-1 my-1">
-                                  <h4 className="font-pressstart2p text-yellow-700 text-[8px] font-bold tracking-widest">
-                                    SHOULD HIRE ME
-                                  </h4>
-                                </div>
-                                <div className="flex justify-center items-center gap-1 mt-1">
-                                  <div className="w-4 h-px bg-white/60"></div>
-                                  <span className="font-pixellari text-gray-700 text-[8px]">
-                                    CLICK ME
-                                  </span>
-                                  <div className="w-4 h-px bg-white/60"></div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Stamp edges */}
-                            <div className="absolute inset-0 border border-gray-200 rounded-md pointer-events-none"></div>
-                          </div>
-
-                          {/* Additional ink drops */}
-                          <div className="absolute -top-0.5 -right-1 w-3 h-3 bg-red-50 rounded-full blur-sm"></div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  <span className="text-neutral-900 font-normal">{r.org}</span>
+                  <span className="text-neutral-900">{r.team}</span>
+                  <span className="text-neutral-900">{r.role}</span>
+                  <span className="text-neutral-400 text-right">{r.year}</span>
                 </div>
-              </div>
-            </div>
-
-            {/* Middle Column: Character Info */}
-            <div className="col-span-1 flex">
-              <div className="relative w-full min-h-[400px] perspective-1000 flex-1">
-                <div
-                  className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                    isInfoCardFlipped ? "rotate-y-180" : ""
-                  }`}
-                >
-                  {/* Card Back (Hidden Side) */}
-                  <div className="absolute inset-0 w-full h-full backface-hidden">
-                    <div className="border border-blue-600 bg-blue-50 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
-                      <div className="text-center">
-                        <div className="flex justify-center mb-4">
-                          <BookOpenText className="w-16 h-16 text-blue-700" />
-                        </div>
-                        <h3 className="font-pressstart2p text-gray-900 text-base md:text-lg mb-4">
-                          CHARACTER LORE
-                        </h3>
-                        <p className="font-pixellari text-blue-700 text-xs md:text-sm mb-6">
-                          Uncover backstory
-                        </p>
-                        <button
-                          onClick={handleUnlockLore}
-                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-gray-900 px-4 py-2 md:px-6 md:py-3 rounded border border-blue-600 transition-colors text-xs md:text-sm"
-                        >
-                          UNLOCK LORE
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card Front (Character Info) */}
-                  <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                    <div className="bg-blue-50 border border-blue-600 rounded-lg p-4 h-full flex flex-col">
-                      <div className="flex items-center gap-2 mb-3 flex-shrink-0">
-                        <h3 className="font-pressstart2p text-gray-900 text-base">
-                          CHARACTER INFO
-                        </h3>
-                      </div>
-                      <div className="font-pressstart2p space-y-3 text-gray-600 text-xs md:text-[10px] text-left leading-relaxed overflow-y-auto flex-1 min-h-0">
-                        <p className="break-words">
-                          A full-stack engineer drawn to the hard parts of AI
-                          systems, the agent loops, the tool orchestration,
-                          the context pipelines that make intelligent software
-                          actually work. Builds with Python, TypeScript, and
-                          FastAPI, and cares as much about how systems behave
-                          under pressure as how they demo. Just graduated with a Master's in Applied Data Science at San
-                          Jose State University.
-                        </p>
-                        <p className="break-words">
-                          Plays a builder class: prototypes fast, reads the
-                          docs, debugs with stubborn patience, and doesn't ship
-                          things that fall over. Equally comfortable deep in a
-                          backend service or polishing the last pixel of a
-                          frontend. Always chasing the next thing worth
-                          learning — usually found experimenting with whatever
-                          the AI ecosystem shipped this week.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Attributes Panel with Flip */}
-            <div className="col-span-1 flex">
-              <div className="relative w-full min-h-[400px] perspective-1000 flex-1">
-                <div
-                  className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                    isAttributesCardFlipped ? "rotate-y-180" : ""
-                  }`}
-                >
-                  {/* Card Back (Hidden Side) */}
-                  <div className="absolute inset-0 w-full h-full backface-hidden">
-                    <div className="border border-blue-600 bg-blue-50 backdrop-blur-sm rounded-lg h-full flex flex-col items-center justify-center p-6">
-                      <div className="text-center">
-                        <div className="flex justify-center mb-4">
-                          <ChartColumnIncreasing className="w-16 h-16 text-blue-700" />
-                        </div>
-                        <h3 className="font-pressstart2p text-gray-900 text-base md:text-lg mb-4">
-                          POWER METRICS
-                        </h3>
-                        <p className="font-pixellari text-blue-700 text-xs md:text-sm mb-6">
-                          See True Power
-                        </p>
-                        <button
-                          onClick={handleUnlockMetrics}
-                          className="font-pressstart2p bg-blue-600 hover:bg-blue-700 text-gray-900 px-4 py-2 md:px-6 md:py-3 rounded border border-blue-600 transition-colors text-xs md:text-sm"
-                        >
-                          UNLOCK METRICS
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card Front (Attributes) */}
-                  <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-                    <div className="bg-blue-50 border border-blue-600 rounded-lg p-4 h-full flex flex-col">
-                      <h3 className="font-pressstart2p text-gray-900 text-base mb-3 flex-shrink-0">
-                        GITHUB STATS
-                      </h3>
-                      <div className="flex-1 min-h-0 overflow-y-auto">
-                        <GitHubCommitChart />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
