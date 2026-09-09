@@ -71,6 +71,27 @@ const ProjectModal = ({ project, isFull, closing = false }: Props) => {
           </span>
 
           <span className="pm-bar-actions">
+            {project.liveUrl ? (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pm-bar-link"
+              >
+                Visit site ↗
+              </a>
+            ) : null}
+            {project.githubUrl ? (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pm-bar-link"
+              >
+                Code ↗
+              </a>
+            ) : null}
+
             <button
               type="button"
               onClick={() =>
@@ -142,19 +163,6 @@ const ProjectModal = ({ project, isFull, closing = false }: Props) => {
                 <p>{sec.body}</p>
               </section>
             ))}
-
-            <div className="pm-links">
-              {project.liveUrl ? (
-                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                  Visit site ↗
-                </a>
-              ) : null}
-              {project.githubUrl ? (
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                  View code ↗
-                </a>
-              ) : null}
-            </div>
           </div>
         </div>
       </div>
