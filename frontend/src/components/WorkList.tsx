@@ -1,5 +1,6 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { projects } from "../data/projects";
+import Reveal from "./Reveal";
 import ProjectModal from "./ProjectModal";
 
 /**
@@ -17,7 +18,7 @@ const WorkList = () => {
 
   return (
     <>
-      <div className="work-grid">
+      <Reveal stagger={0.08} className="work-grid">
         {visible.map((p) => {
           const media = p.previewImages?.[0];
           return (
@@ -45,7 +46,7 @@ const WorkList = () => {
             </button>
           );
         })}
-      </div>
+      </Reveal>
 
       {active ? <ProjectModal project={active} isFull={isFull} /> : null}
     </>

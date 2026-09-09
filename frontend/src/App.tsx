@@ -15,6 +15,7 @@ import "./components/Hero.css";
 import ExperienceRows from "./components/ExperienceRows";
 import { projects } from "./data/projects";
 import WorkList from "./components/WorkList";
+import Reveal from "./components/Reveal";
 import LocalClock from "./components/LocalClock";
 import HireMeStats from "./components/HireMeStats";
 import { RiTwitterXFill } from "react-icons/ri";
@@ -167,6 +168,18 @@ function App() {
       smootherRef.current = null;
     };
   }, []);
+
+  // Nav scrolling. ScrollSmoother owns the scroll position, so anchor jumps
+  // have to go through it; otherwise the browser fights the smoother.
+  const scrollToSection = (target: string) => {
+    const el = document.querySelector(target);
+    if (!el) return;
+    if (smootherRef.current) {
+      smootherRef.current.scrollTo(el, true, "top top");
+    } else {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   // Unlock achievements when sections enter viewport
   useEffect(() => {
@@ -354,17 +367,28 @@ function App() {
         {/* Top meta bar */}
         <div className="hero-meta">
           <a href="/" className="hero-logo">
-            Pranav Reddy
-            <br />
-            Gaddam
+            Pranav Reddy Gaddam
           </a>
-          <span className="hero-meta-tag">Software engineer</span>
           <span className="hero-meta-loc">Based in San Jose, California</span>
           <nav className="hero-nav">
-            <a href="#home" className="hero-nav-link is-active">Home</a>
-            <a href="#projects" className="hero-nav-link">Work</a>
-            <a href="#about" className="hero-nav-link">About</a>
-            <a href="#contact" className="hero-nav-link">Contact</a>
+            {[
+              { label: "Home", target: "#home" },
+              { label: "About", target: "#about" },
+              { label: "Work", target: "#projects" },
+              { label: "Contact", target: "#contact" },
+            ].map((l, i) => (
+              <a
+                key={l.label}
+                href={l.target}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection(l.target);
+                }}
+                className={`hero-nav-link${i === 0 ? " is-active" : ""}`}
+              >
+                {l.label}
+              </a>
+            ))}
           </nav>
         </div>
 
@@ -396,7 +420,7 @@ function App() {
         id="about"
         className="about-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-32"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-32">
+        <Reveal stagger={0.12} className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-32">
           {/* Left: portrait + labels */}
           <div>
             <div className="about-portrait-head flex justify-between mb-4">
@@ -535,7 +559,7 @@ function App() {
               ]}
             />
           </div>
-        </div>
+        </Reveal>
       </section>
 
 
@@ -546,12 +570,12 @@ function App() {
         className="work-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-32"
       >
         <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between mb-10">
+          <Reveal className="flex justify-between mb-10">
             <span className="text-sm text-neutral-900">(Selected work)</span>
             <span className="text-sm text-neutral-400">
               ({projects.filter((p) => !p.placeholder).length} projects)
             </span>
-          </div>
+          </Reveal>
 
           <WorkList />
         </div>
