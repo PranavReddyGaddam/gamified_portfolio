@@ -345,12 +345,12 @@ function App() {
           <h1 className="hero-title">
             I{" "}
             <a href="#about" className="hero-title-img hero-title-img--me" aria-label="About me" />
-            build living, breathing
-            <br />
+            build living, breathing{" "}
+            <br className="hero-br" />
             software{" "}
             <a href="#projects" className="hero-title-img hero-title-img--work" aria-label="My work" />
-            for teams that want
-            <br />
+            for teams that want{" "}
+            <br className="hero-br" />
             to ship, not just plan.
           </h1>
         </div>

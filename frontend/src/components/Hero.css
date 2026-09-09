@@ -306,25 +306,90 @@
   .hero-section {
     padding-left: 22px;
     padding-right: 22px;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
+  /* Meta bar stacks: the logo gets its own line above a full-width nav,
+     rather than being squeezed into a 22% column where the name wrapped
+     onto three lines and ran into the links. */
   .hero-meta {
     left: 22px;
     right: 22px;
-    top: 26px;
+    top: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .hero-logo {
+    width: auto;
+    font-size: 20px;
+    white-space: nowrap;
   }
 
   .hero-nav {
+    margin-left: 0;
     flex-direction: row;
-    gap: 0.8rem;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .hero-nav-link {
+    font-size: 14px;
   }
 
   .hero-title {
     max-width: 100%;
+    font-size: clamp(2rem, 8.4vw, 2.75rem);
+    line-height: 1.06;
   }
 
+  /* Drop the desktop line breaks on a phone and let the headline wrap
+     naturally; the markup carries an explicit space either side, so the
+     words never run together. */
+  .hero-br {
+    display: none;
+  }
+
+  /* The desktop height is a vw fraction tuned for a wide viewport; on a
+     phone that leaves the pill far too short beside the headline. */
   .hero-title-img {
     width: 13vw;
+    height: 8.4vw;
+    max-height: none;
+  }
+
+  /* The shapes are sized for a wide viewport; at phone widths they swamp
+     the headline, so they shrink and pull back to the edges. */
+  .hero-star {
+    width: 190px;
+    height: 190px;
+    top: 16%;
+    left: -18%;
+    opacity: 0.4;
+  }
+
+  .hero-astrix {
+    font-size: 56px;
+    top: 13%;
+    left: 58%;
+  }
+
+  .hero-leaf {
+    width: 200px;
+    height: 250px;
+    top: 58%;
+    right: -22%;
+  }
+
+  .hero-blob {
+    filter: blur(52px);
+    opacity: 0.34;
+  }
+
+  .hero-columns {
+    display: none;
   }
 }
 
@@ -731,5 +796,27 @@
   .pm-overlay--closing .pm-panel {
     animation: none;
     opacity: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  @keyframes hero-pill-open {
+    from {
+      width: 0;
+      max-width: 0;
+      margin-right: 0;
+      opacity: 0;
+      transform: scaleY(0.35);
+    }
+    45% {
+      opacity: 1;
+    }
+    to {
+      width: 13vw;
+      max-width: 13vw;
+      margin-right: 0.7vw;
+      opacity: 1;
+      transform: scaleY(1);
+    }
   }
 }
