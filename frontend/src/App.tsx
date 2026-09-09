@@ -1,11 +1,10 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import "./App.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import emailjs from "@emailjs/browser";
-import GitHubCommitChart from "./components/GitHubCommitChart";
 import GameInstructionsModal from "./components/GameInstructionsModal";
 import CodeRequestModal from "./components/CodeRequestModal";
 import ProjectDeck from "./components/ProjectDeck";
@@ -16,25 +15,8 @@ import "./components/Hero.css";
 import ExperienceRows from "./components/ExperienceRows";
 import LocalClock from "./components/LocalClock";
 import HireMeStats from "./components/HireMeStats";
-import { Button } from "@/components/ui/8bit/button";
-import { Card, CardContent } from "@/components/ui/8bit/card";
-import { Input } from "@/components/ui/8bit/input";
-import { Textarea } from "@/components/ui/8bit/textarea";
-import { Label } from "@/components/ui/8bit/label";
-import { Badge } from "@/components/ui/8bit/badge";
-import {
-  Linkedin,
-  Github,
-  ShieldUser,
-  BookOpenText,
-  ChartColumnIncreasing,
-  Instagram,
-} from "lucide-react";
 import { RiTwitterXFill } from "react-icons/ri";
-import { BsRobot, BsTools, BsDatabaseAdd } from "react-icons/bs";
-import { RxGear } from "react-icons/rx";
-import { FaDocker, FaLock, FaUnlock, FaChevronDown, FaLinkedin, FaGithub, FaInstagram } from "react-icons/fa";
-import { GoTrophy } from "react-icons/go";
+import { FaLock, FaUnlock, FaChevronDown, FaLinkedin, FaGithub, FaInstagram } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin);
@@ -45,7 +27,6 @@ const EMAILJS_TEMPLATE_ID = "template_4hg075h";
 const EMAILJS_PUBLIC_KEY = "wRXZiwguBPiyEMvoX";
 
 // Resume URL (place your PDF in public/ and update this path if needed)
-const RESUME_URL = "/Pranav_Reddy_Gaddam_Resume_FT_Master.pdf";
 
 
 // Level 5 project quests
@@ -188,9 +169,7 @@ const projects: Project[] = [
 ];
 
 function App() {
-  const totalLevels = 6;
   const [currentLevel, setCurrentLevel] = useState(1);
-  const [score, setScore] = useState(0);
   const [unlockedSkills, setUnlockedSkills] = useState({
     frontend: false,
     backend: false,
@@ -200,46 +179,25 @@ function App() {
     tools: false,
   });
 
-  const [carouselIndex, setCarouselIndex] = useState(1);
 
   // Command center state
-  const [terminalInput, setTerminalInput] = useState("");
-  const [terminalHistory, setTerminalHistory] = useState<string[]>([]);
-  const [currentCommand, setCurrentCommand] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const [activeTab, setActiveTab] = useState<"socials" | "quests" | "terminal">(
-    "socials"
-  );
 
   // Mobile carousel auto-animation state
-  const [visibleCardIndex, setVisibleCardIndex] = useState(1); // Start with Master's card visible
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Spaceship sound ref
   const spaceshipSoundRef = useRef<HTMLAudioElement | null>(null);
 
   // Achievements modal visibility
-  const [showAchievementsModal, setShowAchievementsModal] = useState(false);
 
   // Achievement tracking
-  const [unlockedAchievements, setUnlockedAchievements] = useState<Set<string>>(
-    new Set()
-  );
-  const unlockedAchievementsRef = useRef<Set<string>>(new Set());
 
   // Game instructions modal state
   const [showGameInstructions, setShowGameInstructions] = useState(false);
 
   // Card flip state
-  const [isCardFlipped, setIsCardFlipped] = useState(false);
-  const [isInfoCardFlipped, setIsInfoCardFlipped] = useState(false);
-  const [isAttributesCardFlipped, setIsAttributesCardFlipped] = useState(false);
 
   // Per-section achievement bookkeeping
-  const [unlockedSection2Achievements] = useState<Set<string>>(new Set());
-  const [unlockedSection3Achievements] = useState<Set<string>>(new Set());
   const [unlockedSection4Achievements] = useState<Set<string>>(new Set());
-  const [unlockedSection5Achievements] = useState<Set<string>>(new Set());
 
   // "Why you should hire me" modal (opened from the lanyard stamp card)
   const [showWhyHireMeModal, setShowWhyHireMeModal] = useState(false);
@@ -249,9 +207,6 @@ function App() {
   const [isSubmittingCodeRequest, setIsSubmittingCodeRequest] = useState(false);
 
   // Section visibility to control heavy backgrounds
-  const [isSection1Visible, setIsSection1Visible] = useState(true);
-  const [isSection2Visible, setIsSection2Visible] = useState(false);
-  const [isSection3Visible, setIsSection3Visible] = useState(false);
 
   const nextSectionRef = useRef<HTMLDivElement>(null);
 
@@ -302,13 +257,6 @@ function App() {
   }, [showMoreProjects]);
 
   // Collaboration form (Section 6)
-  const [collabName, setCollabName] = useState("");
-  const [collabEmail, setCollabEmail] = useState("");
-  const [collabMessage, setCollabMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
 
   // Achievement toast handlers
   // Achievements were removed from the site. Kept as a no-op so the many
@@ -316,164 +264,18 @@ function App() {
   const showAchievement = (_achievementId: string) => {};
 
   // Mapping of achievement IDs to their corresponding section levels
-  const achievementToSectionMap: Record<string, number> = {
-    // Intro achievements
-    "rulebook-raider": 1,
-    // Section unlock achievements
-    identity_unlocked: 2,
-    pathfinder: 3,
-    skill_mastery: 4,
-    quest_conqueror: 5,
-    social_link_established: 6,
-    // Section 2 achievements
-    face_of_hero: 2,
-    keeper_of_stories: 2,
-    power_unleashed: 2,
-    // Section 3 achievements
-    guild_explorer: 3,
-    grandmasters_path: 3,
-    // Section 4 achievements
-    pixel_perfect: 4,
-    server_sensei: 4,
-    data_tamer: 4,
-    pipeline_pro: 4,
-    model_maker: 4,
-    utility_wizard: 4,
-    // Section 5 achievements
-    code_cartographer: 5,
-    quizmaster_crafter: 5,
-    community_architect: 5,
-    emotion_decoder: 5,
-    suggestion_sage: 5,
-    digital_persona_builder: 5,
-    // Section 6 achievements
-    alliance_formed: 6,
-  };
 
   // Function to navigate to a specific section
-  const navigateToSection = (sectionLevel: number) => {
-    const sectionElement = document.querySelector(
-      `[data-level="${sectionLevel}"]`
-    );
-    if (sectionElement) {
-      if (smootherRef.current) {
-        smootherRef.current.scrollTo(sectionElement, true, "top top");
-      } else {
-        sectionElement.scrollIntoView({ behavior: "smooth" });
-      }
-      setShowAchievementsModal(false);
-    }
-  };
 
   // Function to handle achievement click
-  const handleAchievementClick = (achievementId: string) => {
-    const sectionLevel = achievementToSectionMap[achievementId];
-    if (sectionLevel) {
-      navigateToSection(sectionLevel);
-    }
-  };
 
   // List of all achievements with display names and XP
-  const allAchievements: {
-    id: string;
-    title: string;
-    xp: number;
-    section: string;
-  }[] = [
-    // Generic/game flow
-    {
-      id: "rulebook-raider",
-      title: "Rulebook Raider",
-      xp: 30,
-      section: "Intro",
-    },
-    // Section unlock-on-scroll
-    {
-      id: "identity_unlocked",
-      title: "Identity Unlocked",
-      xp: 100,
-      section: "Level 2",
-    },
-    { id: "pathfinder", title: "Pathfinder", xp: 100, section: "Level 3" },
-    {
-      id: "skill_mastery",
-      title: "Skill Mastery",
-      xp: 100,
-      section: "Level 4",
-    },
-    {
-      id: "quest_conqueror",
-      title: "Quest Conqueror",
-      xp: 100,
-      section: "Level 5",
-    },
-    {
-      id: "social_link_established",
-      title: "Social Link",
-      xp: 100,
-      section: "Level 6",
-    },
-    // Section 2 specifics
-    {
-      id: "face_of_hero",
-      title: "Face of the Hero",
-      xp: 150,
-      section: "Level 2",
-    },
-    {
-      id: "keeper_of_stories",
-      title: "Keeper of Stories",
-      xp: 100,
-      section: "Level 2",
-    },
-    {
-      id: "power_unleashed",
-      title: "Power Unleashed",
-      xp: 75,
-      section: "Level 2",
-    },
-    // Section 3 specifics (hint/password achievements removed)
-    {
-      id: "guild_explorer",
-      title: "Guild Explorer",
-      xp: 75,
-      section: "Level 3",
-    },
-    {
-      id: "grandmasters_path",
-      title: "Grandmaster's Path",
-      xp: 90,
-      section: "Level 3",
-    },
-    // Section 4 completion
-    {
-      id: "skill_tree_master",
-      title: "Skill Tree Master",
-      xp: 200,
-      section: "Level 4",
-    },
-    // Section 5 completion
-    {
-      id: "project_master",
-      title: "Project Master",
-      xp: 300,
-      section: "Level 5",
-    },
-    // Section 6
-    {
-      id: "alliance_formed",
-      title: "Alliance Formed",
-      xp: 100,
-      section: "Level 6",
-    },
-  ];
 
   // Escape closes any open modal
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setShowWhyHireMeModal(false);
-        setShowAchievementsModal(false);
         setShowGameInstructions(false);
         setShowCodeRequestModal(false);
       }
@@ -530,58 +332,12 @@ function App() {
     return () => triggers.forEach((t) => t.kill());
   }, []);
 
-  const handleStartGame = () => {
-    // Play spaceship sound
-    if (spaceshipSoundRef.current) {
-      spaceshipSoundRef.current.currentTime = 0;
-      spaceshipSoundRef.current
-        .play()
-        .catch((e) => console.log("Audio play failed:", e));
-    }
 
-    // Show identity unlocked achievement for consistency with section unlocking
-    showAchievement("identity_unlocked");
 
-    // Scroll to next section
-    if (nextSectionRef.current) {
-      if (smootherRef.current) {
-        smootherRef.current.scrollTo(nextSectionRef.current, true, "top top");
-      } else {
-        nextSectionRef.current.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  };
-
-  const handleHowToPlay = () => {
-    setShowGameInstructions(true);
-    showAchievement("rulebook-raider");
-  };
-
-  const handleOpenResume = () => {
-    window.open(RESUME_URL, "_blank");
-  };
 
   // Section 2 Achievement Handlers
-  const handleRevealAvatar = () => {
-    setIsCardFlipped(true);
-    if (!unlockedSection2Achievements.has("face_of_hero")) {
-      showAchievement("face_of_hero");
-    }
-  };
 
-  const handleUnlockLore = () => {
-    setIsInfoCardFlipped(true);
-    if (!unlockedSection2Achievements.has("keeper_of_stories")) {
-      showAchievement("keeper_of_stories");
-    }
-  };
 
-  const handleUnlockMetrics = () => {
-    setIsAttributesCardFlipped(true);
-    if (!unlockedSection2Achievements.has("power_unleashed")) {
-      showAchievement("power_unleashed");
-    }
-  };
 
   // Section 3 Achievement Handlers (none for hint/password anymore)
 
@@ -602,10 +358,6 @@ function App() {
             onToggle: (self) => {
               if (self.isActive) {
                 setCurrentLevel(level);
-                // Control background visibility to avoid overlapping canvases
-                setIsSection1Visible(level === 1);
-                setIsSection2Visible(level === 2);
-                setIsSection3Visible(level === 3);
               }
             },
           })
@@ -615,68 +367,9 @@ function App() {
     return () => triggers.forEach((t) => t.kill());
   }, []);
 
-  // Mobile carousel auto-animation effect
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const cardIndex = parseInt(
-              entry.target.getAttribute("data-card-index") || "0"
-            );
-            setVisibleCardIndex(cardIndex);
-            setCarouselIndex(cardIndex);
-          }
-        });
-      },
-      {
-        root: null,
-        threshold: 0.5,
-        rootMargin: "-50px 0px -50px 0px",
-      }
-    );
-
-    // Observe all mobile carousel cards
-    cardRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
   // Section 3 Carousel Navigation Achievements
-  const handleCarouselNavigation = (newIndex: number) => {
-    if (newIndex === 1 && !unlockedSection3Achievements.has("guild_explorer")) {
-      showAchievement("guild_explorer");
-    } else if (
-      newIndex === 2 &&
-      !unlockedSection3Achievements.has("grandmasters_path")
-    ) {
-      showAchievement("grandmasters_path");
-    }
-  };
 
-  const handleSkillClick = (skillName: string) => {
-    setUnlockedSkills((prev) => {
-      const newSkills = {
-        ...prev,
-        [skillName]: true, // Once unlocked, stays unlocked
-      };
-
-      // Check if all skills are now unlocked
-      const allSkillsUnlocked = Object.values(newSkills).every(
-        (skill) => skill
-      );
-      if (
-        allSkillsUnlocked &&
-        !unlockedSection4Achievements.has("skill_tree_master")
-      ) {
-        showAchievement("skill_tree_master");
-      }
-
-      return newSkills;
-    });
-  };
 
   const handleUnlockAllSkills = () => {
     setUnlockedSkills({
@@ -711,175 +404,8 @@ function App() {
   // Removed: career progression unlock handler (no longer gated)
 
   // Terminal command handler
-  const handleTerminalCommand = (command: string) => {
-    const cmd = command.toLowerCase().trim();
-    let response = "";
-
-    switch (cmd) {
-      case "help":
-        response = `Available commands:
-  help - Show this help message
-  about - Learn about Pranav
-  skills - View technical skills
-  projects - See project portfolio with GitHub links
-  github - Access GitHub profile
-  contact - Get contact information
-  social - View social profiles
-  interests - Discover personal interests
-  resume - Download resume
-  clear - Clear terminal history`;
-        break;
-      case "about":
-        response = `Pranav Reddy Gaddam - Full Stack Developer & AI Enthusiast
-Master's Student at San Jose State University
-Passionate about building innovative solutions with AI and modern web technologies.`;
-        break;
-      case "skills":
-        response = `Technical Arsenal:
-Frontend: React, TypeScript, Tailwind CSS, Next.js
-Backend: FastAPI, Node.js, Python, PostgreSQL
-AI/ML: OpenAI APIs, LangChain, Vector Databases
-DevOps: Docker, AWS, Git, CI/CD
-Tools: Vite, Webpack, Figma, VS Code`;
-        break;
-      case "projects":
-        response = `Featured Projects:
-- GitBridge - AI-powered GitHub repository analyzer
-   GitHub: https://github.com/pranavreddygaddam/gitbridge
-
-- Hirely - AI interview preparation platform  
-   GitHub: https://github.com/pranavreddygaddam/hirely
-
-- Nexus - 3D startup analysis tool
-   GitHub: https://github.com/pranavreddygaddam/nexus
-
-- Bloom - AI quiz generation platform
-   GitHub: https://github.com/pranavreddygaddam/bloom
-
-- Bay Window - SF building & renter lookup tool
-   Website: https://baywindow.pranavreddygaddam.com/
-
-- Portfolio - Gamified personal website
-   GitHub: https://github.com/pranavreddygaddam/gamified-portfolio
-
-Type 'github' to open main GitHub profile`;
-        break;
-      case "github":
-        response = `Opening GitHub profile...`;
-        setTimeout(() => {
-          window.open("https://github.com/PranavReddyGaddam", "_blank");
-        }, 1000);
-        break;
-      case "resume":
-        response = `Opening resume download...`;
-        setTimeout(() => {
-          window.open("/Pranav_Reddy_Gaddam_Resume_FT_Master.pdf", "_blank");
-        }, 1000);
-        break;
-      case "contact":
-        response = `Get in touch:
-Email: pranavreddy.gaddam@sjsu.edu
-GitHub: github.com/PranavReddyGaddam
-LinkedIn: linkedin.com/in/pranav-reddy-gaddam-69338321b/
-Location: San Jose, California
-
-Type 'github' to open GitHub profile directly`;
-        break;
-      case "social":
-        response = `Social Command Center:
-GitHub: Code repositories and contributions
-LinkedIn: Professional network and experience
-Instagram: Personal journey and lifestyle
-Twitter: Tech thoughts and insights
-
-Type 'github' to open GitHub profile directly`;
-        break;
-      case "interests":
-        response = `Beyond Coding:
-Cinema - Exploring legendary films and hidden gems
-Sports - Cricket, basketball and athletic pursuits
-Cycling - Urban adventures and scenic trails
-Travel - Discovering new places and cultures`;
-        break;
-      case "clear":
-        setTerminalHistory([]);
-        return;
-      default:
-        if (cmd) {
-          response = `Command not recognized: ${cmd}
-Type 'help' to see available commands.`;
-        } else {
-          return;
-        }
-    }
-
-    setTerminalHistory((prev) => [...prev, `> ${command}`, response]);
-  };
 
   // Handle collaboration form submit (Section 6)
-  const handleCollabSubmit = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
-
-    const trimmedName = collabName.trim();
-    const trimmedEmail = collabEmail.trim();
-    const trimmedMessage = collabMessage.trim();
-
-    if (!trimmedEmail || !trimmedMessage) {
-      alert("Please provide your email and a brief message.");
-      return;
-    }
-
-    setIsSubmitting(true);
-    setSubmitStatus("idle");
-
-    try {
-      // Check if EmailJS is properly configured
-      if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
-        throw new Error(
-          "EmailJS configuration is missing. Please check your environment variables."
-        );
-      }
-
-      // Initialize EmailJS with your public key
-      emailjs.init(EMAILJS_PUBLIC_KEY);
-
-      // Prepare template parameters
-      const templateParams = {
-        name: trimmedName || "Anonymous",
-        email: trimmedEmail,
-        message: trimmedMessage,
-        title: "Collaboration Request from Portfolio",
-        time: new Date().toLocaleString(),
-      };
-
-      // Send email using EmailJS
-      const response = await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        templateParams
-      );
-
-      if (response.status === 200) {
-        setSubmitStatus("success");
-        // Clear form
-        setCollabName("");
-        setCollabEmail("");
-        setCollabMessage("");
-
-        // Trigger Section 6 achievement on successful submit
-        showAchievement("alliance_formed");
-      } else {
-        throw new Error("Email sending failed");
-      }
-    } catch (error) {
-      console.error("Error sending email:", error);
-      setSubmitStatus("error");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   // Handle code request submission
   const handleCodeRequestSubmit = async (requestData: { name: string; from: string; reason: string }) => {
@@ -941,6 +467,7 @@ Type 'help' to see available commands.`;
       {/* Section 1: Landing Page */}
       <section
         data-level={1}
+        id="home"
         className="hero-section relative z-10 min-h-screen flex flex-col justify-center px-[50px] overflow-hidden"
       >
         {/* Decorative gradient shapes */}
@@ -1000,6 +527,7 @@ Type 'help' to see available commands.`;
       <section
         data-level={2}
         ref={nextSectionRef}
+        id="about"
         className="about-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-32"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-32">
@@ -1148,6 +676,7 @@ Type 'help' to see available commands.`;
       {/* Section 5: Project Quests */}
       <section
         data-level={5}
+        id="projects"
         className="relative z-10 min-h-screen bg-cream px-4 py-16"
       >
 
@@ -1205,7 +734,7 @@ Type 'help' to see available commands.`;
       </section>
 
       {/* Footer */}
-      <footer className="site-footer relative z-10 px-6 md:px-16 pt-8 pb-8">
+      <footer id="contact" className="site-footer relative z-10 px-6 md:px-16 pt-8 pb-8">
         <div className="flex flex-col gap-16">
           <div className="flex flex-col gap-5 items-start w-full">
             {/* Hairline rule */}
