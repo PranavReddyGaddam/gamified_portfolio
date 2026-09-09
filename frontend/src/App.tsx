@@ -7,10 +7,6 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import emailjs from "@emailjs/browser";
 import GameInstructionsModal from "./components/GameInstructionsModal";
 import CodeRequestModal from "./components/CodeRequestModal";
-import ProjectDeck from "./components/ProjectDeck";
-import ProjectDeckMobile from "./components/ProjectDeckMobile";
-import TimeMachine from "./components/TimeMachine";
-import "./components/TimeMachine.css";
 import "./components/Hero.css";
 import ExperienceRows from "./components/ExperienceRows";
 import { projects } from "./data/projects";
@@ -19,7 +15,7 @@ import Reveal from "./components/Reveal";
 import LocalClock from "./components/LocalClock";
 import HireMeStats from "./components/HireMeStats";
 import { RiTwitterXFill } from "react-icons/ri";
-import { FaLock, FaUnlock, FaChevronDown, FaLinkedin, FaGithub, FaInstagram } from "react-icons/fa";
+import { FaLock, FaUnlock, FaLinkedin, FaGithub, FaInstagram } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin);
@@ -78,50 +74,9 @@ function App() {
   const nextSectionRef = useRef<HTMLDivElement>(null);
 
   // Section 5: reveal the second row of project cards only after the button is clicked
-  const [showMoreProjects, setShowMoreProjects] = useState(false);
-  const moreProjectsWrapRef = useRef<HTMLDivElement | null>(null);
-  const isFirstMoreProjectsRender = useRef(true);
 
   // Animate the "more projects" deck open/closed by height, mirroring the
   // mobile deck. The wrapper stays mounted so the close tween can actually run.
-  useLayoutEffect(() => {
-    const wrap = moreProjectsWrapRef.current;
-    if (!wrap) return;
-
-    if (isFirstMoreProjectsRender.current) {
-      gsap.set(wrap, {
-        height: showMoreProjects ? "auto" : 0,
-        opacity: showMoreProjects ? 1 : 0,
-      });
-      isFirstMoreProjectsRender.current = false;
-      return;
-    }
-
-    if (showMoreProjects) {
-      gsap.fromTo(
-        wrap,
-        { height: 0, opacity: 0 },
-        {
-          height: wrap.scrollHeight,
-          opacity: 1,
-          duration: 0.5,
-          ease: "power3.inOut",
-          onComplete: () => {
-            gsap.set(wrap, { height: "auto" });
-            ScrollTrigger.refresh();
-          },
-        }
-      );
-    } else {
-      gsap.to(wrap, {
-        height: 0,
-        opacity: 0,
-        duration: 0.5,
-        ease: "power3.inOut",
-        onComplete: () => ScrollTrigger.refresh(),
-      });
-    }
-  }, [showMoreProjects]);
 
   // Collaboration form (Section 6)
 
@@ -266,19 +221,6 @@ function App() {
     }
   };
 
-  const handleProjectLink = (projectId: string) => {
-    // Show code request modal for private portfolio website
-    if (projectId === "personalwebsite") {
-      setShowCodeRequestModal(true);
-      return;
-    }
-
-    const project = projects.find((p) => p.id === projectId);
-    const url = project?.liveUrl ?? project?.githubUrl;
-    if (url) {
-      window.open(url, "_blank");
-    }
-  };
 
   // Removed: career progression unlock handler (no longer gated)
 
@@ -608,7 +550,7 @@ function App() {
                 {[
                   { label: "Work", href: "#projects" },
                   { label: "About", href: "#about" },
-                  { label: "Archive", href: "/v1" },
+                  { label: "Previous version", href: "/v1" },
                 ].map((l) => (
                   <a
                     key={l.label}
@@ -701,19 +643,10 @@ function App() {
           </div>
 
           {/* Centred credit line */}
-          <div className="flex flex-col items-center gap-1 relative">
-            <p className="text-sm text-neutral-400">
-              Built with React &amp;{" "}
-              <span className="text-neutral-700">too much coffee.</span> ☕
-            </p>
+          <div className="flex flex-col items-center gap-1">
             <p className="text-xs text-neutral-300 tracking-wider uppercase">
               © {new Date().getFullYear()} Pranav Reddy Gaddam
             </p>
-
-            {/* Time machine tucked into the corner */}
-            <div className="absolute right-0 bottom-0">
-              <TimeMachine />
-            </div>
           </div>
         </div>
       </footer>
