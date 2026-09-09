@@ -1113,7 +1113,7 @@ Type 'help' to see available commands.`;
         ref={nextSectionRef}
         className="about-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-32"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-[384px_1fr] gap-10 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[384px_1fr] gap-10 lg:gap-32">
           {/* Left: portrait + labels */}
           <div>
             <div className="about-portrait-head flex justify-between mb-4">
@@ -1165,7 +1165,7 @@ Type 'help' to see available commands.`;
           </div>
 
           {/* Right: paragraph + experience table */}
-          <div>
+          <div className="about-right">
             <p className="text-xl md:text-2xl font-light leading-relaxed text-neutral-900 mb-16 md:mb-24">
               Starting with side projects, I built a versatile skill set across{" "}
               <span className="font-['Instrument_Serif'] italic underline decoration-1 underline-offset-4">
@@ -1203,7 +1203,7 @@ Type 'help' to see available commands.`;
                 {
                   id: "ve-projects",
                   org: "VE Projects Pvt Ltd",
-                  team: "Data Engineering",
+                  team: "Engineering",
                   role: "Software Engineer",
                   year: "23–24",
                   period: "Aug 2023 – Jul 2024",

@@ -386,3 +386,12 @@
 .about-section .exp-table {
   max-width: 640px;
 }
+
+/* Drop the right column so the paragraph starts level with the top of the
+   portrait rather than with the label row above it: the label's own line
+   box (20px) plus its 16px bottom margin. */
+@media (min-width: 1024px) {
+  .about-right {
+    padding-top: calc(20px + 1rem);
+  }
+}
