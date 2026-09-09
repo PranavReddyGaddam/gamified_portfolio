@@ -226,15 +226,15 @@
   margin: 0 auto;
 }
 
-/* Inline circular images set into the headline. */
+/* Inline pill-shaped images set into the headline. */
 .hero-title-img {
   display: inline-block;
-  width: 6.5vw;
-  max-width: 94px;
-  aspect-ratio: 1;
-  border-radius: 50%;
+  width: 10vw;
+  max-width: 148px;
+  aspect-ratio: 1.55;
+  border-radius: 999px;
   margin-right: 0.7vw;
-  vertical-align: -0.12em;
+  vertical-align: -0.16em;
   background-size: cover;
   background-position: center;
   transition: transform 0.3s ease;
@@ -246,10 +246,12 @@
 
 .hero-title-img--me {
   background-image: url("/projects/Pranav.jpeg");
+  /* Square source in a wide pill: bias the crop up to keep the face centred. */
+  background-position: center 34%;
 }
 
 .hero-title-img--work {
-  background: conic-gradient(from 90deg, #c1e4f7 0deg, #dac6eb 360deg);
+  background-image: url("/work.jpg");
 }
 
 /* --- responsive ------------------------------------------------------- */
@@ -292,7 +294,7 @@
   }
 
   .hero-title-img {
-    width: 11vw;
+    width: 17vw;
   }
 }
 

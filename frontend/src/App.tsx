@@ -1080,9 +1080,9 @@ Type 'help' to see available commands.`;
         {/* Top meta bar */}
         <div className="hero-meta">
           <a href="/" className="hero-logo">
-            pranav.
+            pranav reddy
             <br />
-            builds
+            gaddam
           </a>
           <span className="hero-meta-tag">Software engineer</span>
           <span className="hero-meta-loc">Based in San Jose, California</span>
