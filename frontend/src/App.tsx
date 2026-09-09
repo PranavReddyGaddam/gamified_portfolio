@@ -6,10 +6,6 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import emailjs from "@emailjs/browser";
 import GitHubCommitChart from "./components/GitHubCommitChart";
-import AchievementToasts, {
-  AchievementToast,
-  AchievementTheme,
-} from "./components/AchievementToasts";
 import GameInstructionsModal from "./components/GameInstructionsModal";
 import CodeRequestModal from "./components/CodeRequestModal";
 import ProjectDeck from "./components/ProjectDeck";
@@ -51,26 +47,6 @@ const EMAILJS_PUBLIC_KEY = "wRXZiwguBPiyEMvoX";
 // Resume URL (place your PDF in public/ and update this path if needed)
 const RESUME_URL = "/Pranav_Reddy_Gaddam_Resume_FT_Master.pdf";
 
-// Achievement toast metadata (title/xp/theme shown in the popup)
-const ACHIEVEMENT_TOAST_META: Record<
-  string,
-  { title: string; xp: number; theme: AchievementTheme }
-> = {
-  "rulebook-raider": { title: "Rulebook Raider", xp: 30, theme: "blue" },
-  identity_unlocked: { title: "Identity Unlocked", xp: 100, theme: "blue" },
-  pathfinder: { title: "Pathfinder", xp: 100, theme: "yellow" },
-  skill_mastery: { title: "Skill Mastery", xp: 100, theme: "green" },
-  quest_conqueror: { title: "Quest Conqueror", xp: 100, theme: "red" },
-  social_link_established: { title: "Social Link", xp: 100, theme: "teal" },
-  face_of_hero: { title: "Face of the Hero", xp: 150, theme: "blue" },
-  keeper_of_stories: { title: "Keeper of Stories", xp: 100, theme: "yellow" },
-  power_unleashed: { title: "Power Unleashed", xp: 75, theme: "green" },
-  guild_explorer: { title: "Guild Explorer", xp: 75, theme: "green" },
-  grandmasters_path: { title: "Grandmaster's Path", xp: 90, theme: "purple" },
-  skill_tree_master: { title: "Skill Tree Master", xp: 200, theme: "green" },
-  project_master: { title: "Project Master", xp: 300, theme: "red" },
-  alliance_formed: { title: "Alliance Formed", xp: 100, theme: "teal" },
-};
 
 // Level 5 project quests
 type Project = {
@@ -251,13 +227,6 @@ function App() {
   );
   const unlockedAchievementsRef = useRef<Set<string>>(new Set());
 
-  // Achievement toast queue (max 3 visible, extras wait their turn)
-  const [achievementToasts, setAchievementToasts] = useState<
-    AchievementToast[]
-  >([]);
-  const toastQueueRef = useRef<AchievementToast[]>([]);
-  const visibleToastCountRef = useRef(0);
-
   // Game instructions modal state
   const [showGameInstructions, setShowGameInstructions] = useState(false);
 
@@ -342,90 +311,9 @@ function App() {
   >("idle");
 
   // Achievement toast handlers
-  const TOAST_DURATION_MS = 3500;
-  const TOAST_EXIT_MS = 300;
-  const MAX_VISIBLE_TOASTS = 3;
-
-  const removeToast = (id: string) => {
-    // play the exit animation, then drop the toast and promote a queued one
-    setAchievementToasts((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, leaving: true } : t))
-    );
-    setTimeout(() => {
-      setAchievementToasts((prev) => prev.filter((t) => t.id !== id));
-      visibleToastCountRef.current -= 1;
-      const next = toastQueueRef.current.shift();
-      if (next) displayToast(next);
-    }, TOAST_EXIT_MS);
-  };
-
-  const displayToast = (toast: AchievementToast) => {
-    visibleToastCountRef.current += 1;
-    setAchievementToasts((prev) => [...prev, toast]);
-    setTimeout(() => removeToast(toast.id), TOAST_DURATION_MS);
-  };
-
-  const showAchievement = (achievementId: string) => {
-    // Check if achievement is already unlocked (session-wide)
-    if (unlockedAchievementsRef.current.has(achievementId)) {
-      return; // Already unlocked, don't show again
-    }
-
-    // Unlock the achievement (update ref immediately to avoid stale closures)
-    unlockedAchievementsRef.current.add(achievementId);
-    setUnlockedAchievements((prev) => new Set(prev).add(achievementId));
-
-    // Show a toast (max 3 at once; extras wait in the queue)
-    const meta = ACHIEVEMENT_TOAST_META[achievementId];
-    if (meta) {
-      const toast: AchievementToast = { id: achievementId, ...meta };
-      if (visibleToastCountRef.current < MAX_VISIBLE_TOASTS) {
-        displayToast(toast);
-      } else {
-        toastQueueRef.current.push(toast);
-      }
-    }
-
-    // Score increments per achievement
-    const xpMap: Record<string, number> = {
-      // Generic/game flow
-      "rulebook-raider": 30,
-      // Section 2 specific
-      face_of_hero: 150,
-      keeper_of_stories: 100,
-      power_unleashed: 75,
-      // Section 3 specific (hint/password achievements removed)
-      guild_explorer: 75,
-      grandmasters_path: 90,
-      // Section 4 specific
-      pixel_perfect: 50,
-      server_sensei: 50,
-      data_tamer: 50,
-      pipeline_pro: 50,
-      model_maker: 50,
-      utility_wizard: 50,
-      // Section 5 specific
-      code_cartographer: 75,
-      quizmaster_crafter: 75,
-      community_architect: 75,
-      emotion_decoder: 75,
-      suggestion_sage: 75,
-      digital_persona_builder: 75,
-      // Section 6
-      alliance_formed: 100,
-      // Section unlock-on-scroll
-      identity_unlocked: 100,
-      pathfinder: 100,
-      skill_mastery: 100,
-      quest_conqueror: 100,
-      social_link_established: 100,
-    };
-
-    const gained = xpMap[achievementId] ?? 0;
-    if (gained > 0) {
-      setScore((prev) => prev + gained);
-    }
-  };
+  // Achievements were removed from the site. Kept as a no-op so the many
+  // call sites scattered through the sections stay valid.
+  const showAchievement = (_achievementId: string) => {};
 
   // Mapping of achievement IDs to their corresponding section levels
   const achievementToSectionMap: Record<string, number> = {
@@ -1479,9 +1367,6 @@ Type 'help' to see available commands.`;
           </div>
         )}
 
-      {/* Achievement Toasts */}
-      <AchievementToasts toasts={achievementToasts} />
-
       {/* Why You Should Hire Me Modal */}
       {showWhyHireMeModal && (
         <div
@@ -1566,100 +1451,7 @@ Type 'help' to see available commands.`;
         isSubmitting={isSubmittingCodeRequest}
       />
 
-      {/* Achievements Modal */}
-      {showAchievementsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="bg-white border-2 border-yellow-600 rounded-lg p-6 max-w-3xl w-full shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-pressstart2p text-yellow-700 text-xl">
-                ACHIEVEMENTS
-              </h2>
-              <button
-                onClick={() => setShowAchievementsModal(false)}
-                className="font-pressstart2p bg-yellow-600 hover:bg-yellow-700 text-gray-900 px-4 py-2 rounded border border-yellow-600"
-              >
-                CLOSE
-              </button>
-            </div>
-            <div className="mb-4 p-3 bg-yellow-50 border border-yellow-500/50 rounded-lg">
-              <p className="font-pixellari text-yellow-700 text-sm">
-                Click on locked achievements to navigate to where you can
-                unlock them!
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[70vh] overflow-y-auto pr-1">
-              {allAchievements.map((a) => {
-                const isUnlocked =
-                  unlockedAchievements.has(a.id) ||
-                  unlockedAchievementsRef.current.has(a.id);
-                const sectionLevel = achievementToSectionMap[a.id];
-                const isClickable = sectionLevel !== undefined;
-
-                return (
-                  <div
-                    key={a.id}
-                    onClick={() => isClickable && handleAchievementClick(a.id)}
-                    className={`flex items-center justify-between border-2 rounded-lg px-4 py-3 transition-all duration-200 h-20 ${
-                      isUnlocked
-                        ? "border-green-600 bg-green-50"
-                        : "border-gray-300 bg-white/70"
-                    } ${
-                      isClickable
-                        ? "cursor-pointer hover:border-yellow-600 hover:bg-yellow-50 hover:scale-105"
-                        : "cursor-default"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <span
-                        className={`flex-shrink-0 ${
-                          isUnlocked ? "text-green-700" : "text-gray-500"
-                        }`}
-                      >
-                        <GoTrophy />
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div
-                          className={`font-pressstart2p text-sm truncate ${
-                            isUnlocked ? "text-gray-900" : "text-gray-500"
-                          }`}
-                          title={a.title}
-                        >
-                          {a.title}
-                        </div>
-                        <div className="font-pixellari text-xs text-gray-600 truncate">
-                          {a.section} • +{a.xp} XP
-                          {isClickable && !isUnlocked && (
-                            <span className="text-yellow-700 ml-2">
-                              (Click to navigate)
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      {isClickable && !isUnlocked && (
-                        <span className="text-yellow-700 text-xs">→</span>
-                      )}
-                      <Badge
-                        variant={isUnlocked ? "default" : "outline"}
-                        font="retro"
-                        className={`${
-                          isUnlocked
-                            ? "bg-green-600 border-green-600 text-green-700"
-                            : "bg-gray-600 border-gray-300 text-gray-500"
-                        } text-sm`}
-                      >
-                        {isUnlocked ? "UNLOCKED" : "LOCKED"}
-                      </Badge>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           </div>
-        </div>
-      )}
-    </div>
   );
 }
 
