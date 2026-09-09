@@ -330,11 +330,27 @@ function App() {
         <div className="relative z-10 w-full flex flex-col items-center text-center">
           <h1 className="hero-title">
             I{" "}
-            <a href="#about" className="hero-title-img hero-title-img--me" aria-label="About me" />
+            <a
+              href="#about"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("#about");
+              }}
+              className="hero-title-img hero-title-img--me"
+              aria-label="About me"
+            />
             build living, breathing{" "}
             <br className="hero-br" />
             software{" "}
-            <a href="#projects" className="hero-title-img hero-title-img--work" aria-label="My work" />
+            <a
+              href="#projects"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("#projects");
+              }}
+              className="hero-title-img hero-title-img--work"
+              aria-label="Work"
+            />
             for teams that want{" "}
             <br className="hero-br" />
             to ship, not just plan.

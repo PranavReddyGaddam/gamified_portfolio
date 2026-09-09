@@ -269,9 +269,55 @@
   }
 }
 
-.hero-title-img:hover {
-  transform: scaleY(1) scale(1.06);
-  transition: transform 0.45s cubic-bezier(0.33, 0, 0.15, 1);
+/* Hover: the pill widens and a solid tint blends up over the photo, letting
+   the label read against it. */
+.hero-title-img {
+  position: relative;
+  background-blend-mode: lighten;
+  transition: width 0.45s cubic-bezier(0.33, 0, 0.15, 1),
+    max-width 0.45s cubic-bezier(0.33, 0, 0.15, 1),
+    background-color 0.45s ease;
+}
+
+.hero-title-img::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Geist", -apple-system, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+  color: #3a4a16;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.hero-title-img--me::before {
+  content: "About me";
+}
+
+.hero-title-img--work::before {
+  content: "Work";
+}
+
+.hero-title-img:hover::before {
+  opacity: 1;
+}
+
+.hero-title-img--me:hover {
+  background-color: #c1e4f7;
+  width: 118px !important;
+  max-width: 118px !important;
+}
+
+.hero-title-img--work:hover {
+  background-color: #dac6eb;
+  width: 78px !important;
+  max-width: 78px !important;
 }
 
 .hero-title-img--me {
