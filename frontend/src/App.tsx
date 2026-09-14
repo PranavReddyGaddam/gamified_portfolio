@@ -9,7 +9,9 @@ import emailjs from "@emailjs/browser";
 import GameInstructionsModal from "./components/GameInstructionsModal";
 import CodeRequestModal from "./components/CodeRequestModal";
 import "./components/Hero.css";
+import ContributionGraph from "./components/ContributionGraph";
 import ExperienceRows from "./components/ExperienceRows";
+import FunWall from "./components/FunWall";
 import { projects } from "./data/projects";
 import WorkList from "./components/WorkList";
 import Reveal from "./components/Reveal";
@@ -129,14 +131,41 @@ function App() {
 
   // Nav scrolling. ScrollSmoother owns the scroll position, so anchor jumps
   // have to go through it; otherwise the browser fights the smoother.
+  //
+  // Rather than smoother.scrollTo(el, true) — whose built-in duration is tuned
+  // for short nudges and reads as a snap across a whole page — this tweens the
+  // smoother's own scrollTop so the travel gets a real duration and easing.
   const scrollToSection = (target: string) => {
     const el = document.querySelector(target);
     if (!el) return;
-    if (smootherRef.current) {
-      smootherRef.current.scrollTo(el, true, "top top");
-    } else {
+
+    const smoother = smootherRef.current;
+    if (!smoother) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
     }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      smoother.scrollTo(el, false, "top top");
+      return;
+    }
+
+    const from = smoother.scrollTop();
+    const to = smoother.offset(el, "top top");
+
+    // Scale the duration with the distance travelled, so a jump to the next
+    // section and one across the whole page both feel deliberate rather than
+    // sharing one fixed time. Clamped so neither extreme drags.
+    const distance = Math.abs(to - from);
+    const duration = gsap.utils.clamp(0.9, 2.1, 0.55 + distance / 2600);
+
+    gsap.to(smoother, {
+      scrollTop: to,
+      duration,
+      // Long, gentle ease-out: leaves quickly, settles slowly, no bounce.
+      ease: "power2.inOut",
+      overwrite: true,
+    });
   };
 
   // Unlock achievements when sections enter viewport
@@ -327,12 +356,30 @@ function App() {
                 { label: "Home", target: "#home" },
                 { label: "About", target: "#about" },
                 { label: "Work", target: "#projects" },
-                // Resume is a file rather than a section, so it opens in a new tab.
-                { label: "Resume", target: RESUME_URL, external: true },
+                { label: "Fun", target: "#fun" },
               ]}
               onNavigate={scrollToSection}
+              // Desktop shows Resume in its own corner; the burger is the only
+              // nav on phones, so it has to appear there too.
+              extraItems={[
+                { label: "Resume", target: RESUME_URL, external: true },
+              ]}
             />
           </div>,
+          document.body
+        )}
+
+        {/* Resume is a file rather than a section, so it sits apart from the
+            dock — fixed top right, and portalled for the same reason. */}
+        {createPortal(
+          <a
+            href={RESUME_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hero-resume"
+          >
+            Resume <span aria-hidden="true">↗</span>
+          </a>,
           document.body
         )}
 
@@ -380,7 +427,7 @@ function App() {
         id="about"
         className="about-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-32"
       >
-        <Reveal stagger={0.12} className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-32">
+        <Reveal stagger={0.12} className="about-grid">
           {/* Left: portrait + labels */}
           <div>
             <div className="about-portrait-head flex justify-between mb-4">
@@ -403,32 +450,7 @@ function App() {
               />
             </div>
 
-            <div className="flex gap-1 mt-4 text-sm text-neutral-900">
-              <a
-                href="https://github.com/PranavReddyGaddam"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-neutral-500 transition-colors"
-              >
-                GitHub
-              </a>
-              <span className="text-neutral-400">,</span>
-              <a
-                href="https://www.linkedin.com/in/pranav-reddy-gaddam"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-neutral-500 transition-colors"
-              >
-                LinkedIn
-              </a>
-              <span className="text-neutral-400">,</span>
-              <a
-                href="mailto:reddy.pranav.gaddam@gmail.com"
-                className="hover:text-neutral-500 transition-colors"
-              >
-                Email
-              </a>
-            </div>
+            <ContributionGraph />
           </div>
 
           {/* Right: paragraph + experience table */}
@@ -438,17 +460,8 @@ function App() {
               <span className="font-['Instrument_Serif'] italic underline decoration-1 underline-offset-4">
                 full-stack engineering
               </span>
-              , backend systems, and AI through hands-on work. I&apos;m
-              now a software engineer at{" "}
-              <a
-                href="https://www.salesforce.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline decoration-1 underline-offset-4"
-              >
-                Salesforce
-              </a>
-              , alongside finishing my master&apos;s at{" "}
+              , backend systems, and AI through hands-on work. After completing
+              my master&apos;s at{" "}
               <a
                 href="https://www.sjsu.edu/"
                 target="_blank"
@@ -456,6 +469,15 @@ function App() {
                 className="underline decoration-1 underline-offset-4"
               >
                 San Jose State University
+              </a>
+              , I&apos;m now a software engineer at{" "}
+              <a
+                href="https://www.salesforce.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-1 underline-offset-4"
+              >
+                Salesforce
               </a>
               .
             </p>
@@ -541,6 +563,23 @@ function App() {
         </div>
       </section>
 
+      {/* Section 4: For fun */}
+      <section
+        id="fun"
+        className="fun-section relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 py-16 md:py-24"
+      >
+        <div className="max-w-6xl mx-auto">
+          <Reveal className="flex justify-between mb-10">
+            <span className="text-sm text-neutral-900">(For fun)</span>
+            <span className="text-sm text-neutral-400">
+              (Watched, heard, visited)
+            </span>
+          </Reveal>
+
+          <FunWall />
+        </div>
+      </section>
+
       {/* Footer */}
       <footer id="contact" className="site-footer relative z-10 px-6 md:px-16 pt-8 pb-8">
         <div className="flex flex-col">
@@ -568,6 +607,7 @@ function App() {
                 {[
                   { label: "Work", href: "#projects" },
                   { label: "About", href: "#about" },
+                  { label: "For fun", href: "#fun" },
                   { label: "Previous version", href: "/v1" },
                 ].map((l) => (
                   <a

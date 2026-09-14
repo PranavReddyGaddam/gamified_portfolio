@@ -157,11 +157,13 @@
   color: #3a4a16;
 }
 
-/* The section links stay on screen for the whole page. */
+/* The section links stay on screen for the whole page, as a glass dock
+   riding the right edge at the vertical centre. */
 .hero-navbar {
   position: fixed;
-  top: 50px;
-  right: 50px;
+  top: 50%;
+  right: 26px;
+  transform: translateY(-50%);
   z-index: 40;
   font-family: "Geist", -apple-system, sans-serif;
   font-size: 13.6px;
@@ -197,27 +199,147 @@
   width: 26%;
 }
 
-.hero-nav {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.35rem;
-}
-
-.hero-nav-link {
-  font-size: 15.2px;
+/* Resume sits apart from the dock: it opens a file rather than moving to a
+   section, so it gets the top-right corner and the same glass treatment. */
+.hero-resume {
+  position: fixed;
+  top: 50px;
+  right: 50px;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: "Geist", -apple-system, sans-serif;
+  font-size: 13.6px;
   font-weight: 500;
   color: #3a4a16;
   text-decoration: none;
   transition: opacity 0.2s ease;
 }
 
-.hero-nav-link:hover {
+.hero-resume:hover {
   opacity: 0.6;
 }
 
-.hero-nav-link.is-active::before {
-  content: "• ";
+@media (max-width: 640px) {
+  /* The burger owns the top-right corner on phones. */
+  .hero-resume {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-resume {
+    transition: none;
+  }
+}
+
+/* --- glass dock ------------------------------------------------------- */
+
+/* Frosted pill holding the section icons. The page behind is near-solid
+   cream, so the read comes from the blur plus a lit top edge and a soft
+   drop shadow rather than from anything showing through. */
+.hero-dock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.75),
+    rgba(255, 255, 255, 0.45)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow:
+    /* specular highlight along the top inner edge */
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    /* shadow catching the bottom inner edge, to give it thickness */
+    inset 0 -1px 1px rgba(58, 74, 22, 0.06),
+    0 1px 2px rgba(58, 74, 22, 0.04),
+    0 8px 24px rgba(58, 74, 22, 0.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+  backdrop-filter: blur(14px) saturate(1.6);
+}
+
+.hero-dock-link {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  color: #3a4a16;
+  text-decoration: none;
+  opacity: 0.55;
+  transition:
+    opacity 0.25s ease,
+    background-color 0.25s ease,
+    transform 0.25s cubic-bezier(0.33, 0, 0.15, 1);
+}
+
+.hero-dock-link svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 1.7;
+}
+
+.hero-dock-link:hover {
+  opacity: 1;
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+/* The section you are in reads as a seated, lit button. */
+.hero-dock-link.is-active {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    0 1px 3px rgba(58, 74, 22, 0.1);
+}
+
+/* Label slides out to the left on hover: the icons alone are guessable but
+   not certain. */
+.hero-dock-tip {
+  position: absolute;
+  right: calc(100% + 10px);
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  color: #3a4a16;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 14px rgba(58, 74, 22, 0.12);
+  -webkit-backdrop-filter: blur(10px) saturate(1.6);
+  backdrop-filter: blur(10px) saturate(1.6);
+  opacity: 0;
+  transform: translateX(6px);
+  pointer-events: none;
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s cubic-bezier(0.33, 0, 0.15, 1);
+}
+
+.hero-dock-link:hover .hero-dock-tip,
+.hero-dock-link:focus-visible .hero-dock-tip {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-dock-link,
+  .hero-dock-tip {
+    transition: none;
+  }
+
+  .hero-dock-link:hover {
+    transform: none;
+  }
 }
 
 /* --- headline --------------------------------------------------------- */
@@ -391,19 +513,11 @@
     white-space: nowrap;
   }
 
-  .hero-nav {
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
-  }
-
+  /* The dock gives way to the hamburger on phones. */
   .hero-navbar {
     top: 24px;
     right: 22px;
-  }
-
-  .hero-nav-link {
-    font-size: 14px;
+    transform: none;
   }
 
   .hero-title {
@@ -482,20 +596,177 @@
 /* The reference is black-on-white rather than the hero's cream. */
 .about-section {
   background: #ffffff;
+  /* Shared width for the portrait, its label row and the graph, so the left
+     column reads as one stack. */
+  --about-frame: 440px;
 }
 
-/* Portrait: softly rounded rather than a hard rectangle. */
+/* Two content-sized columns, centred as a pair. An even 50/50 split left the
+   portrait adrift in a half-viewport column on wide screens; sizing the left
+   column to the frame instead closes the gap between the two. */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .about-grid {
+    grid-template-columns: var(--about-frame) minmax(0, 620px);
+    gap: 4.5rem;
+    justify-content: center;
+  }
+}
+
+/* Portrait: softly rounded rather than a hard rectangle. Square, so the
+   contribution graph can sit beneath it without the left column outrunning
+   the experience table on the right. */
 .about-portrait {
   width: 100%;
-  max-width: 384px;
-  aspect-ratio: 3 / 4;
+  max-width: var(--about-frame);
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 14px;
 }
 
+/* --- contribution graph ----------------------------------------------- */
+
+/* Sits under the portrait and matches its frame width, so the left column
+   reads as one stack rather than two loose objects. */
+.contrib {
+  width: 100%;
+  max-width: var(--about-frame);
+  margin-top: 1.25rem;
+}
+
+.contrib-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+  font-size: 13.6px;
+}
+
+.contrib-title {
+  color: #171717;
+}
+
+.contrib-total {
+  color: #a3a3a3;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The whole grid is a link to the profile, and the anchor is the positioning
+   context for the hover tooltip. */
+.contrib-link {
+  position: relative;
+  display: block;
+  border-radius: 4px;
+  outline-offset: 4px;
+}
+
+.contrib-grid {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.contrib-cell.is-hovered {
+  stroke: #3a4a16;
+  stroke-width: 1.5;
+  /* The stroke straddles the edge, so it would clip against neighbours
+     without room to draw outward. */
+  paint-order: stroke;
+  transition: none;
+}
+
+/* Sits above the hovered cell, centred on it. */
+.contrib-tip {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 8px));
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  line-height: 1;
+  white-space: nowrap;
+  color: #f0efe9;
+  background: #3a4a16;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Olive ramp, tinted from the page accent rather than GitHub's green. */
+.contrib-cell {
+  transition: fill 0.6s ease;
+}
+
+.contrib-cell--0 {
+  fill: #eeeeea;
+}
+.contrib-cell--1 {
+  fill: #d3dcbb;
+}
+.contrib-cell--2 {
+  fill: #a8bb7e;
+}
+.contrib-cell--3 {
+  fill: #6d8541;
+}
+.contrib-cell--4 {
+  fill: #3a4a16;
+}
+
+.contrib-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 0.6rem;
+  font-size: 11.5px;
+  color: #a3a3a3;
+}
+
+/* The legend keys reuse the cell ramp, so they need the fill as a
+   background instead. */
+.contrib-key {
+  width: 10px;
+  height: 10px;
+  border-radius: 2.5px;
+}
+
+.contrib-key.contrib-cell--0 {
+  background: #eeeeea;
+}
+.contrib-key.contrib-cell--1 {
+  background: #d3dcbb;
+}
+.contrib-key.contrib-cell--2 {
+  background: #a8bb7e;
+}
+.contrib-key.contrib-cell--3 {
+  background: #6d8541;
+}
+.contrib-key.contrib-cell--4 {
+  background: #3a4a16;
+}
+
+/* The grid is 53 columns wide; below this it would render as slivers, so
+   trade some of the year for legibility by letting it scroll. */
+@media (max-width: 520px) {
+  .contrib-grid {
+    min-width: 420px;
+  }
+
+  .contrib {
+    overflow-x: auto;
+  }
+}
+
 /* Keep the label row aligned with the frame rather than the column. */
 .about-portrait-head {
-  max-width: 384px;
+  max-width: var(--about-frame);
 }
 
 .about-portrait img {
@@ -523,6 +794,370 @@
 @media (min-width: 1024px) {
   .about-right {
     padding-top: calc(20px + 1rem);
+  }
+}
+
+/* The grid now centres two content-sized columns, which keeps the right
+   column clear of the dock on its own — no extra inset needed. */
+
+/* --- Fun rows --------------------------------------------------------- */
+
+.fun-section {
+  background: #ffffff;
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 400;
+}
+
+.fun-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+/* Label, year tabs and source link share one baseline, with a hairline
+   under them separating the header from the covers. */
+.fun-row-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid #ededea;
+}
+
+/* The first tab: all-time favourites. Quiet until selected, so it reads as
+   one option among the years rather than a permanent heading. */
+.fun-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  padding: 7px 15px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 14px;
+  font-family: inherit;
+  color: #a3a3a3;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.fun-pill:hover:not(:disabled) {
+  color: #525252;
+}
+
+.fun-pill.is-active {
+  background: #f2f1ed;
+  color: #262626;
+}
+
+.fun-pill:disabled {
+  cursor: default;
+}
+
+.fun-pill-star {
+  width: 13px;
+  height: 13px;
+  color: #c8c8c2;
+  transition: color 0.2s ease;
+}
+
+.fun-pill.is-active .fun-pill-star {
+  color: #3a4a16;
+}
+
+.fun-pill-count,
+.fun-year-count {
+  color: #a3a3a3;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The years scroll rather than wrap, so the header stays one line. */
+.fun-years {
+  display: flex;
+  align-items: center;
+  gap: 1.35rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.fun-years::-webkit-scrollbar {
+  display: none;
+}
+
+.fun-year {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 14px;
+  color: #a3a3a3;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.fun-year:hover {
+  color: #525252;
+}
+
+.fun-year.is-active {
+  color: #262626;
+}
+
+.fun-year.is-active .fun-year-count {
+  color: #737373;
+}
+
+.fun-source {
+  flex: 0 0 auto;
+  font-size: 14px;
+  color: #a3a3a3;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.fun-source:hover {
+  color: #3a4a16;
+}
+
+.fun-covers {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 1.6rem;
+}
+
+.fun-cover {
+  display: block;
+  text-decoration: none;
+}
+
+.fun-cover-art {
+  position: relative;
+  display: block;
+  /* Square by default, for album art. Poster rows override it below. */
+  aspect-ratio: var(--fun-ratio, 1 / 1);
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f0efe9;
+  box-shadow: 0 1px 3px rgba(28, 34, 12, 0.1);
+  transition: transform 0.4s cubic-bezier(0.33, 0, 0.15, 1);
+}
+
+/* Film posters and match imagery are portrait — a square crop would cut the
+   top and bottom off every poster. */
+.fun-row--screen {
+  --fun-ratio: 2 / 3;
+}
+
+/* Places are landscape photos, and there are more of them per year than the
+   other rows show, so they run smaller and wrap onto a second line. */
+.fun-row--place {
+  --fun-ratio: 4 / 3;
+}
+
+.fun-row--place .fun-covers {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+/* Badge over the artwork: "Movie", "TV", "Match". */
+.fun-cover-tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #f0efe9;
+  background: rgba(28, 34, 12, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.fun-cover:hover .fun-cover-art {
+  transform: translateY(-4px);
+}
+
+.fun-cover-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Stand-in while there is no artwork. */
+.fun-cover-initial {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 40px;
+  color: #c8d2ad;
+}
+
+/* Placeholders are marked rather than dressed up as real entries. */
+.fun-cover.is-placeholder .fun-cover-art {
+  border: 1px dashed #d6d3c9;
+  box-shadow: none;
+  background: repeating-linear-gradient(
+    45deg,
+    #f7f6f2,
+    #f7f6f2 6px,
+    #f0efe9 6px,
+    #f0efe9 12px
+  );
+}
+
+/* Captions sit under the cover, as in the reference, rather than on hover. */
+.fun-cover-title,
+.fun-cover-by {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fun-cover-title {
+  margin-top: 0.65rem;
+  font-size: 13px;
+  color: #262626;
+}
+
+.fun-cover-by {
+  margin-top: 1px;
+  font-size: 12px;
+  color: #a3a3a3;
+}
+
+@media (max-width: 900px) {
+  .fun-covers {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fun-row-head {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  /* The source link would otherwise be stranded on its own line. */
+  .fun-source {
+    order: -1;
+    margin-left: auto;
+  }
+
+  .fun-covers {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fun-cover-art {
+    transition: none;
+  }
+
+  .fun-cover:hover .fun-cover-art {
+    transform: none;
+  }
+}
+
+/* --- Sport cards ------------------------------------------------------ */
+
+/* Four wide cards rather than the five covers of the other rows: there is no
+   artwork to carry them, so they lean on type instead. */
+.sport-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 1.6rem;
+}
+
+.sport-card {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sport-card-art {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f2f1ed;
+  transition:
+    transform 0.4s cubic-bezier(0.33, 0, 0.15, 1),
+    background-color 0.3s ease;
+}
+
+.sport-card:hover .sport-card-art {
+  transform: translateY(-4px);
+  background: #eceade;
+}
+
+.sport-card-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Initial standing in for artwork. */
+.sport-card-mark {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 52px;
+  color: #c8d2ad;
+}
+
+.sport-card-label {
+  display: block;
+  margin-top: 0.65rem;
+  font-size: 13px;
+  color: #262626;
+}
+
+.sport-card-fav {
+  display: block;
+  margin-top: 1px;
+  font-size: 12px;
+  color: #a3a3a3;
+}
+
+@media (max-width: 640px) {
+  .sport-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sport-card-art {
+    transition: none;
+  }
+
+  .sport-card:hover .sport-card-art {
+    transform: none;
   }
 }
 
@@ -966,7 +1601,7 @@
 }
 
 @media (max-width: 640px) {
-  .hero-nav {
+  .hero-dock {
     display: none;
   }
 

@@ -1,6 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { gsap } from "gsap";
+import {
+  LuHouse,
+  LuUser,
+  LuBriefcase,
+  LuFileText,
+  LuPopcorn,
+} from "react-icons/lu";
+import type { IconType } from "react-icons";
 
 export type NavItem = {
   label: string;
@@ -12,15 +20,32 @@ export type NavItem = {
 type Props = {
   items: NavItem[];
   onNavigate: (target: string) => void;
+  /**
+   * Shown only in the mobile menu. On desktop these live outside the dock
+   * (Resume has its own corner), but the burger is the only nav on phones,
+   * so they have to appear there or become unreachable.
+   */
+  extraItems?: NavItem[];
+};
+
+/** Icon per nav label. Falls back to the document glyph for anything unmapped. */
+const ICONS: Record<string, IconType> = {
+  Home: LuHouse,
+  About: LuUser,
+  Work: LuBriefcase,
+  Fun: LuPopcorn,
+  Resume: LuFileText,
 };
 
 /**
- * Hero navigation: inline links on desktop, a hamburger opening a full-screen
- * menu on phones.
+ * Hero navigation: a glass dock pinned to the right edge on desktop, a
+ * hamburger opening a full-screen menu on phones.
  */
-const HeroNav = ({ items, onNavigate }: Props) => {
+const HeroNav = ({ items, onNavigate, extraItems = [] }: Props) => {
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(items[0]?.target ?? "");
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const dockRef = useRef<HTMLElement | null>(null);
 
   // Lock the page behind the menu, and let Escape close it.
   useEffect(() => {
@@ -36,6 +61,50 @@ const HeroNav = ({ items, onNavigate }: Props) => {
       window.removeEventListener("keydown", onKey);
     };
   }, [open]);
+
+  // Light up whichever section is crossing the middle of the viewport. Uses a
+  // scroll listener rather than IntersectionObserver: ScrollSmoother moves the
+  // page with a transform, so observer roots do not fire where you expect.
+  useEffect(() => {
+    const sections = items
+      .filter((i) => !i.external)
+      .map((i) => ({ target: i.target, el: document.querySelector(i.target) }))
+      .filter((s): s is { target: string; el: Element } => Boolean(s.el));
+    if (!sections.length) return;
+
+    const update = () => {
+      const line = window.innerHeight * 0.4;
+      let current = sections[0].target;
+      for (const s of sections) {
+        if (s.el.getBoundingClientRect().top <= line) current = s.target;
+      }
+      setActive(current);
+    };
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [items]);
+
+  // The dock drifts in from the right edge once the hero has settled.
+  useLayoutEffect(() => {
+    if (!dockRef.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ctx = gsap.context(() => {
+      gsap.from(dockRef.current, {
+        opacity: 0,
+        x: 24,
+        duration: 0.8,
+        delay: 0.4,
+        ease: "power3.out",
+      });
+    }, dockRef);
+    return () => ctx.revert();
+  }, []);
 
   // The panel fades while each link slides in from the right, staggered —
   // matching the reference menu's entrance.
@@ -74,24 +143,31 @@ const HeroNav = ({ items, onNavigate }: Props) => {
 
   return (
     <>
-      <nav className="hero-nav">
-        {items.map((item, i) => (
-          <a
-            key={item.label}
-            href={item.target}
-            {...(item.external
-              ? { target: "_blank", rel: "noopener noreferrer" }
-              : {
-                  onClick: (e: React.MouseEvent) => {
-                    e.preventDefault();
-                    onNavigate(item.target);
-                  },
-                })}
-            className={`hero-nav-link${i === 0 ? " is-active" : ""}`}
-          >
-            {item.label}
-          </a>
-        ))}
+      <nav ref={dockRef} className="hero-dock" aria-label="Sections">
+        {items.map((item) => {
+          const Icon = ICONS[item.label] ?? LuFileText;
+          const isActive = !item.external && item.target === active;
+          return (
+            <a
+              key={item.label}
+              href={item.target}
+              aria-label={item.label}
+              aria-current={isActive ? "true" : undefined}
+              {...(item.external
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {
+                    onClick: (e: React.MouseEvent) => {
+                      e.preventDefault();
+                      onNavigate(item.target);
+                    },
+                  })}
+              className={`hero-dock-link${isActive ? " is-active" : ""}`}
+            >
+              <Icon aria-hidden="true" />
+              <span className="hero-dock-tip">{item.label}</span>
+            </a>
+          );
+        })}
       </nav>
 
       <button
@@ -130,7 +206,7 @@ const HeroNav = ({ items, onNavigate }: Props) => {
               </div>
 
               <nav className="hero-menu-links">
-                {items.map((item) => (
+                {[...items, ...extraItems].map((item) => (
                   <button
                     key={item.label}
                     type="button"
