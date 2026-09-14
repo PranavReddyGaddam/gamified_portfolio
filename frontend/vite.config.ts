@@ -12,9 +12,13 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      // The /api routes are Vercel functions, which `vite dev` does not run.
+      // Point them at the deployment so they work locally without needing
+      // `vercel dev` and a GITHUB_TOKEN in the environment.
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'https://pranavreddygaddam.com',
         changeOrigin: true,
+        secure: true,
       },
     },
   },
