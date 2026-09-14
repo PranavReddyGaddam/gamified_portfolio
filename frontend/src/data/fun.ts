@@ -15,6 +15,19 @@ export type FunItem = {
   href?: string;
   /** True until real content replaces it — renders as a marked placeholder. */
   placeholder?: boolean;
+  /**
+   * Opens a detail modal on click rather than a link. Any field present is
+   * rendered and the rest skipped, so a trip can start with nothing but
+   * photos and gain notes later.
+   */
+  detail?: {
+    /** Rows in the modal's meta grid — when, who with, how long. */
+    facts?: { label: string; value: string }[];
+    /** Paragraphs of the write-up. */
+    body?: string[];
+    /** Photos, in order. The first doubles as the modal's lead image. */
+    photos?: string[];
+  };
 };
 
 export type FunYear = {
@@ -364,48 +377,47 @@ export const funRows: FunRow[] = [
   {
     id: "place",
     label: "Places",
-    // TODO(pranav): my pick, not yours — reorder or replace these five.
     favourites: [
-      { id: "pf-1", title: "Yosemite", by: "California", tag: "Nov 2025" },
-      { id: "pf-2", title: "Lake Tahoe", by: "California", tag: "May 2025" },
-      { id: "pf-3", title: "San Francisco", by: "California", tag: "2024" },
-      { id: "pf-4", title: "Seattle", by: "Washington", tag: "Jul 2025" },
-      { id: "pf-5", title: "New York", by: "New York", tag: "Dec 2024" },
+      { id: "pf-1", title: "New York", by: "New York", tag: "2026", detail: { photos: [] } },
+      { id: "pf-2", title: "San Diego", by: "California", tag: "2026", detail: { photos: [] } },
+      { id: "pf-4", title: "Yosemite", by: "California", tag: "2025", detail: { photos: [] } },
+      { id: "pf-5", title: "Seattle", by: "Washington", tag: "2025", detail: { photos: [] } },
+      { id: "pf-6", title: "San Francisco", by: "California", tag: "2024", detail: { photos: [] } },
     ],
     years: [
       {
         year: "2026",
-        total: 9,
+        total: 10,
         items: [
-          { id: "p26-1", title: "Los Angeles", by: "California", tag: "May" },
-          { id: "p26-2", title: "San Diego", by: "California", tag: "May" },
-          { id: "p26-3", title: "New York", by: "New York", tag: "May" },
-          { id: "p26-4", title: "New Jersey", by: "New Jersey", tag: "May" },
-          { id: "p26-5", title: "Washington", by: "District of Columbia", tag: "May" },
-          { id: "p26-6", title: "Philadelphia", by: "Pennsylvania", tag: "May" },
-          { id: "p26-7", title: "Dallas", by: "Texas", tag: "Jun" },
-          { id: "p26-8", title: "Austin", by: "Texas", tag: "Jun" },
-          { id: "p26-9", title: "San Antonio", by: "Texas", tag: "Jun" },
+          { id: "p26-1", title: "Los Angeles", by: "California", tag: "May", detail: { photos: [] } },
+          { id: "p26-2", title: "San Diego", by: "California", tag: "May", detail: { photos: [] } },
+          { id: "p26-3", title: "New York", by: "New York", tag: "May", detail: { photos: [] } },
+          { id: "p26-4", title: "New Jersey", by: "New Jersey", tag: "May", detail: { photos: [] } },
+          { id: "p26-5", title: "Washington", by: "District of Columbia", tag: "May", detail: { photos: [] } },
+          { id: "p26-6", title: "Philadelphia", by: "Pennsylvania", tag: "May", detail: { photos: [] } },
+          { id: "p26-7", title: "Dallas", by: "Texas", tag: "Jun", detail: { photos: [] } },
+          { id: "p26-8", title: "Austin", by: "Texas", tag: "Jun", detail: { photos: [] } },
+          { id: "p26-9", title: "San Antonio", by: "Texas", tag: "Jun", detail: { photos: [] } },
+          { id: "p26-10", title: "Lake Tahoe", by: "California", tag: "May", detail: { photos: [] } },
         ],
       },
       {
         year: "2025",
-        total: 4,
+        total: 3,
         items: [
-          { id: "p25-1", title: "Dallas", by: "Texas", tag: "Jan" },
-          { id: "p25-2", title: "Lake Tahoe", by: "California", tag: "May" },
-          { id: "p25-3", title: "Seattle", by: "Washington", tag: "Jul" },
-          { id: "p25-4", title: "Yosemite", by: "California", tag: "Nov" },
+          { id: "p25-1", title: "Dallas", by: "Texas", tag: "Jan", detail: { photos: [] } },
+          { id: "p25-3", title: "Seattle", by: "Washington", tag: "Jul", detail: { photos: [] } },
+          { id: "p25-4", title: "Yosemite", by: "California", tag: "Nov", detail: { photos: [] } },
         ],
       },
       {
         year: "2024",
         total: 4,
         items: [
-          { id: "p24-1", title: "San Francisco", by: "California", tag: "Arrived" },
-          { id: "p24-2", title: "San Jose", by: "California", tag: "Home" },
-          { id: "p24-3", title: "New York", by: "New York", tag: "Dec" },
-          { id: "p24-4", title: "New Jersey", by: "New Jersey", tag: "Dec" },
+          { id: "p24-1", title: "San Francisco", by: "California", tag: "Arrived", detail: { photos: [] } },
+          { id: "p24-2", title: "San Jose", by: "California", tag: "Home", detail: { photos: [] } },
+          { id: "p24-3", title: "New York", by: "New York", tag: "Dec", detail: { photos: [] } },
+          { id: "p24-4", title: "New Jersey", by: "New Jersey", tag: "Dec", detail: { photos: [] } },
         ],
       },
     ],
