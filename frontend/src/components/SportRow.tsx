@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { useState } from "react";
 import { sports, type Sport } from "../data/sports";
+import DetailModal from "./DetailModal";
 
 /**
  * Sports followed — four cards, each opening a detail modal.
@@ -21,21 +21,6 @@ const SportRow = () => {
       setClosing(false);
     }, 320);
   };
-
-  // Lock the page behind the modal, and let Escape close it.
-  useEffect(() => {
-    if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") dismiss();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = previous;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
 
   return (
     <div className="fun-row fun-row--sport">
@@ -77,79 +62,41 @@ const SportRow = () => {
         ))}
       </div>
 
-      {open
-        ? createPortal(
-            // Shares the project modal's chrome so the two read as one
-            // pattern. ScrollSmoother transforms #smooth-content, which would
-            // otherwise be the containing block for position:fixed.
-            <div
-              className={`pm-overlay${closing ? " pm-overlay--closing" : ""}`}
-              role="dialog"
-              aria-modal="true"
-              aria-label={open.label}
-            >
-              <div className="pm-scrim" onClick={dismiss} />
+      {open ? (
+        <DetailModal
+          crumb="Sport"
+          title={open.label}
+          closing={closing}
+          onClose={dismiss}
+        >
+          <h1 className="pm-title">{open.label}</h1>
 
-              <div className="pm-panel">
-                <header className="pm-bar">
-                  <span className="pm-crumb">
-                    <button type="button" onClick={dismiss} className="pm-crumb-link">
-                      Sport
-                    </button>
-                    <span aria-hidden="true"> › </span>
-                    <span className="pm-crumb-current">{open.label}</span>
-                  </span>
-
-                  <span className="pm-bar-actions">
-                    <button
-                      type="button"
-                      onClick={dismiss}
-                      aria-label="Close"
-                      title="Close"
-                      className="pm-icon-btn"
-                    >
-                      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6">
-                        <path d="M4 4l10 10M14 4L4 14" strokeLinecap="round" />
-                      </svg>
-                    </button>
-                  </span>
-                </header>
-
-                <div className="pm-scroll">
-                  <div className="pm-content">
-                    <h1 className="pm-title">{open.label}</h1>
-
-                    {open.facts?.length ? (
-                      <dl className="pm-meta">
-                        {open.facts.map((f) => (
-                          <div key={f.label}>
-                            <dt>{f.label}</dt>
-                            <dd>{f.value}</dd>
-                          </div>
-                        ))}
-                      </dl>
-                    ) : null}
-
-                    {open.image ? (
-                      <div className="pm-hero">
-                        <img src={open.image} alt={open.label} />
-                      </div>
-                    ) : null}
-
-                    {open.blurb ? <p className="pm-lede">{open.blurb}</p> : null}
-
-                    {open.body?.map((p, i) => (
-                      <section key={i} className="pm-section">
-                        <p>{p}</p>
-                      </section>
-                    ))}
-                  </div>
+          {open.facts?.length ? (
+            <dl className="pm-meta">
+              {open.facts.map((f) => (
+                <div key={f.label}>
+                  <dt>{f.label}</dt>
+                  <dd>{f.value}</dd>
                 </div>
-              </div>
-            </div>,
-            document.body
-          )
-        : null}
+              ))}
+            </dl>
+          ) : null}
+
+          {open.image ? (
+            <div className="pm-hero">
+              <img src={open.image} alt={open.label} />
+            </div>
+          ) : null}
+
+          {open.blurb ? <p className="pm-lede">{open.blurb}</p> : null}
+
+          {open.body?.map((p, i) => (
+            <p key={i} className="pm-para">
+              {p}
+            </p>
+          ))}
+        </DetailModal>
+      ) : null}
     </div>
   );
 };
