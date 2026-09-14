@@ -1046,6 +1046,57 @@
   }
 }
 
+@media (max-width: 640px) {
+  /* Year over subtitle: side by side they crowd at this width. */
+  .tl-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    padding-bottom: 0.85rem;
+  }
+
+  .tl-year {
+    font-size: 28px;
+  }
+
+  /* Rows need to stay comfortably tappable. */
+  .tl-row {
+    gap: 11px;
+    padding: 9px 4px;
+  }
+
+  .tl-rank {
+    flex-basis: 18px;
+    font-size: 11.5px;
+  }
+
+  .tl-art {
+    flex-basis: 46px;
+    width: 46px;
+    height: 46px;
+  }
+
+  .tl-title {
+    font-size: 14px;
+  }
+
+  .tl-by {
+    font-size: 12.5px;
+  }
+
+  /* One photo per row reads better than two cramped ones. */
+  .trip-photos {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 1.5rem;
+  }
+
+  .trip-empty {
+    padding: 1.75rem 1rem;
+    margin-top: 1.5rem;
+  }
+}
+
 /* --- covers ----------------------------------------------------------- */
 
 .fun-covers {
@@ -1480,11 +1531,104 @@ a.fun-cover {
 }
 
 @media (max-width: 767px) {
+  /* Full-bleed on a phone. 100vh is measured against the viewport with
+     browser chrome retracted, so it runs the bar up under the address bar
+     and the end of the list under the toolbar; dvh tracks the chrome as it
+     shows and hides. The vh line is the fallback for browsers without it. */
   .pm-panel {
     width: 100%;
     max-height: 100vh;
     min-height: 100vh;
+    max-height: 100dvh;
+    min-height: 100dvh;
     border-radius: 0;
+  }
+
+  /* Clear the notch and the home indicator. */
+  .pm-bar {
+    padding: 0.85rem 1rem;
+    padding-top: max(0.85rem, env(safe-area-inset-top));
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  /* Desktop prose padding leaves a phone mostly empty at the top and a dead
+     zone at the bottom. */
+  .pm-content {
+    padding: 1.5rem 1.15rem;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+
+  .pm-content--wide {
+    padding-top: 1.5rem;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+
+  /* Momentum scrolling inside the panel rather than the page behind it. */
+  .pm-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pm-title {
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
+    margin-bottom: 1.25rem;
+  }
+
+  .pm-meta {
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .pm-lede {
+    font-size: 17px;
+    margin-bottom: 1.75rem;
+  }
+
+  /* The crumb and its actions crowd each other at this width. */
+  .pm-crumb {
+    font-size: 13px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pm-bar-actions {
+    flex: 0 0 auto;
+  }
+
+  /* The shared entrance scales the panel down slightly, which on a
+     full-bleed sheet pulls its edges inside the viewport and flashes the
+     page behind. Rise without scaling instead. */
+  .pm-panel {
+    animation: pm-in-sheet 0.34s cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .pm-overlay--closing .pm-panel {
+    animation: pm-out-sheet 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+}
+
+@keyframes pm-in-sheet {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pm-out-sheet {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(14px);
   }
 }
 
@@ -1725,11 +1869,16 @@ a.fun-cover {
      two of them would fight over opacity. */
 }
 
+/* The panel covers the whole screen, notch included, so keep the bar and the
+   links clear of the insets. */
 .hero-menu-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 24px 22px;
+  padding-top: max(24px, env(safe-area-inset-top));
+  padding-left: max(22px, env(safe-area-inset-left));
+  padding-right: max(22px, env(safe-area-inset-right));
 }
 
 .hero-menu-logo {
@@ -1753,6 +1902,8 @@ a.fun-cover {
   justify-content: center;
   gap: 24px;
   padding: 0 32px 96px;
+  /* The links sit against the right edge, so they need that inset too. */
+  padding-right: max(32px, env(safe-area-inset-right));
 }
 
 /* Scaled up for touch, but otherwise the site's own nav styling rather than
