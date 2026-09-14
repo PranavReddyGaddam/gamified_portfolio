@@ -199,21 +199,20 @@
   width: 26%;
 }
 
-/* Resume sits apart from the dock: it opens a file rather than moving to a
-   section, so it gets the top-right corner and the same glass treatment. */
+/* Sits at the right end of the hero bar, so it scrolls away with the hero
+   rather than following the page like the dock. */
 .hero-resume {
-  position: fixed;
-  top: 50px;
-  right: 50px;
-  z-index: 40;
+  margin-left: auto;
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  padding-top: 6px;
   font-family: "Geist", -apple-system, sans-serif;
   font-size: 13.6px;
   font-weight: 500;
   color: #3a4a16;
   text-decoration: none;
+  white-space: nowrap;
   transition: opacity 0.2s ease;
 }
 
@@ -868,8 +867,7 @@
   color: #3a4a16;
 }
 
-.fun-pill-count,
-.fun-year-count {
+.fun-pill-count {
   color: #a3a3a3;
   font-variant-numeric: tabular-nums;
 }
@@ -911,21 +909,144 @@
   color: #262626;
 }
 
-.fun-year.is-active .fun-year-count {
-  color: #737373;
-}
-
 .fun-source {
   flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
   font-size: 14px;
   color: #a3a3a3;
   text-decoration: none;
+  cursor: pointer;
   transition: color 0.2s ease;
 }
 
 .fun-source:hover {
   color: #3a4a16;
 }
+
+/* --- full track list -------------------------------------------------- */
+
+/* A hundred rows do not want the 720px prose measure. */
+.pm-content--wide {
+  max-width: 1180px;
+  padding-top: 2.25rem;
+  padding-bottom: 3rem;
+}
+
+/* Compact header: the old one burned a whole screen before the first row. */
+.tl-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  padding-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #ededea;
+}
+
+.tl-year {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 40px;
+  line-height: 1;
+  color: #171717;
+}
+
+.tl-sub {
+  font-size: 13.5px;
+  color: #a3a3a3;
+}
+
+/* Two columns on a wide panel, so the list is scannable rather than a
+   single endless ribbon. Rows fill down each column in turn. */
+.tl-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  columns: 2;
+  column-gap: 46px;
+}
+
+.tl-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  /* Keep a row from splitting across the column break. */
+  break-inside: avoid;
+  transition: background-color 0.18s ease;
+}
+
+.tl-row:hover {
+  background: #faf9f6;
+}
+
+.tl-rank {
+  flex: 0 0 24px;
+  font-size: 12.5px;
+  color: #c4c4bd;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* The first three carry the year, so they read a shade heavier. */
+.tl-row.is-top .tl-rank {
+  color: #3a4a16;
+  font-weight: 500;
+}
+
+.tl-art {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f0efe9;
+  box-shadow: 0 1px 2px rgba(28, 34, 12, 0.08);
+}
+
+.tl-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tl-text {
+  min-width: 0;
+}
+
+.tl-title,
+.tl-by {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tl-title {
+  font-size: 13.5px;
+  color: #171717;
+}
+
+.tl-by {
+  margin-top: 1px;
+  font-size: 12px;
+  color: #a3a3a3;
+}
+
+@media (max-width: 860px) {
+  .tl-list {
+    columns: 1;
+  }
+
+  .tl-year {
+    font-size: 32px;
+  }
+}
+
+/* --- covers ----------------------------------------------------------- */
 
 .fun-covers {
   display: grid;
@@ -936,7 +1057,19 @@
 
 .fun-cover {
   display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
   text-decoration: none;
+}
+
+/* Only tiles that open something take a pointer. */
+button.fun-cover,
+a.fun-cover {
+  cursor: pointer;
 }
 
 .fun-cover-art {
@@ -951,8 +1084,19 @@
   transition: transform 0.4s cubic-bezier(0.33, 0, 0.15, 1);
 }
 
-/* Film posters and match imagery are portrait — a square crop would cut the
-   top and bottom off every poster. */
+.fun-cover:hover .fun-cover-art {
+  transform: translateY(-4px);
+}
+
+.fun-cover-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Film posters are portrait — a square crop would cut the top and bottom
+   off every one. */
 .fun-row--screen {
   --fun-ratio: 2 / 3;
 }
@@ -965,34 +1109,6 @@
 
 .fun-row--place .fun-covers {
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-}
-
-/* Badge over the artwork: "Movie", "TV", "Match". */
-.fun-cover-tag {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: #f0efe9;
-  background: rgba(28, 34, 12, 0.72);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-}
-
-.fun-cover:hover .fun-cover-art {
-  transform: translateY(-4px);
-}
-
-.fun-cover-art img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* Stand-in while there is no artwork. */
@@ -1019,7 +1135,24 @@
   );
 }
 
-/* Captions sit under the cover, as in the reference, rather than on hover. */
+/* Badge over the artwork: "Movie", "TV", a month. */
+.fun-cover-tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #f0efe9;
+  background: rgba(28, 34, 12, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Captions sit under the cover rather than on hover. */
 .fun-cover-title,
 .fun-cover-by {
   display: block;
@@ -1073,6 +1206,42 @@
   .fun-cover:hover .fun-cover-art {
     transform: none;
   }
+}
+
+/* --- trip modal ------------------------------------------------------- */
+
+.trip-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 2rem;
+}
+
+.trip-photos img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #f5f5f4;
+}
+
+.trip-empty {
+  margin-top: 2rem;
+  padding: 2.5rem;
+  border: 1px dashed #e5e5e5;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 14px;
+  color: #a3a3a3;
+}
+
+.pm-para {
+  margin-top: 1rem;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #404040;
 }
 
 /* --- Sport cards ------------------------------------------------------ */
@@ -1246,7 +1415,9 @@
 .pm-overlay {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  /* Above the glass dock, which is also portalled to the body and would
+     otherwise paint over the panel. */
+  z-index: 60;
   display: flex;
   align-items: center;
   justify-content: center;

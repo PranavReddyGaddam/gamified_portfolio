@@ -344,6 +344,17 @@ function App() {
             Pranav Reddy Gaddam
           </a>
           <span className="hero-meta-loc">San Jose, California</span>
+
+          {/* Resume opens a file rather than moving to a section, so it sits
+              in the hero bar and scrolls away with it — unlike the dock. */}
+          <a
+            href={RESUME_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hero-resume"
+          >
+            Resume <span aria-hidden="true">↗</span>
+          </a>
         </div>
 
         {/* Only the section links stay on screen. Portalled to the body:
@@ -369,19 +380,6 @@ function App() {
           document.body
         )}
 
-        {/* Resume is a file rather than a section, so it sits apart from the
-            dock — fixed top right, and portalled for the same reason. */}
-        {createPortal(
-          <a
-            href={RESUME_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hero-resume"
-          >
-            Resume <span aria-hidden="true">↗</span>
-          </a>,
-          document.body
-        )}
 
         {/* Centered hero content */}
         <div className="relative z-10 w-full flex flex-col items-center text-center">
