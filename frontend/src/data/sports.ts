@@ -12,6 +12,12 @@ export type Sport = {
    * figures carry the pictures.
    */
   image?: string;
+  /**
+   * Vertical focal point for the thumbnail crop, as a CSS object-position
+   * value. Defaults to centre; a tall photograph with its subject high in
+   * the frame needs something nearer the top or it crops to empty space.
+   */
+  imageFocus?: string;
   /** Free-form rows shown in the modal: team, competition, ground, whatever. */
   facts?: { label: string; value: string }[];
   /**
@@ -58,12 +64,36 @@ export const sports: Sport[] = [
     id: "nba",
     label: "NBA",
     favourite: "LeBron James",
-    blurb: "[Add a line about how you got into basketball]",
+    image: "/fun/basketball/lebron-curry.jpg",
+    // A tall frame with LeBron at the rim near the top: a centred crop keeps
+    // only the crowd behind him.
+    imageFocus: "center 26%",
+    blurb: "A sport I did not like, right up until I did.",
     facts: [
       { label: "Player", value: "LeBron James" },
-      { label: "Team", value: "[Add team]" },
+      { label: "Team", value: "Los Angeles Lakers" },
+      { label: "Since", value: "2015" },
     ],
-    body: [t("[Write about what you like watching: a season, a run, a game.]")],
+    body: [
+      t(
+        "I did not like basketball for the longest time. What changed it was the guys at school picking it up as a weekend hobby. They kept turning up for it, week after week, and eventually I wanted to know what was so cool about this sport that I was clearly missing."
+      ),
+      t(
+        "So I started watching in 2015, and it has been my go-to sport ever since. LeBron's playstyle got me the second I watched him play."
+      ),
+      t(
+        "The timing could not have been better. The Cavs and the Warriors were in the middle of their rivalry, which is about the best starting point a new fan could ask for. Cleveland had lost to Golden State in the finals the season before, and in 2016 they went down 3-1 again. What followed was one hell of a finals. A great moment to be a new fan, and an even better first anniversary of becoming one."
+      ),
+      t(
+        "When LeBron moved to the Lakers, I moved with him, and 2020 gave us the bubble championship. An entire season sealed off from the world, and a title at the end of it."
+      ),
+      t(
+        "I have watched him for eleven years now. What still gets me is that eleven years is not even half his career, and he is still going."
+      ),
+      t(
+        "This summer I will be taking my fan talents to Philly."
+      ),
+    ],
   },
   {
     id: "cricket",

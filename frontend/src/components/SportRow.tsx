@@ -49,7 +49,12 @@ const SportRow = () => {
           >
             <span className="sport-card-art">
               {s.image ? (
-                <img src={s.image} alt="" loading="lazy" />
+                <img
+                  src={s.image}
+                  alt=""
+                  loading="lazy"
+                  style={s.imageFocus ? { objectPosition: s.imageFocus } : undefined}
+                />
               ) : (
                 <span className="sport-card-mark" aria-hidden="true">
                   {s.label.charAt(0)}
