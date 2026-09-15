@@ -95,6 +95,22 @@ const SportRow = () => {
               {p}
             </p>
           ))}
+
+          {open.photos?.length ? (
+            <div className="sp-photos">
+              {open.photos.map((ph) => (
+                <figure key={ph.src} className="sp-photo">
+                  <img src={ph.src} alt={ph.caption} loading="lazy" />
+                  <figcaption>
+                    {ph.caption}{" "}
+                    <a href={ph.href} target="_blank" rel="noopener noreferrer">
+                      {ph.credit}, {ph.licence}
+                    </a>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          ) : null}
         </DetailModal>
       ) : null}
     </div>
