@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { gsap } from "gsap";
+import { scrollLock } from "../lib/scrollLock";
 import {
   LuHouse,
   LuUser,
@@ -47,17 +48,16 @@ const HeroNav = ({ items, onNavigate, extraItems = [] }: Props) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const dockRef = useRef<HTMLElement | null>(null);
 
-  // Lock the page behind the menu, and let Escape close it.
+  // Freeze the page behind the menu, and let Escape close it.
   useEffect(() => {
     if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    scrollLock.acquire();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = previous;
+      scrollLock.release();
       window.removeEventListener("keydown", onKey);
     };
   }, [open]);

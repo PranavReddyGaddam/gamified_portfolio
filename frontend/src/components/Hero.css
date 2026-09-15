@@ -2,13 +2,20 @@
 
 .hero-section {
   min-height: 100vh;
+  /* dvh tracks the browser chrome as it shows and hides; without it the
+     section runs past the viewport on a phone. */
+  min-height: 100dvh;
   background: #f0efe9;
 }
 
 /* Pull the headline above the optical centre: dead centre reads low once
-   the fixed nav occupies the top of the viewport. */
+   the fixed nav occupies the top of the viewport.
+   The matching negative bottom padding keeps the section exactly one
+   viewport tall — otherwise the offset leaves a band of empty cream below
+   the headline before the next section starts. */
 .hero-section > div:last-child {
   margin-top: -6vh;
+  margin-bottom: -6vh;
 }
 
 /* --- vertical column rules ------------------------------------------- */
@@ -40,43 +47,37 @@
   z-index: 0;
 }
 
-.hero-blob {
+/* The three large circles. Each sits mostly outside the frame, so what
+   reads is a soft wash of colour at the edges rather than three discs. */
+.hero-orb {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.42;
+  width: 46vw;
+  max-width: 640px;
+  height: auto;
+  opacity: 0.85;
+  will-change: transform;
 }
 
-.hero-blob--orange {
-  width: 46vw;
-  height: 46vw;
-  max-width: 620px;
-  max-height: 620px;
-  top: -12%;
-  left: -14%;
-  background: conic-gradient(#93dd89 0deg, #fc6a00 360deg);
+.hero-orb--warm {
+  top: -18%;
+  left: -12%;
   animation: hero-drift 26s ease-in-out infinite alternate;
 }
 
-.hero-blob--violet {
+.hero-orb--cool {
+  top: 28%;
+  right: -16%;
   width: 42vw;
-  height: 42vw;
-  max-width: 560px;
-  max-height: 560px;
-  top: 34%;
-  left: 46%;
-  background: conic-gradient(from 90deg, #c1e4f7 0deg, #dac6eb 360deg);
+  max-width: 580px;
   animation: hero-drift 32s ease-in-out infinite alternate-reverse;
 }
 
-.hero-blob--green {
+.hero-orb--green {
+  bottom: -24%;
+  left: 18%;
   width: 38vw;
-  height: 38vw;
   max-width: 520px;
-  max-height: 520px;
-  bottom: -18%;
-  right: -8%;
-  background: conic-gradient(from 180deg, #dac6eb 0deg, #93dd89 360deg);
+  opacity: 0.7;
   animation: hero-drift 29s ease-in-out infinite alternate;
 }
 
@@ -85,50 +86,43 @@
     transform: translate3d(0, 0, 0) scale(1);
   }
   to {
-    transform: translate3d(3%, -4%, 0) scale(1.08);
+    transform: translate3d(3%, -4%, 0) scale(1.07);
   }
 }
 
-/* Eight-point starburst, upper left. */
-.hero-star {
+/* The small ornaments sit above the circles, nearer the type, and turn
+   slowly rather than drifting. */
+.hero-mark {
   position: absolute;
-  top: 20%;
-  left: 3%;
-  width: 250px;
-  height: 250px;
-  background: conic-gradient(from 90deg, #f46732 0deg, #dac6eb 360deg);
-  clip-path: polygon(
-    50% 0%, 58% 35%, 79% 21%, 68% 44%, 100% 50%, 68% 56%,
-    79% 79%, 58% 65%, 50% 100%, 42% 65%, 21% 79%, 32% 56%,
-    0% 50%, 32% 44%, 21% 21%, 42% 35%
-  );
-  opacity: 0.55;
-  filter: blur(3px);
-  animation: hero-spin 48s linear infinite;
+  height: auto;
+  z-index: 2;
+  will-change: transform;
 }
 
-/* Green asterisk. */
-.hero-astrix {
-  position: absolute;
-  top: 18%;
-  left: 22%;
-  font-size: 92px;
-  line-height: 1;
-  color: #93dd89;
-  animation: hero-spin 34s linear infinite;
+.hero-mark--star {
+  top: 17%;
+  left: 7%;
+  width: 116px;
+  opacity: 0.8;
+  animation: hero-spin 42s linear infinite;
 }
 
-/* Leaf, right edge. */
-.hero-leaf {
-  position: absolute;
-  top: 42%;
-  right: -10%;
-  width: 300px;
-  height: 380px;
-  background: conic-gradient(from 200deg, #93dd89 0deg, #c1e4f7 360deg);
-  border-radius: 0 100% 0 100%;
-  opacity: 0.32;
-  filter: blur(26px);
+.hero-mark--box {
+  top: 62%;
+  left: 13%;
+  width: 74px;
+  opacity: 0.75;
+  animation: hero-spin 54s linear infinite reverse;
+}
+
+/* Tucked into the opposite corner from the star, to balance it. */
+.hero-mark--leaf {
+  top: 24%;
+  right: 9%;
+  width: 104px;
+  opacity: 0.6;
+  transform: rotate(-18deg);
+  animation: hero-sway 18s ease-in-out infinite alternate;
 }
 
 @keyframes hero-spin {
@@ -137,6 +131,34 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes hero-sway {
+  from {
+    transform: rotate(-18deg) translateY(0);
+  }
+  to {
+    transform: rotate(-10deg) translateY(-14px);
+  }
+}
+
+/* The ornaments crowd the headline on a phone, so only the wash remains. */
+@media (max-width: 760px) {
+  .hero-mark {
+    display: none;
+  }
+
+  .hero-orb {
+    width: 70vw;
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb,
+  .hero-mark {
+    animation: none;
   }
 }
 
@@ -540,46 +562,12 @@
     max-height: none;
   }
 
-  /* The shapes are sized for a wide viewport; at phone widths they swamp
-     the headline, so they shrink and pull back to the edges. */
-  .hero-star {
-    width: 190px;
-    height: 190px;
-    top: 16%;
-    left: -18%;
-    opacity: 0.4;
-  }
-
-  .hero-astrix {
-    font-size: 56px;
-    top: 13%;
-    left: 58%;
-  }
-
-  .hero-leaf {
-    width: 200px;
-    height: 250px;
-    top: 58%;
-    right: -22%;
-  }
-
-  .hero-blob {
-    filter: blur(52px);
-    opacity: 0.34;
-  }
-
   .hero-columns {
     display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-blob,
-  .hero-star,
-  .hero-astrix {
-    animation: none;
-  }
-
   .hero-title-img {
     animation: none;
     width: 6.5vw;
@@ -1564,6 +1552,23 @@ a.fun-cover {
 
 /* --- Project modal ---------------------------------------------------- */
 
+/* Freezes the page behind an open modal.
+   A paused ScrollSmoother stops wheel and programmatic scrolling, but iOS
+   still drags the page under the panel, so the wrapper is pinned to the
+   viewport as well: with nothing left to scroll, the gesture has to land on
+   the panel's own scroller. */
+html.is-scroll-locked,
+html.is-scroll-locked body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+html.is-scroll-locked #smooth-wrapper {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
 .pm-overlay {
   position: fixed;
   inset: 0;
@@ -1636,12 +1641,19 @@ a.fun-cover {
      browser chrome retracted, so it runs the bar up under the address bar
      and the end of the list under the toolbar; dvh tracks the chrome as it
      shows and hides. The vh line is the fallback for browsers without it. */
+  /* Fill the overlay rather than measuring the viewport again. The overlay is
+     already fixed to it, so stretching to it is exact at every moment;
+     sizing in vh/dvh here let the panel latch onto a stale height mid-gesture
+     and open at half the screen. */
+  .pm-overlay {
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
   .pm-panel {
     width: 100%;
-    max-height: 100vh;
-    min-height: 100vh;
-    max-height: 100dvh;
-    min-height: 100dvh;
+    max-height: none;
+    min-height: 0;
     border-radius: 0;
   }
 
@@ -1792,8 +1804,16 @@ a.fun-cover {
 
 .pm-scroll {
   flex: 1;
+  /* min-height:0 lets a flex child shrink below its content and actually
+     scroll; without it the panel grows to fit and the scroll moves whatever
+     is behind it instead. */
+  min-height: 0;
   overflow-y: auto;
+  /* Claim vertical drags for this element, so the gesture cannot chain out
+     to the page, and stop the scroll at its own ends. */
+  touch-action: pan-y;
   overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .pm-content {

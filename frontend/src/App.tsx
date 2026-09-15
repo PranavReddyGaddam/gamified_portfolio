@@ -9,6 +9,7 @@ import emailjs from "@emailjs/browser";
 import GameInstructionsModal from "./components/GameInstructionsModal";
 import CodeRequestModal from "./components/CodeRequestModal";
 import "./components/Hero.css";
+import { scrollLock } from "./lib/scrollLock";
 import ContributionGraph from "./components/ContributionGraph";
 import ExperienceRows from "./components/ExperienceRows";
 import FunWall from "./components/FunWall";
@@ -123,7 +124,12 @@ function App() {
       effects: false,
     });
     smootherRef.current = smoother;
+    // Modals live in a portal outside this tree and need to freeze the page
+    // behind them. body{overflow:hidden} cannot do it: ScrollSmoother never
+    // scrolls the body, it transforms #smooth-content.
+    scrollLock.register(smoother);
     return () => {
+      scrollLock.register(null);
       smoother.kill();
       smootherRef.current = null;
     };
@@ -324,13 +330,15 @@ function App() {
         className="hero-section relative z-10 min-h-screen flex flex-col justify-center px-[50px] overflow-hidden"
       >
         {/* Decorative gradient shapes */}
+        {/* Three gradient circles drift behind the headline; the smaller
+            ornaments sit above them, closer to the type. */}
         <div className="hero-shapes" aria-hidden="true">
-          <div className="hero-blob hero-blob--orange" />
-          <div className="hero-blob hero-blob--violet" />
-          <div className="hero-blob hero-blob--green" />
-          <div className="hero-star" />
-          <div className="hero-astrix">✳</div>
-          <div className="hero-leaf" />
+          <img className="hero-orb hero-orb--warm" src="/shape-circle1.webp" alt="" />
+          <img className="hero-orb hero-orb--cool" src="/shape-circle2.webp" alt="" />
+          <img className="hero-orb hero-orb--green" src="/shape-circle3.webp" alt="" />
+          <img className="hero-mark hero-mark--star" src="/shape-star1.webp" alt="" />
+          <img className="hero-mark hero-mark--box" src="/shape-star-box1.webp" alt="" />
+          <img className="hero-mark hero-mark--leaf" src="/shape-leaf1.webp" alt="" />
         </div>
 
         {/* Vertical column rules */}

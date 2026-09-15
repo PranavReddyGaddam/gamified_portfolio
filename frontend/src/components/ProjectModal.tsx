@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { scrollLock } from "../lib/scrollLock";
 import type { Project } from "../data/projects";
 
 type Props = {
@@ -23,13 +24,12 @@ const ProjectModal = ({ project, isFull, closing = false }: Props) => {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  // Lock the page behind the modal while it is open.
+  // Freeze the page behind the modal while it is open. body{overflow:hidden}
+  // cannot do this: ScrollSmoother never scrolls the body, it transforms
+  // #smooth-content, so the page kept scrolling under the panel.
   useEffect(() => {
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previous;
-    };
+    scrollLock.acquire();
+    return () => scrollLock.release();
   }, []);
 
   // Escape steps back out: full screen returns to the modal, the modal closes.

@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { scrollLock } from "../lib/scrollLock";
 
 type Props = {
   /** Breadcrumb root — "Sport", "Places". */
@@ -34,16 +35,15 @@ const DetailModal = ({
   contentClass = "",
   children,
 }: Props) => {
-  // Lock the page behind the modal, and let Escape close it.
+  // Freeze the page behind the modal, and let Escape close it.
   useEffect(() => {
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    scrollLock.acquire();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = previous;
+      scrollLock.release();
       window.removeEventListener("keydown", onKey);
     };
   }, [onClose]);
