@@ -378,8 +378,8 @@
    push the words apart — the pill appears to open out from inside the line. */
 .hero-title-img {
   display: inline-block;
-  height: 4.19vw;
-  max-height: 62px;
+  height: 5.05vw;
+  max-height: 75px;
   border-radius: 999px;
   /* Centred on the text's optical midline (~0.37em above the baseline for
      Instrument Serif) rather than hanging below it. */
@@ -418,7 +418,7 @@
     opacity: 1;
   }
   to {
-    width: 6.5vw;
+    width: 6.6vw;
     max-width: 96px;
     margin-right: 0.7vw;
     opacity: 1;
@@ -467,14 +467,14 @@
 
 .hero-title-img--me:hover {
   background-color: #c1e4f7;
-  width: 118px !important;
-  max-width: 118px !important;
+  width: 104px !important;
+  max-width: 104px !important;
 }
 
 .hero-title-img--work:hover {
   background-color: #dac6eb;
-  width: 78px !important;
-  max-width: 78px !important;
+  width: 72px !important;
+  max-width: 72px !important;
 }
 
 .hero-title-img--me {
@@ -540,13 +540,18 @@
 
   .hero-title {
     max-width: 100%;
-    font-size: clamp(2rem, 8.4vw, 2.75rem);
-    line-height: 1.06;
+    font-size: clamp(2.4rem, 10.4vw, 3.4rem);
+    line-height: 1.08;
+    /* Hold the wrap to four lines by capping the measure rather than
+       letting a larger face rewrap unpredictably. The headline is ~80
+       characters plus two pills, so the cap has to sit near a quarter of
+       that; 15ch pushed it to five lines. */
+    max-width: 22ch;
   }
 
-  /* Drop the desktop line breaks on a phone and let the headline wrap
-     naturally; the markup carries an explicit space either side, so the
-     words never run together. */
+  /* The desktop breaks would force three long lines at this size; let the
+     measure above do the wrapping instead. The markup carries an explicit
+     space either side of each, so words never run together. */
   .hero-br {
     display: none;
   }
@@ -567,7 +572,7 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-title-img {
     animation: none;
-    width: 6.5vw;
+    width: 6.6vw;
     max-width: 96px;
     margin-right: 0.7vw;
     opacity: 1;
