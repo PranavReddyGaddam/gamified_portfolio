@@ -9,13 +9,10 @@
 }
 
 /* Pull the headline above the optical centre: dead centre reads low once
-   the fixed nav occupies the top of the viewport.
-   The matching negative bottom padding keeps the section exactly one
-   viewport tall — otherwise the offset leaves a band of empty cream below
-   the headline before the next section starts. */
+   the name and location occupy the top of the hero. The section keeps its
+   full height, so this only moves the type within it. */
 .hero-section > div:last-child {
   margin-top: -6vh;
-  margin-bottom: -6vh;
 }
 
 /* --- vertical column rules ------------------------------------------- */

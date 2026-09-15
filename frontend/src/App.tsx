@@ -421,11 +421,6 @@ function App() {
         </div>
       </section>
 
-      {/* Transition Section - Smooth Blend */}
-      <section className="relative z-10 h-32 bg-cream">
-        <div className="absolute inset-0 "></div>
-      </section>
-
       {/* Section 2: About */}
       <section
         data-level={2}
