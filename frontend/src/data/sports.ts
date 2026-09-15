@@ -6,26 +6,45 @@ export type Sport = {
   favourite: string;
   /** One line under the sport name. */
   blurb?: string;
-  /** Cover image, from /public/fun/. Omit for the drawn crest. */
+  /**
+   * Thumbnail for the card, from /public/fun/. Omit to fall back to the
+   * drawn initial. Not repeated inside the modal, where the body's own
+   * figures carry the pictures.
+   */
   image?: string;
   /** Free-form rows shown in the modal: team, competition, ground, whatever. */
   facts?: { label: string; value: string }[];
-  /** Longer paragraphs for the modal body. */
-  body?: string[];
   /**
-   * Photos shown under the write-up. Everything here is Creative Commons
-   * from Wikimedia and stored locally, so `credit` and `licence` are
-   * required: both licences used oblige attribution.
+   * The write-up, as an ordered run of blocks so photographs can sit at the
+   * moment they belong to rather than collecting at the end.
    */
-  photos?: {
-    src: string;
-    caption: string;
-    credit: string;
-    licence: string;
-    /** Link to the file page, so the attribution can be checked. */
-    href: string;
-  }[];
+  body?: Block[];
 };
+
+/** A paragraph. */
+export type TextBlock = { kind: "text"; text: string };
+
+/**
+ * One or two photographs sharing a caption. A pair is laid out side by side,
+ * which suits two frames of the same passage of play.
+ */
+export type FigureBlock = {
+  kind: "figure";
+  images: { src: string; alt: string }[];
+  caption?: string;
+  /**
+   * Where the subject sits vertically, for the crop. Defaults to centre;
+   * "top" keeps heads in frame on a tall image.
+   */
+  focus?: "top" | "center";
+  /** Required only for material that is not ours, e.g. Creative Commons. */
+  credit?: { name: string; licence: string; href: string };
+};
+
+export type Block = TextBlock | FigureBlock;
+
+/** Shorthand so the story below reads as prose rather than object literals. */
+const t = (text: string): TextBlock => ({ kind: "text", text });
 
 /**
  * Sports followed, one card each.
@@ -44,12 +63,13 @@ export const sports: Sport[] = [
       { label: "Player", value: "LeBron James" },
       { label: "Team", value: "[Add team]" },
     ],
-    body: ["[Write about what you like watching: a season, a run, a game.]"],
+    body: [t("[Write about what you like watching: a season, a run, a game.]")],
   },
   {
     id: "cricket",
     label: "Cricket",
     favourite: "Virat Kohli",
+    image: "/fun/cricket/kohli-cover-drive.webp",
     blurb: "Eighteen years of it, and counting.",
     facts: [
       { label: "Player", value: "Virat Kohli" },
@@ -58,39 +78,124 @@ export const sports: Sport[] = [
       { label: "Since", value: "2007" },
     ],
     body: [
-      "It starts in 2007. My cousins came over, someone found a bat, and we played right there in the house. I was six years old, and that is the first memory I have of cricket. Then the T20 World Cup happened and India won the inaugural edition, and then the IPL arrived and had all of us glued to the television. I supported the Deccan Chargers back then, and we won the second edition. Virender Sehwag was my favourite player.",
-      "The 2011 World Cup was in India, and by then I was a hardcore fan with no stopping me. First match, first ball: Sehwag hits a four against Bangladesh in Dhaka and goes on to make a legendary 175. In the same match, a player in his first World Cup also scored a century and started his World Cup career with a bang. His name is Virat Kohli, and he has been my favourite ever since. Around then I started supporting RCB, because Gayle and Kohli were in the same side.",
-      "Then came the long wait. 2016 was Virat's record season, 973 runs in a single IPL, and we still could not lift the cup. I was heartbroken for days. India lost the T20 World Cup that year, the Champions Trophy the year after, and the 2019 World Cup went the same way. 2023 was the cruellest of them all: a record run to the final at home without losing a single match, Virat scoring 765 across the tournament, and then losing the final to Australia.",
-      "Through every one of those, my support for India, for RCB and for Virat never diminished. That is the part I think about most. Thirteen years of turning up for the same teams and the same player, knowing exactly how it tended to end, and turning up anyway.",
-      "The 2024 T20 World Cup finally broke it open. Success at an international trophy after thirteen years of waiting, and the Champions Trophy followed. Then RCB won two IPL titles back to back, and two more in the WPL. After all that time, everything arrived at once.",
-      "I also played properly for a while. I went to cricket coaching in grade 8 and left after a year, but I will happily admit it was the best year of my life. I had so much fun going to those sessions, and I still think about them.",
-      "This is the very short version. There is a lot more to it.",
-    ],
-    photos: [
+      t(
+        "It starts in 2007. My cousins came over, someone found a bat, and we played right there in the house. I was six years old, and that is the first memory I have of cricket. Then the T20 World Cup happened and India won the inaugural edition, and the whole country came out for it."
+      ),
       {
-        src: "/fun/cricket/sehwag.jpg",
+        kind: "figure",
+        images: [
+          {
+            src: "/fun/cricket/2007-t20-parade.webp",
+            alt: "Crowds filling the street around an open-top bus during India's 2007 T20 World Cup victory parade",
+          },
+        ],
         caption:
-          "Virender Sehwag, my first favourite. He opened the 2011 World Cup with a four off the very first ball and made 175.",
-        credit: "Flying Cloud",
-        licence: "CC BY 2.0",
-        href: "https://commons.wikimedia.org/wiki/File:Virender_Sehwag_in_2008.jpg",
+          "The 2007 victory parade. India won the first T20 World Cup there was, and this is roughly the moment cricket stopped being something I watched and became something I followed.",
+      },
+      t(
+        "Then the IPL arrived and had all of us glued to the television. I supported the Deccan Chargers back then, and we won the second edition. Virender Sehwag was my favourite player."
+      ),
+      {
+        kind: "figure",
+        images: [
+          {
+            src: "/fun/cricket/2009-deccan-chargers-title.webp",
+            alt: "Deccan Chargers players lifting the 2009 IPL trophy under confetti",
+          },
+        ],
+        caption: "Deccan Chargers, 2009. My first team, and my first trophy.",
+      },
+      t(
+        "The 2011 World Cup was in India, and by then I was a hardcore fan with no stopping me. First match, first ball: Sehwag hits a four against Bangladesh in Dhaka and goes on to make a legendary 175. In the same match, a player in his first World Cup also scored a century and started his World Cup career with a bang. His name is Virat Kohli, and he has been my favourite ever since."
+      ),
+      {
+        kind: "figure",
+        focus: "top",
+        images: [
+          {
+            src: "/fun/cricket/2011-dhaka-partnership.webp",
+            alt: "Virat Kohli and Virender Sehwag meeting mid-pitch during their partnership in Dhaka",
+          },
+          {
+            src: "/fun/cricket/2011-dhaka-kohli-century.webp",
+            alt: "Virat Kohli raising his bat after reaching his century on World Cup debut",
+          },
+        ],
+        caption:
+          "Dhaka, 19 February 2011. The two of them mid-partnership, and Kohli raising his bat for a hundred on his World Cup debut.",
+      },
+      t(
+        "Around then I started supporting RCB, because Gayle and Kohli were in the same side."
+      ),
+      t(
+        "Then came the long wait. 2016 was Virat's record season, 973 runs in a single IPL, and we still could not lift the cup. I was heartbroken for days."
+      ),
+      {
+        kind: "figure",
+        images: [
+          {
+            src: "/fun/cricket/2016-kohli-rcb-season.webp",
+            alt: "Virat Kohli in the 2016 RCB shirt raising his bat to the crowd",
+          },
+        ],
+        caption:
+          "973 runs in one season, a record that still stands, and no trophy at the end of it.",
+      },
+      t(
+        "India lost the T20 World Cup that year, the Champions Trophy the year after, and the 2019 World Cup went the same way. 2023 was the cruellest of them all: a record run to the final at home without losing a single match, Virat scoring 765 across the tournament, and then losing the final to Australia."
+      ),
+      t(
+        "Through every one of those, my support for India, for RCB and for Virat never diminished. That is the part I think about most. Thirteen years of turning up for the same teams and the same player, knowing exactly how it tended to end, and turning up anyway."
+      ),
+      t(
+        "The 2024 T20 World Cup finally broke it open. Success at an international trophy after thirteen years of waiting."
+      ),
+      {
+        kind: "figure",
+        images: [
+          {
+            src: "/fun/cricket/2024-t20-world-cup.webp",
+            alt: "India celebrating with the 2024 T20 World Cup trophy",
+          },
+        ],
+        caption: "Barbados, 2024. Thirteen years of waiting, finally over.",
+      },
+      t(
+        "Then the Champions Trophy followed, RCB won two IPL titles back to back, and there were two more in the WPL. After all that time, everything arrived at once."
+      ),
+      {
+        kind: "figure",
+        images: [
+          {
+            src: "/fun/cricket/2025-champions-trophy.webp",
+            alt: "Virat Kohli lifting the 2025 Champions Trophy surrounded by teammates",
+          },
+          {
+            src: "/fun/cricket/2025-rcb-ipl-title.webp",
+            alt: "Virat Kohli kissing the IPL trophy in the RCB shirt",
+          },
+        ],
+        caption:
+          "The Champions Trophy, and then RCB finally getting there. I had waited most of my life for the second one.",
       },
       {
-        src: "/fun/cricket/kohli.jpg",
-        caption:
-          "Virat Kohli, who scored a century in that same match on his World Cup debut and has been my favourite ever since.",
-        credit: "Anand Anil",
-        licence: "CC BY-SA 4.0",
-        href: "https://commons.wikimedia.org/wiki/File:Virat_Kohli_portrait.jpg",
+        kind: "figure",
+        images: [
+          {
+            src: "/fun/cricket/2026-rcb-ipl-title.webp",
+            alt: "Virat Kohli and RCB teammates celebrating on the field after winning",
+          },
+          {
+            src: "/fun/cricket/2026-t20-world-cup.webp",
+            alt: "India lifting the T20 World Cup trophy amid gold confetti",
+          },
+        ],
+        caption: "And then it kept happening.",
       },
-      {
-        src: "/fun/cricket/wankhede.jpg",
-        caption:
-          "The Wankhede in Mumbai, where the 2011 final was won.",
-        credit: "G patkar",
-        licence: "CC BY-SA 3.0",
-        href: "https://commons.wikimedia.org/wiki/File:Wankhede_ICC_WCF.jpg",
-      },
+      t(
+        "I also played properly for a while. I went to cricket coaching in grade 8 and left after a year, but I will happily admit it was the best year of my life. I had so much fun going to those sessions, and I still think about them."
+      ),
+      t("This is the very short version. There is a lot more to it."),
     ],
   },
   {
@@ -102,7 +207,7 @@ export const sports: Sport[] = [
       { label: "Player", value: "Roger Federer" },
       { label: "Tournament", value: "[Add a favourite slam]" },
     ],
-    body: ["[Write about a match or rivalry you keep going back to.]"],
+    body: [t("[Write about a match or rivalry you keep going back to.]")],
   },
   {
     id: "football",
@@ -113,6 +218,6 @@ export const sports: Sport[] = [
       { label: "Player", value: "Lionel Messi" },
       { label: "Club", value: "[Add club]" },
     ],
-    body: ["[Write about a season, a final, or how you started watching.]"],
+    body: [t("[Write about a season, a final, or how you started watching.]")],
   },
 ];

@@ -82,35 +82,56 @@ const SportRow = () => {
             </dl>
           ) : null}
 
-          {open.image ? (
-            <div className="pm-hero">
-              <img src={open.image} alt={open.label} />
-            </div>
-          ) : null}
-
+          {/* The card image is a thumbnail, not a lead: repeating it here
+              would only push the writing down the panel. Photographs inside
+              the piece come from the body blocks instead. */}
           {open.blurb ? <p className="pm-lede">{open.blurb}</p> : null}
 
-          {open.body?.map((p, i) => (
-            <p key={i} className="pm-para">
-              {p}
-            </p>
-          ))}
+          {open.body?.map((block, i) =>
+            block.kind === "text" ? (
+              <p key={i} className="pm-para">
+                {block.text}
+              </p>
+            ) : (
+              <figure
+                key={i}
+                className={`sp-figure${
+                  block.images.length > 1 ? " sp-figure--pair" : ""
+                }`}
+              >
+                <span className="sp-figure-frames">
+                  {block.images.map((img) => (
+                    <span
+                      key={img.src}
+                      className={`sp-frame${
+                        block.focus === "top" ? " sp-frame--top" : ""
+                      }`}
+                    >
+                      <img src={img.src} alt={img.alt} loading="lazy" />
+                    </span>
+                  ))}
+                </span>
 
-          {open.photos?.length ? (
-            <div className="sp-photos">
-              {open.photos.map((ph) => (
-                <figure key={ph.src} className="sp-photo">
-                  <img src={ph.src} alt={ph.caption} loading="lazy" />
+                {block.caption || block.credit ? (
                   <figcaption>
-                    {ph.caption}{" "}
-                    <a href={ph.href} target="_blank" rel="noopener noreferrer">
-                      {ph.credit}, {ph.licence}
-                    </a>
+                    {block.caption}
+                    {block.credit ? (
+                      <>
+                        {" "}
+                        <a
+                          href={block.credit.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {block.credit.name}, {block.credit.licence}
+                        </a>
+                      </>
+                    ) : null}
                   </figcaption>
-                </figure>
-              ))}
-            </div>
-          ) : null}
+                ) : null}
+              </figure>
+            )
+          )}
         </DetailModal>
       ) : null}
     </div>
