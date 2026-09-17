@@ -340,15 +340,42 @@ export const funRows: FunRow[] = [
   {
     id: "screen",
     label: "Screen",
+    // TMDB's terms require attribution wherever their artwork is shown.
+    source: {
+      label: "TMDB",
+      href: "https://www.themoviedb.org/",
+    },
     favourites: [
-      ...ph("sf-a", 3, "FAVOURITE FILM", "Director").map((i) => ({
-        ...i,
-        tag: "Movie",
-      })),
-      ...ph("sf-b", 2, "FAVOURITE SERIES", "Creator").map((i) => ({
-        ...i,
-        tag: "TV",
-      })),
+      {
+        id: "sf-1",
+        image: "/fun/screen/interstellar.jpg",
+        title: "Interstellar",
+        by: "Christopher Nolan",
+      },
+      {
+        id: "sf-2",
+        image: "/fun/screen/oopiri.jpg",
+        title: "Oopiri",
+        by: "Vamsi Paidipally",
+      },
+      {
+        id: "sf-3",
+        image: "/fun/screen/zindagi-na-milegi-dobara.jpg",
+        title: "Zindagi Na Milegi Dobara",
+        by: "Zoya Akhtar",
+      },
+      {
+        id: "sf-4",
+        image: "/fun/screen/dragon-ball-z.jpg",
+        title: "Dragon Ball Z",
+        by: "Akira Toriyama",
+      },
+      {
+        id: "sf-5",
+        image: "/fun/screen/the-mentalist.jpg",
+        title: "The Mentalist",
+        by: "Bruno Heller",
+      },
     ],
     years: [
       {
