@@ -232,6 +232,10 @@ export const sports: Sport[] = [
     id: "tennis",
     label: "Tennis",
     favourite: "Roger Federer",
+    image: "/fun/tennis/federer-wimbledon-smash.jpg",
+    // Mid-leap, racquet overhead: the action is in the upper third and a
+    // centred crop lands on his legs.
+    imageFocus: "center 30%",
     blurb: "The sport that taught me losing.",
     facts: [
       { label: "Player", value: "Roger Federer" },
@@ -263,11 +267,39 @@ export const sports: Sport[] = [
     id: "football",
     label: "Football",
     favourite: "Lionel Messi",
-    blurb: "[Add a line about following football]",
+    image: "/fun/football/messi-argentina-knees.jpg",
+    // Shot from directly above, with him low and slightly left of centre in
+    // an otherwise empty field of grass.
+    imageFocus: "center 45%",
+    blurb: "The one where supporting them actually worked out.",
     facts: [
       { label: "Player", value: "Lionel Messi" },
-      { label: "Club", value: "[Add club]" },
+      { label: "Club", value: "Barcelona" },
+      { label: "Country", value: "Argentina" },
+      { label: "Since", value: "2010" },
     ],
-    body: [t("[Write about a season, a final, or how you started watching.]")],
+    body: [
+      t(
+        "The 2010 World Cup is where I first paid attention, but only in the way you pay attention to a World Cup. It was on, everyone was watching, so I watched. It did not stick as a habit."
+      ),
+      t(
+        "What made it stick was FIFA 14. I played enough of it to learn the teams, the players, the leagues, the way a side is actually put together, and somewhere in there the game turned into the sport. Barcelona was who I picked, and Messi was the reason."
+      ),
+      t(
+        "Then Suarez signed the next summer and the front three came together. Messi, Neymar and Suarez, all at once. In their first season they scored 122 goals between them and won the treble, and that is still the most an attacking trio has managed in a single year. I had picked the team just before it became the best version of itself, which was pure luck and I will take it."
+      ),
+      t(
+        "The Clasicos were the fixtures I would rearrange a day around. Barcelona and Real Madrid twice a season, sometimes more, and never once a dead rubber."
+      ),
+      t(
+        "Argentina was the other side of it, and for years it was nothing but heartbreak. The 2014 World Cup final, lost. The Copa America final in 2015, lost. The Copa America final in 2016, lost again, and Messi missed his penalty in the shootout and announced that night that he was done with the national team. Four finals, four defeats, and Argentina had not scored in a single one of them. He came back, but the fact that he had reached the point of quitting told you everything about how heavy it had got."
+      ),
+      t(
+        "And then it broke, all of it. The Copa America in 2021, Argentina's first trophy in 28 years. The Finalissima. The World Cup in 2022, which is the one I had stopped expecting. Another Copa America in 2024."
+      ),
+      t(
+        "That is the part that makes football different for me. With cricket I waited thirteen years. With tennis I mostly watched someone I loved lose the biggest matches. Football is the one where the teams I picked went and won more than anyone during the exact years I was watching them. I did nothing to earn that. I just happened to choose right, as a kid, off the back of a video game."
+      ),
+    ],
   },
 ];
