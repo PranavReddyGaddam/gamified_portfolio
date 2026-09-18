@@ -232,12 +232,32 @@ export const sports: Sport[] = [
     id: "tennis",
     label: "Tennis",
     favourite: "Roger Federer",
-    blurb: "[Add a line about following tennis]",
+    blurb: "The sport that taught me losing.",
     facts: [
       { label: "Player", value: "Roger Federer" },
-      { label: "Tournament", value: "[Add a favourite slam]" },
+      { label: "Tournament", value: "Wimbledon" },
+      { label: "Since", value: "2007" },
     ],
-    body: [t("[Write about a match or rivalry you keep going back to.]")],
+    body: [
+      t(
+        "2007, the Wimbledon final. Federer against Nadal, the rivalry still early enough that nobody knew yet how long it would run. Five sets, and Federer came through for his fifth Wimbledon in a row. That was the match that got me, and from then on I watched every grand slam there was, then the Masters events on top of them."
+      ),
+      t(
+        "2009 was the year that had everything in it. Roland Garros first, the tournament that had always belonged to Nadal, and Federer finally won it. The career slam, complete. Watching someone get the one thing that had kept being taken from them does something to you as a kid."
+      ),
+      t(
+        "Then five weeks later, Wimbledon, and the sixth title. Roddick took him to 16-14 in the fifth, the longest final set a slam final has ever had, and Federer did not break him once until the very last game of it. Two trophies inside a summer, and the record for most majors won along with them."
+      ),
+      t(
+        "Then Wimbledon again in 2012 and once more in 2017, both of them after long enough without a title that people had started writing him off. Coming back is its own kind of thing to watch. It is easy to follow someone while they are winning; the better test is what they look like on the way back up."
+      ),
+      t(
+        "But I watched him lose a lot too. Finals to Djokovic, finals to Nadal, on the courts that were supposed to be his. As a kid that was genuinely heartbreaking, and I do not think I had a way to process it at the time beyond just feeling bad for days."
+      ),
+      t(
+        "What I took from it eventually is the thing I still carry. Sometimes you have the upper hand and it goes wrong anyway. Sometimes you have no business winning and it comes to you regardless. Having the advantage is not the same as having the outcome, and the sooner you make peace with that the less each individual result can knock you over. Eighteen years of watching one man win and lose taught me that better than anything else has."
+      ),
+    ],
   },
   {
     id: "football",
