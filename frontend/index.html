@@ -5,8 +5,14 @@
     <!-- viewport-fit=cover is what makes env(safe-area-inset-*) report real
          values; without it the notch and home-indicator insets are all 0. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <link rel="icon" href="/Pranav.png" />
-    <link rel="apple-touch-icon" href="/Pranav.png" />
+    <!-- SVG first for browsers that take it; favicon.ico stays as the
+         fallback for those that do not. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" sizes="any" href="/favicon.ico" />
+    <!-- iOS ignores SVG touch icons and never rounds a square itself, so the
+         home-screen icon is the unrounded, inset variant. -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#efe3cf" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

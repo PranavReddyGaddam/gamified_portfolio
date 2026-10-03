@@ -19,6 +19,7 @@ import Reveal from "./components/Reveal";
 import HeroNav from "./components/HeroNav";
 import LocalClock from "./components/LocalClock";
 import HireMeStats from "./components/HireMeStats";
+import NameModal from "./components/NameModal";
 import { RiTwitterXFill } from "react-icons/ri";
 import { FaLock, FaUnlock, FaLinkedin, FaGithub, FaInstagram } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -73,6 +74,18 @@ function App() {
 
   // Code Request Modal
   const [showCodeRequestModal, setShowCodeRequestModal] = useState(false);
+
+  // The hero mark opens an explanation of the name. `closing` keeps the panel
+  // mounted through the 320ms exit, as the other modals do.
+  const [nameOpen, setNameOpen] = useState(false);
+  const [nameClosing, setNameClosing] = useState(false);
+  const closeName = () => {
+    setNameClosing(true);
+    window.setTimeout(() => {
+      setNameOpen(false);
+      setNameClosing(false);
+    }, 320);
+  };
   const [isSubmittingCodeRequest, setIsSubmittingCodeRequest] = useState(false);
 
   // Section visibility to control heavy backgrounds
@@ -348,10 +361,17 @@ function App() {
 
         {/* Name and location belong to the hero and scroll away with it. */}
         <div className="hero-meta">
-          <a href="/" className="hero-logo">
-            Pranav Reddy Gaddam
-          </a>
-          <span className="hero-meta-loc">San Jose, California</span>
+          {/* The mark is ॐ because the name means it. Clicking opens the
+              explanation rather than navigating, so this is a button. */}
+          <button
+            type="button"
+            className="hero-logo"
+            aria-label="Pranav Reddy Gaddam — what the name means"
+            onClick={() => setNameOpen(true)}
+          >
+            <img src="/om-mark.svg" alt="" width="33" height="34" />
+          </button>
+          <span className="hero-meta-loc">San Francisco, California</span>
 
           {/* Resume opens a file rather than moving to a section, so it sits
               in the hero bar and scrolls away with it — unlike the dock. */}
@@ -378,6 +398,7 @@ function App() {
                 { label: "Fun", target: "#fun" },
               ]}
               onNavigate={scrollToSection}
+              onNameClick={() => setNameOpen(true)}
               // Desktop shows Resume in its own corner; the burger is the only
               // nav on phones, so it has to appear there too.
               extraItems={[
@@ -491,7 +512,7 @@ function App() {
                   team: "Platform Radio",
                   role: "Software Engineer",
                   year: "26–",
-                  period: "Sep 2026 – Present",
+                  period: "Oct 2026 – Present",
                   detail:
                     "Building on the Platform Radio team, working on the infrastructure that Salesforce products are built on.",
                   points: ["Distributed systems and platform services"],
@@ -812,6 +833,10 @@ function App() {
         onSubmit={handleCodeRequestSubmit}
         isSubmitting={isSubmittingCodeRequest}
       />
+
+      {nameOpen ? (
+        <NameModal closing={nameClosing} onClose={closeName} />
+      ) : null}
 
           </div>
   );

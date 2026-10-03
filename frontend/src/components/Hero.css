@@ -189,15 +189,35 @@
   color: #3a4a16;
 }
 
+/* The mark is ॐ — praṇava, which is what the name means. It opens an
+   explanation, so it is a button rather than a link. */
 .hero-logo {
-  font-family: "Instrument Serif", Georgia, serif;
-  font-size: 26px;
-  line-height: 1.05;
-  font-style: italic;
-  color: #3a4a16;
-  text-decoration: none;
+  display: flex;
+  align-items: center;
   flex: 0 0 auto;
   width: 22%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #3a4a16;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.hero-logo img {
+  display: block;
+  height: 34px;
+  width: auto;
+}
+
+.hero-logo:hover {
+  opacity: 0.62;
+}
+
+.hero-logo:focus-visible {
+  outline: 2px solid #3a4a16;
+  outline-offset: 6px;
+  border-radius: 4px;
 }
 
 .hero-meta-tag,
@@ -527,8 +547,10 @@
 
   .hero-logo {
     width: auto;
-    font-size: 20px;
-    white-space: nowrap;
+  }
+
+  .hero-logo img {
+    height: 29px;
   }
 
   /* The dock gives way to the hamburger on phones. */
@@ -2005,10 +2027,19 @@ html.is-scroll-locked #smooth-wrapper {
 }
 
 .hero-menu-logo {
-  font-family: "Instrument Serif", Georgia, serif;
-  font-style: italic;
-  font-size: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
   color: #3a4a16;
+  cursor: pointer;
+}
+
+.hero-menu-logo img {
+  display: block;
+  height: 29px;
+  width: auto;
 }
 
 .hero-menu .hero-burger--close {
@@ -2068,4 +2099,105 @@ html.is-scroll-locked #smooth-wrapper {
     opacity: 1;
     transform: none;
   }
+}
+
+/* ---- Uses -------------------------------------------------------------- */
+
+/* Two groups side by side, each an icon list. Wider gap than the cover rows
+   because there are no tiles to carry the separation. */
+.uses-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 64px;
+  margin-top: 1.6rem;
+}
+
+.uses-group-label {
+  margin: 0 0 1rem;
+  font-size: 15px;
+  font-weight: 500;
+  color: #262626;
+}
+
+.uses-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.uses-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-size: 14px;
+  color: #525252;
+}
+
+.uses-item-icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: #a3a3a3;
+}
+
+/* One group above the other once the pair no longer fits. */
+@media (max-width: 900px) {
+  .uses-groups {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* A single column of items — two columns of names get too narrow to read. */
+@media (max-width: 640px) {
+  .uses-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Experience rows --------------------------------------------------- */
+
+/* Year and chevron ride the right edge together. */
+.exp-year {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Small enough to read as an affordance rather than a control. */
+.exp-chevron {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  color: #c4c2bb;
+  transition:
+    transform 0.4s cubic-bezier(0.33, 0, 0.15, 1),
+    color 0.25s ease;
+}
+
+.exp-chevron.is-open {
+  transform: rotate(180deg);
+  color: #8a8880;
+}
+
+/* Darken on hover with the row, which already fades to 60% opacity. */
+.exp-table button:hover .exp-chevron {
+  color: #8a8880;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exp-chevron {
+    transition: none;
+  }
+}
+
+/* Devanagari ॐ inside prose: the body stack reaches Noto Serif Telugu first,
+   which has its own Om, so the Sanskrit glyph needs its face named. */
+.om-glyph {
+  font-family: "Noto Serif Devanagari", serif;
 }

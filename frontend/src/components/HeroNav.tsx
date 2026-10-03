@@ -27,6 +27,11 @@ type Props = {
    * so they have to appear there or become unreachable.
    */
   extraItems?: NavItem[];
+  /**
+   * Opens the explanation of the name. The burger menu is the only nav on
+   * phones, so the mark has to be reachable from here too.
+   */
+  onNameClick?: () => void;
 };
 
 /** Icon per nav label. Falls back to the document glyph for anything unmapped. */
@@ -42,18 +47,55 @@ const ICONS: Record<string, IconType> = {
  * Hero navigation: a glass dock pinned to the right edge on desktop, a
  * hamburger opening a full-screen menu on phones.
  */
-const HeroNav = ({ items, onNavigate, extraItems = [] }: Props) => {
+const HeroNav = ({ items, onNavigate, extraItems = [], onNameClick }: Props) => {
   const [open, setOpen] = useState(false);
+  // Kept mounted through the exit so the menu animates out instead of
+  // vanishing. Mirrors how the modals handle their own dismissal.
+  const [closing, setClosing] = useState(false);
   const [active, setActive] = useState(items[0]?.target ?? "");
   const menuRef = useRef<HTMLDivElement | null>(null);
   const dockRef = useRef<HTMLElement | null>(null);
+
+  /**
+   * Play the links out, then the panel, then unmount.
+   *
+   * Driven by GSAP rather than a CSS class so the exit can reverse the
+   * entrance exactly — same easing family, same stagger, shorter duration,
+   * which is what stops the close reading as a jump.
+   */
+  const dismiss = () => {
+    if (closing) return;
+    const panel = menuRef.current;
+    if (!panel) {
+      setOpen(false);
+      return;
+    }
+
+    setClosing(true);
+    const links = panel.querySelectorAll(".hero-menu-link");
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setOpen(false);
+        setClosing(false);
+      },
+    });
+
+    tl.to(links, {
+      opacity: 0,
+      x: 24,
+      duration: 0.26,
+      // Last link leaves first, so the list unwinds the way it arrived.
+      stagger: { each: 0.035, from: "end" },
+      ease: "power2.in",
+    }).to(panel, { opacity: 0, duration: 0.22, ease: "power2.inOut" }, "-=0.12");
+  };
 
   // Freeze the page behind the menu, and let Escape close it.
   useEffect(() => {
     if (!open) return;
     scrollLock.acquire();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") dismiss();
     };
     window.addEventListener("keydown", onKey);
     return () => {
@@ -109,7 +151,7 @@ const HeroNav = ({ items, onNavigate, extraItems = [] }: Props) => {
   // The panel fades while each link slides in from the right, staggered —
   // matching the reference menu's entrance.
   useLayoutEffect(() => {
-    if (!open || !menuRef.current) return;
+    if (!open || closing || !menuRef.current) return;
     const ctx = gsap.context(() => {
       gsap.fromTo(
         menuRef.current,
@@ -129,10 +171,10 @@ const HeroNav = ({ items, onNavigate, extraItems = [] }: Props) => {
       );
     }, menuRef);
     return () => ctx.revert();
-  }, [open]);
+  }, [open, closing]);
 
   const activate = (item: NavItem) => {
-    setOpen(false);
+    dismiss();
     if (item.external) {
       window.open(item.target, "_blank", "noopener,noreferrer");
       return;
@@ -192,12 +234,24 @@ const HeroNav = ({ items, onNavigate, extraItems = [] }: Props) => {
               aria-label="Menu"
             >
               <div className="hero-menu-bar">
-                <span className="hero-menu-logo">Pranav Reddy Gaddam</span>
+                {/* Same mark as the desktop hero. Closes the menu first:
+                    two stacked dialogs would fight over the scroll lock. */}
+                <button
+                  type="button"
+                  className="hero-menu-logo"
+                  aria-label="Pranav Reddy Gaddam — what the name means"
+                  onClick={() => {
+                    dismiss();
+                    onNameClick?.();
+                  }}
+                >
+                  <img src="/om-mark.svg" alt="" width="28" height="29" />
+                </button>
                 <button
                   type="button"
                   aria-label="Close menu"
                   className="hero-burger hero-burger--close"
-                  onClick={() => setOpen(false)}
+                  onClick={dismiss}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M18 6 6 18M6 6l12 12" />

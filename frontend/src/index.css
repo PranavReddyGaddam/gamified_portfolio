@@ -1,5 +1,5 @@
 /* Editorial type: Instrument Serif for display, Geist for UI/body. */
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500&family=Taviraj:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500&family=Noto+Serif+Devanagari:wght@400;500&family=Noto+Serif+Telugu:wght@400;500&family=Taviraj:ital,wght@0,300;0,400;0,500;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
