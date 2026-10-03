@@ -4,6 +4,7 @@ import DetailModal from "./DetailModal";
 import Reveal from "./Reveal";
 import TrackListModal from "./TrackListModal";
 import SportRow from "./SportRow";
+import UsesRow from "./UsesRow";
 
 /** Sentinel for the starred tab, which is not a year. */
 const FAVES = "__faves";
@@ -183,8 +184,8 @@ const Cover = ({
 /**
  * Things heard, watched and visited — one row per category.
  *
- * Sport is its own component: it has no year axis and its cards open a
- * modal rather than linking out.
+ * Sport and Uses are their own components: neither has a year axis, and
+ * Uses is a list rather than a grid of covers.
  */
 const FunWall = () => (
   <Reveal stagger={0.1} className="fun-rows">
@@ -195,6 +196,7 @@ const FunWall = () => (
         {row.id === "screen" ? <SportRow /> : null}
       </Fragment>
     ))}
+    <UsesRow />
   </Reveal>
 );
 

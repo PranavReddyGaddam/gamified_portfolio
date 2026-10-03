@@ -122,8 +122,24 @@ const ExperienceRows = ({ entries }: Props) => {
               <span className="text-neutral-900 font-normal">{e.org}</span>
               <span className="text-neutral-900">{e.team}</span>
               <span className="text-neutral-900">{e.role}</span>
-              <span className="text-neutral-400 text-right tabular-nums">
+              {/* Year and chevron share the last column so the arrow tracks
+                  the right edge rather than floating in its own gap. */}
+              <span className="exp-year text-neutral-400 tabular-nums">
                 {e.year}
+                <svg
+                  className={`exp-chevron${isOpen ? " is-open" : ""}`}
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M6 9.5l6 5.5 6-5.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </span>
             </button>
 
