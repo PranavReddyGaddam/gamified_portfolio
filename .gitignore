@@ -63,3 +63,8 @@ jspm_packages/
 
 
 codrops-grid-to-preview/
+
+
+.agents/skills
+.claude/skills
+skills-lock.json
