@@ -1,10 +1,12 @@
-import { Fragment, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { funRows, type FunItem, type FunRow, type FunYear } from "../data/fun";
 import DetailModal from "./DetailModal";
 import Reveal from "./Reveal";
 import TrackListModal from "./TrackListModal";
 import SportRow from "./SportRow";
 import UsesRow from "./UsesRow";
+import FunSidebar, { type SidebarEntry } from "./FunSidebar";
+import { sports } from "../data/sports";
 
 /** Sentinel for the starred tab, which is not a year. */
 const FAVES = "__faves";
@@ -187,17 +189,63 @@ const Cover = ({
  * Sport and Uses are their own components: neither has a year axis, and
  * Uses is a list rather than a grid of covers.
  */
-const FunWall = () => (
-  <Reveal stagger={0.1} className="fun-rows">
-    {funRows.map((row) => (
-      <Fragment key={row.id}>
-        <Row row={row} />
-        {/* Sport sits between Screen and Places. */}
-        {row.id === "screen" ? <SportRow /> : null}
-      </Fragment>
-    ))}
-    <UsesRow />
-  </Reveal>
-);
+const FunWall = ({ onJump }: { onJump: (selector: string) => void }) => {
+  // A sport the rail asked to open, handed to SportRow and cleared by it.
+  const [sportToOpen, setSportToOpen] = useState<string | null>(null);
+
+  // Sport is the only row with real sub-sections: four sports, each with its
+  // own write-up. The other rows are one list filtered by year, and listing
+  // those years here would make the rail a second set of tabs rather than an
+  // index of the section.
+  const entries = useMemo<SidebarEntry[]>(() => {
+    const byId = new Map(funRows.map((r) => [r.id, r]));
+    const order = [...funRows.map((r) => r.id)];
+    order.splice(order.indexOf("screen") + 1, 0, "sport");
+    order.push("uses");
+
+    return order.map((id) => {
+      const row = byId.get(id);
+      if (id === "sport") {
+        return {
+          id,
+          label: "Sport",
+          children: sports.map((sp) => ({ id: sp.id, label: sp.label })),
+        };
+      }
+      return { id, label: row?.label ?? "Uses" };
+    });
+  }, []);
+
+  return (
+    <div className="fun-layout">
+      <FunSidebar
+        entries={entries}
+        onJump={(id) => onJump(`.fun-row--${id}`)}
+        // The only children are the sports, which are cards rather than
+        // tabs: a click opens that sport's write-up.
+        onPickChild={(_rowId, childId) => {
+          onJump(".fun-row--sport");
+          setSportToOpen(childId);
+        }}
+      />
+
+      <Reveal stagger={0.1} className="fun-rows">
+        {funRows.map((row) => (
+          <Fragment key={row.id}>
+            <Row row={row} />
+            {/* Sport sits between Screen and Places. */}
+            {row.id === "screen" ? (
+              <SportRow
+                openId={sportToOpen}
+                onOpened={() => setSportToOpen(null)}
+              />
+            ) : null}
+          </Fragment>
+        ))}
+        <UsesRow />
+      </Reveal>
+    </div>
+  );
+};
 
 export default FunWall;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { sports, type Sport } from "../data/sports";
 import DetailModal from "./DetailModal";
 
@@ -8,8 +8,22 @@ import DetailModal from "./DetailModal";
  * Unlike the other rows these are not grouped by year: the set barely
  * changes, so a year tab would be noise.
  */
-const SportRow = () => {
+const SportRow = ({ openId, onOpened }: {
+  /** A sport the contents rail asked to open, by id. */
+  openId?: string | null;
+  /** Clears that request once it has been honoured. */
+  onOpened?: () => void;
+} = {}) => {
   const [open, setOpen] = useState<Sport | null>(null);
+
+  // Opened from the contents rail. The cards sit in a single row, so scrolling
+  // to one would not move the page; showing its write-up is the useful action.
+  useEffect(() => {
+    if (!openId) return;
+    const sport = sports.find((s) => s.id === openId);
+    if (sport) setOpen(sport);
+    onOpened?.();
+  }, [openId, onOpened]);
   const [closing, setClosing] = useState(false);
 
   // Keep the modal mounted while it animates out — 320ms, matching the exit

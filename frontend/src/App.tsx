@@ -598,7 +598,7 @@ function App() {
             </span>
           </Reveal>
 
-          <FunWall />
+          <FunWall onJump={scrollToSection} />
         </div>
       </section>
 

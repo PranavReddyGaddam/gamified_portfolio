@@ -2201,3 +2201,134 @@ html.is-scroll-locked #smooth-wrapper {
 .om-glyph {
   font-family: "Noto Serif Devanagari", serif;
 }
+
+/* ---------------------------------------------------------------------------
+   Fun contents rail
+
+   A sticky index beside the Fun rows, desktop only. Below 1024px the rows go
+   full width and the rail is dropped rather than stacked: a table of contents
+   above the content it indexes is just a second menu.
+   --------------------------------------------------------------------------- */
+.fun-layout {
+  display: block;
+}
+
+.fun-rail {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .fun-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 2.5rem;
+  }
+
+  .fun-layout .fun-rows {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .fun-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    /* Pinned by ScrollTrigger in FunSidebar, not position: sticky — the
+       smoother's transform would break sticky. */
+    width: 150px;
+    flex: 0 0 150px;
+    padding-bottom: 2rem;
+  }
+
+  /* ScrollTrigger wraps the pinned rail in a spacer, which then becomes the
+     flex child in its place. Left alone the spacer sizes itself from the
+     measured element and opens a wide gap beside the rows, so it is held to
+     the rail's own width. */
+  .fun-layout > .pin-spacer {
+    width: 150px !important;
+    /* ScrollTrigger writes flex-basis inline from the measured element, so
+       the basis has to be overridden on its own rather than via `flex`. */
+    flex-basis: 150px !important;
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+.fun-rail-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+.fun-rail-link {
+  padding: 0 2px;
+  border: 0;
+  background: transparent;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.6;
+  text-align: left;
+  color: #a3a3a3;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.fun-rail-link:hover {
+  color: #737373;
+}
+
+/* The section you are in, lit the way the reference does it. */
+.fun-rail-link.is-active {
+  color: #3b82f6;
+}
+
+/* The years for the row being read. Height is set inline from the child
+   count, since auto does not animate. */
+.fun-rail-kids {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease;
+}
+
+.fun-rail-kids.is-open {
+  opacity: 1;
+}
+
+.fun-rail-kid {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 26px;
+  padding: 0 2px 0 12px;
+  border: 0;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #a3a3a3;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.fun-rail-kid:hover {
+  color: #737373;
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  .fun-rail-kids {
+    transition: none;
+  }
+}
