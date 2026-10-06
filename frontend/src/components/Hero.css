@@ -58,7 +58,7 @@
 .hero-orb--warm {
   top: -18%;
   left: -12%;
-  animation: hero-drift 26s ease-in-out infinite alternate;
+  animation: hero-drift 38s ease-in-out infinite alternate;
 }
 
 .hero-orb--cool {
@@ -66,7 +66,7 @@
   right: -16%;
   width: 42vw;
   max-width: 580px;
-  animation: hero-drift 32s ease-in-out infinite alternate-reverse;
+  animation: hero-drift 46s ease-in-out infinite alternate-reverse;
 }
 
 .hero-orb--green {
@@ -75,7 +75,7 @@
   width: 38vw;
   max-width: 520px;
   opacity: 0.7;
-  animation: hero-drift 29s ease-in-out infinite alternate;
+  animation: hero-drift 42s ease-in-out infinite alternate;
 }
 
 @keyframes hero-drift {
@@ -101,7 +101,7 @@
   left: 7%;
   width: 116px;
   opacity: 0.8;
-  animation: hero-spin 42s linear infinite;
+  animation: hero-spin 64s linear infinite;
 }
 
 .hero-mark--box {
@@ -109,7 +109,7 @@
   left: 13%;
   width: 74px;
   opacity: 0.75;
-  animation: hero-spin 54s linear infinite reverse;
+  animation: hero-spin 80s linear infinite reverse;
 }
 
 /* Tucked into the opposite corner from the star, to balance it. */
@@ -119,7 +119,7 @@
   width: 104px;
   opacity: 0.6;
   transform: rotate(-18deg);
-  animation: hero-sway 18s ease-in-out infinite alternate;
+  animation: hero-sway 26s ease-in-out infinite alternate;
 }
 
 @keyframes hero-spin {
@@ -312,9 +312,9 @@
   text-decoration: none;
   opacity: 0.55;
   transition:
-    opacity 0.25s ease,
-    background-color 0.25s ease,
-    transform 0.25s cubic-bezier(0.33, 0, 0.15, 1);
+    opacity 0.35s ease,
+    background-color 0.35s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hero-dock-link svg {
@@ -359,8 +359,8 @@
   transform: translateX(6px);
   pointer-events: none;
   transition:
-    opacity 0.22s ease,
-    transform 0.22s cubic-bezier(0.33, 0, 0.15, 1);
+    opacity 0.32s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hero-dock-link:hover .hero-dock-tip,
@@ -393,6 +393,11 @@
   margin: 0 auto;
 }
 
+/* Phone-only line breaks; see the mobile .hero-title rule. */
+.hero-br-m {
+  display: none;
+}
+
 /* Inline pill-shaped images set into the headline.
    They start at zero width so the line reads as pure text, then grow and
    push the words apart — the pill appears to open out from inside the line. */
@@ -411,19 +416,19 @@
   max-width: 0;
   margin-right: 0;
   opacity: 0;
-  transform: scaleY(0.35);
+  transform: scaleY(0.55);
   transform-origin: center;
   overflow: hidden;
-  animation: hero-pill-open 0.85s cubic-bezier(0.33, 0, 0.15, 1) forwards;
+  animation: hero-pill-open 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* Staggered so they open one after the other, in reading order. */
 .hero-title-img--me {
-  animation-delay: 0.45s;
+  animation-delay: 0.6s;
 }
 
 .hero-title-img--work {
-  animation-delay: 0.75s;
+  animation-delay: 1.05s;
 }
 
 @keyframes hero-pill-open {
@@ -432,9 +437,9 @@
     max-width: 0;
     margin-right: 0;
     opacity: 0;
-    transform: scaleY(0.35);
+    transform: scaleY(0.55);
   }
-  45% {
+  60% {
     opacity: 1;
   }
   to {
@@ -451,9 +456,9 @@
 .hero-title-img {
   position: relative;
   background-blend-mode: lighten;
-  transition: width 0.45s cubic-bezier(0.33, 0, 0.15, 1),
-    max-width 0.45s cubic-bezier(0.33, 0, 0.15, 1),
-    background-color 0.45s ease;
+  transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    max-width 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.6s ease;
 }
 
 .hero-title-img::before {
@@ -487,14 +492,25 @@
 
 .hero-title-img--me:hover {
   background-color: #c1e4f7;
-  width: 104px !important;
-  max-width: 104px !important;
 }
 
 .hero-title-img--work:hover {
   background-color: #dac6eb;
-  width: 72px !important;
-  max-width: 72px !important;
+}
+
+/* Widening is for a real pointer only. On a phone a tap leaves :hover
+   stuck, and a wider pill would reflow the headline just as the entrance
+   used to. */
+@media (hover: hover) {
+  .hero-title-img--me:hover {
+    width: 104px !important;
+    max-width: 104px !important;
+  }
+
+  .hero-title-img--work:hover {
+    width: 72px !important;
+    max-width: 72px !important;
+  }
 }
 
 .hero-title-img--me {
@@ -560,22 +576,29 @@
     transform: none;
   }
 
+  /* The lines are set by hand rather than left to wrap. A free wrap is
+     recomputed every frame while the pills grow from zero, so words hopped
+     between lines twice during the entrance. With the breaks fixed and
+     wrapping off, a growing pill can only push its own line wider.
+
+     The type scales purely with the viewport (no rem floor) so the widest
+     finished line keeps the same share of the width on any phone. */
   .hero-title {
-    max-width: 100%;
-    font-size: clamp(2.4rem, 10.4vw, 3.4rem);
+    max-width: none;
+    font-size: min(10.4vw, 3.4rem);
     line-height: 1.08;
-    /* Hold the wrap to four lines by capping the measure rather than
-       letting a larger face rewrap unpredictably. The headline is ~80
-       characters plus two pills, so the cap has to sit near a quarter of
-       that; 15ch pushed it to five lines. */
-    max-width: 22ch;
+    white-space: nowrap;
   }
 
-  /* The desktop breaks would force three long lines at this size; let the
-     measure above do the wrapping instead. The markup carries an explicit
-     space either side of each, so words never run together. */
+  /* The desktop breaks would force three long lines at this size, so the
+     phone gets its own four. The markup carries an explicit space either
+     side of each, so words never run together. */
   .hero-br {
     display: none;
+  }
+
+  .hero-br-m {
+    display: inline;
   }
 
   /* The desktop height is a vw fraction tuned for a wide viewport; on a
@@ -617,7 +640,10 @@
    column to the frame instead closes the gap between the two. */
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  /* minmax(0, …) so the column can shrink below its widest child. A bare
+     1fr floors at min-content, which on a phone pushed the column past the
+     viewport, widened the page and shoved the menu button off-screen. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 2.5rem;
 }
 

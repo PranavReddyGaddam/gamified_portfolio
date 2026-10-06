@@ -423,7 +423,9 @@ function App() {
               className="hero-title-img hero-title-img--me"
               aria-label="About me"
             />
-            build living, breathing{" "}
+            build living,{" "}
+            <br className="hero-br-m" />
+            breathing{" "}
             <br className="hero-br" />
             software{" "}
             <a
@@ -435,9 +437,12 @@ function App() {
               className="hero-title-img hero-title-img--work"
               aria-label="Work"
             />
+            <br className="hero-br-m" />
             for teams that want{" "}
             <br className="hero-br" />
-            to ship, not just plan.
+            to{" "}
+            <br className="hero-br-m" />
+            ship, not just plan.
           </h1>
         </div>
       </section>

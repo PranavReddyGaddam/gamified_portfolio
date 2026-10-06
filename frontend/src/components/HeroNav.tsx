@@ -140,9 +140,9 @@ const HeroNav = ({ items, onNavigate, extraItems = [], onNameClick }: Props) => 
       gsap.from(dockRef.current, {
         opacity: 0,
         x: 24,
-        duration: 0.8,
-        delay: 0.4,
-        ease: "power3.out",
+        duration: 1.3,
+        delay: 0.9,
+        ease: "power2.out",
       });
     }, dockRef);
     return () => ctx.revert();
