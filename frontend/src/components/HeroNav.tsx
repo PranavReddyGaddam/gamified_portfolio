@@ -3,12 +3,12 @@ import { createPortal } from "react-dom";
 import { gsap } from "gsap";
 import { scrollLock } from "../lib/scrollLock";
 import {
-  LuHouse,
-  LuUser,
-  LuBriefcase,
-  LuFileText,
-  LuPopcorn,
-} from "react-icons/lu";
+  PiHouse,
+  PiUser,
+  PiBriefcase,
+  PiFileText,
+  PiConfetti,
+} from "react-icons/pi";
 import type { IconType } from "react-icons";
 
 export type NavItem = {
@@ -34,13 +34,20 @@ type Props = {
   onNameClick?: () => void;
 };
 
-/** Icon per nav label. Falls back to the document glyph for anything unmapped. */
+/**
+ * Icon per nav label. Falls back to the document glyph for anything unmapped.
+ *
+ * Phosphor's regular weight: lighter than Lucide's, which sat heavy against
+ * the glass, but not the light weight, which thins out at 17px once the dock
+ * dims inactive links. Fun is confetti rather than popcorn because the
+ * section is music, places and sport as much as film.
+ */
 const ICONS: Record<string, IconType> = {
-  Home: LuHouse,
-  About: LuUser,
-  Work: LuBriefcase,
-  Fun: LuPopcorn,
-  Resume: LuFileText,
+  Home: PiHouse,
+  About: PiUser,
+  Work: PiBriefcase,
+  Fun: PiConfetti,
+  Resume: PiFileText,
 };
 
 /**
@@ -187,7 +194,7 @@ const HeroNav = ({ items, onNavigate, extraItems = [], onNameClick }: Props) => 
     <>
       <nav ref={dockRef} className="hero-dock" aria-label="Sections">
         {items.map((item) => {
-          const Icon = ICONS[item.label] ?? LuFileText;
+          const Icon = ICONS[item.label] ?? PiFileText;
           const isActive = !item.external && item.target === active;
           return (
             <a
