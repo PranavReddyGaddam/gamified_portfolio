@@ -220,7 +220,6 @@
   border-radius: 4px;
 }
 
-.hero-meta-tag,
 .hero-meta-loc {
   padding-top: 6px;
 }
@@ -232,10 +231,6 @@
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
-}
-
-.hero-meta-tag {
-  width: 26%;
 }
 
 /* Sits at the right end of the hero bar, so it scrolls away with the hero
@@ -534,7 +529,6 @@
     font-size: 12px;
   }
 
-  .hero-meta-tag,
   .hero-meta-loc {
     display: none;
   }
@@ -2041,7 +2035,7 @@ html.is-scroll-locked #smooth-wrapper {
   font-size: 34px;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  font-weight: 400;
+  font-weight: 500;
   color: #3a4a16;
   cursor: pointer;
   transition: opacity 0.2s ease;

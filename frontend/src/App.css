@@ -1,15 +1,5 @@
 /* Custom styles for the portfolio */
 
-/* Gradient text utility */
-.bg-gradient-text {
-  /* Neutralize gradient text to default color */
-  background: none;
-  -webkit-background-clip: initial;
-  -webkit-text-fill-color: inherit;
-  background-clip: initial;
-  color: inherit;
-}
-
 /* Custom scrollbar - Vertical only */
 ::-webkit-scrollbar {
   width: 10px;
@@ -45,53 +35,7 @@ html {
   scroll-behavior: auto;
 }
 
-/* Achievement toasts: slide in from the right; on exit, fade out while
-   collapsing height so the remaining toasts settle smoothly */
-.achievement-toast {
-  max-height: 12rem;
-  margin-top: 0.75rem;
-  animation: achievement-toast-in 0.3s ease-out;
-}
-
-.achievement-toast--leaving {
-  animation: achievement-toast-out 0.3s ease-in forwards;
-}
-
-@keyframes achievement-toast-in {
-  from {
-    opacity: 0;
-    transform: translateX(120%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes achievement-toast-out {
-  to {
-    opacity: 0;
-    transform: translateX(120%);
-    max-height: 0;
-    margin-top: 0;
-  }
-}
-
-/* Custom animations */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Achievement popup animation */
+/* Modal entrance */
 @keyframes fade-in {
   0% {
     opacity: 0;
@@ -105,81 +49,4 @@ html {
 
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
-}
-
-/* 3D Card Flip Animation */
-.perspective-1000 {
-  perspective: 1000px;
-}
-
-.transform-style-preserve-3d {
-  transform-style: preserve-3d;
-}
-
-.backface-hidden {
-  backface-visibility: hidden;
-}
-
-.rotate-y-180 {
-  transform: rotateY(180deg);
-}
-
-/* Expanding container animation for typing effect */
-@keyframes expandWidth {
-  0% {
-    width: 0%;
-  }
-  100% {
-    width: 100%;
-  }
-}
-
-/* Glass morphism effect */
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Custom focus styles */
-.focus-ring:focus {
-  outline: auto;
-  outline-offset: 2px;
-}
-
-/* Responsive text utilities */
-.text-responsive {
-  font-size: clamp(1rem, 4vw, 2rem);
-}
-
-.text-responsive-lg {
-  font-size: clamp(1.5rem, 6vw, 3rem);
-}
-
-.text-responsive-xl {
-  font-size: clamp(2rem, 8vw, 4rem);
-}
-
-/* Hide scrollbar utility for mobile carousel */
-.scrollbar-hide {
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Safari and Chrome */
-}
-
-/* Lanyard swing animation */
-@keyframes swing {
-  0%, 100% {
-    transform: rotate(6deg);
-  }
-  50% {
-    transform: rotate(-2deg);
-  }
-}
-
-.animate-swing {
-  animation: swing 3s ease-in-out infinite;
-  transform-origin: top center;
 }
