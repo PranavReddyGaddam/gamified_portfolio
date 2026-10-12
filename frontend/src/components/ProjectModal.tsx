@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { scrollLock } from "../lib/scrollLock";
 import type { Project } from "../data/projects";
+import ProjectBody from "./ProjectBody";
 
 type Props = {
   project: Project;
@@ -41,8 +42,6 @@ const ProjectModal = ({ project, isFull, closing = false }: Props) => {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [isFull, project.id, navigate]);
-
-  const media = project.previewImages?.[0];
 
   // ScrollSmoother puts a transform on #smooth-content, which makes it the
   // containing block for position:fixed. Portal to the body so the overlay is
@@ -127,43 +126,7 @@ const ProjectModal = ({ project, isFull, closing = false }: Props) => {
         </header>
 
         <div ref={scrollRef} className="pm-scroll">
-          <div className="pm-content">
-            <h1 className="pm-title">{project.title}</h1>
-
-            <dl className="pm-meta">
-              {[
-                { label: "Year", value: project.year },
-                { label: "Role", value: project.role },
-                { label: "Stack", value: project.stack ?? project.tags.join(", ") },
-              ]
-                .filter((m) => m.value)
-                .map((m) => (
-                  <div key={m.label}>
-                    <dt>{m.label}</dt>
-                    <dd>{m.value}</dd>
-                  </div>
-                ))}
-            </dl>
-
-            {media ? (
-              <div className="pm-hero">
-                {media.endsWith(".mp4") ? (
-                  <video src={media} muted loop autoPlay playsInline />
-                ) : (
-                  <img src={media} alt={project.title} />
-                )}
-              </div>
-            ) : null}
-
-            <p className="pm-lede">{project.summary ?? project.description}</p>
-
-            {project.sections?.map((sec) => (
-              <section key={sec.heading} className="pm-section">
-                <h2>{sec.heading}</h2>
-                <p>{sec.body}</p>
-              </section>
-            ))}
-          </div>
+          <ProjectBody project={project} />
         </div>
       </div>
     </div>,

@@ -1534,74 +1534,12 @@ a.fun-cover {
   font-weight: 400;
 }
 
-/* --- Work grid -------------------------------------------------------- */
+/* --- Work section ----------------------------------------------------- */
 
 .work-section {
   background: #ffffff;
   font-family: "Hanken Grotesk", "Onest", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 400;
-}
-
-.work-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-}
-
-@media (max-width: 760px) {
-  .work-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.work-card {
-  display: block;
-  width: 100%;
-  cursor: pointer;
-  text-align: left;
-}
-
-/* The media tile carries the label, and eases back slightly on press. */
-.work-card-media {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 678 / 367.625;
-  border-radius: 26px;
-  overflow: hidden;
-  background: #e4e4e7;
-  transition: transform 0.3s ease;
-}
-
-.work-card:hover .work-card-media {
-  transform: scale(0.99);
-}
-
-.work-card-media video,
-.work-card-media img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 26px;
-}
-
-/* Floating label, bottom left of the tile. */
-.work-card-pill {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  display: inline-flex;
-  align-items: center;
-  background: #ffffff;
-  border: 1px solid #f4f4f5;
-  border-radius: 999px;
-  padding: 5px 12px 4.8px;
-  font-size: 16px;
-  line-height: 1.3;
-  color: #171717;
-  white-space: nowrap;
 }
 
 /* --- Project modal ---------------------------------------------------- */
@@ -2367,5 +2305,234 @@ html.is-scroll-locked #smooth-wrapper {
 @media (prefers-reduced-motion: reduce) {
   .fun-rail-kids {
     transition: none;
+  }
+}
+
+/* --- Project wheel (desktop work section) ----------------------------- */
+
+/* The wheel column and the case study side by side, at a fixed height so
+   swapping projects never moves the page below. */
+.pw {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 32px;
+  height: clamp(560px, 78vh, 760px);
+}
+
+/* Only this column takes the mouse wheel. touch-action and user-select keep
+   a drag from scrolling the page or selecting the captions. */
+.pw-wheel {
+  position: relative;
+  min-height: 0;
+  border-right: 1px solid #ededea;
+  outline: none;
+  touch-action: none;
+  user-select: none;
+  /* Cards leaning out past the arc are cut at the divider, not the edge. */
+  overflow: hidden;
+  cursor: grab;
+}
+
+.pw-wheel.is-dragging,
+.pw-wheel.is-dragging .pw-card {
+  cursor: grabbing;
+}
+
+.pw-wheel:focus-visible {
+  box-shadow: inset 0 0 0 1px #3b82f6;
+}
+
+/* Positioned every frame from ProjectWheel; the origin is the card centre so
+   rotate and scale pivot in place. */
+.pw-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 190px;
+  height: 119px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  background: #f5f5f4;
+  cursor: pointer;
+  transform-origin: 50% 50%;
+  visibility: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.pw-card[aria-selected="true"] {
+  border-color: #3b82f6;
+}
+
+/* The veil that fades cards towards the page as they leave the centre. */
+.pw-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  opacity: var(--shade, 0);
+  pointer-events: none;
+}
+
+.pw-card video,
+.pw-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.pw-cap {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 3px 8px 4px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.86);
+  color: #171717;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Points from the centre card to the panel it is showing. */
+.pw-mark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 101;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 11px solid #3b82f6;
+  pointer-events: none;
+}
+
+.pw-hint {
+  position: absolute;
+  left: 8px;
+  bottom: 6px;
+  z-index: 102;
+  margin: 0;
+  font-size: 12px;
+  color: #a3a3a3;
+  pointer-events: none;
+}
+
+/* The modal's write-up, set on the page instead of in a dialog. It scrolls
+   on its own; once it reaches either end the scroll carries on to the page. */
+.pw-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid #ededea;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.pw-panel .pm-crumb {
+  color: #a3a3a3;
+}
+
+.pw-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.pw-swap {
+  animation: pw-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pw-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-swap {
+    animation: none;
+  }
+}
+
+/* Phones and tablets: the reference's narrow-screen wheel, the same
+   vertical dial at its own card size. The wheel only takes swipes over its
+   own column, so the summary beside it is where the page still scrolls. */
+.pw--compact {
+  /* Wide enough for the centre card and its marker; cards further round the
+     rim are cut at the divider, which leaves the summary room on a phone. */
+  grid-template-columns: 196px minmax(0, 1fr);
+  gap: 14px;
+  height: clamp(420px, 66vh, 560px);
+}
+
+.pw--compact .pw-card {
+  width: 150px;
+  height: 94px;
+}
+
+.pw--compact .pw-cap {
+  font-size: 11px;
+  line-height: 14px;
+  padding: 2px 6px 3px;
+}
+
+.pw-aside {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.pw-aside-year {
+  font-size: 12px;
+  color: #a3a3a3;
+  margin-bottom: 0.35rem;
+}
+
+.pw-aside-title {
+  font-family: "Onest", -apple-system, sans-serif;
+  font-size: 1.35rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #171717;
+  margin-bottom: 0.6rem;
+}
+
+.pw-aside-desc {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #525252;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pw-aside-open {
+  font-size: 13.5px;
+  color: #3b82f6;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+@media (max-width: 360px) {
+  .pw-aside-desc {
+    display: none;
   }
 }
