@@ -20,6 +20,8 @@ import HeroNav from "./components/HeroNav";
 import LocalClock from "./components/LocalClock";
 import HireMeStats from "./components/HireMeStats";
 import NameModal from "./components/NameModal";
+import SkillsModal from "./components/SkillsModal";
+import SjsuLink from "./components/SjsuLink";
 import { RiTwitterXFill } from "react-icons/ri";
 import { FaLock, FaUnlock, FaLinkedin, FaGithub, FaInstagram } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -84,6 +86,16 @@ function App() {
     window.setTimeout(() => {
       setNameOpen(false);
       setNameClosing(false);
+    }, 320);
+  };
+  // "full-stack engineering" in the About paragraph opens the skills list.
+  const [skillsOpen, setSkillsOpen] = useState(false);
+  const [skillsClosing, setSkillsClosing] = useState(false);
+  const closeSkills = () => {
+    setSkillsClosing(true);
+    window.setTimeout(() => {
+      setSkillsOpen(false);
+      setSkillsClosing(false);
     }, 320);
   };
   const [isSubmittingCodeRequest, setIsSubmittingCodeRequest] = useState(false);
@@ -484,19 +496,16 @@ function App() {
           <div className="about-right">
             <p className="text-xl md:text-2xl font-light leading-relaxed text-neutral-900 mb-16 md:mb-24">
               Starting with side projects, I built a versatile skill set across{" "}
-              <span className="font-['Onest'] font-normal underline decoration-1 underline-offset-4">
+              <button
+                type="button"
+                className="about-skills-link"
+                onClick={() => setSkillsOpen(true)}
+              >
                 full-stack engineering
-              </span>
+              </button>
               , backend systems, and AI through hands-on work. After completing
               my master&apos;s at{" "}
-              <a
-                href="https://www.sjsu.edu/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline decoration-1 underline-offset-4"
-              >
-                San Jose State University
-              </a>
+              <SjsuLink />
               , I&apos;m now a software engineer at{" "}
               <a
                 href="https://www.salesforce.com/"
@@ -532,8 +541,8 @@ function App() {
                   detail:
                     "Master's in Applied Data Science, focusing on machine learning systems and putting models into production.",
                   points: [
-                    "CGPA 3.84 / 4.0",
-                    "Machine learning, AI systems, and large-scale data",
+                    "CGPA 3.7 / 4.0",
+                    "Distributed systems, Deep Learning, and Generative AI",
                   ],
                 },
                 {
@@ -841,6 +850,10 @@ function App() {
 
       {nameOpen ? (
         <NameModal closing={nameClosing} onClose={closeName} />
+      ) : null}
+
+      {skillsOpen ? (
+        <SkillsModal closing={skillsClosing} onClose={closeSkills} />
       ) : null}
 
           </div>
