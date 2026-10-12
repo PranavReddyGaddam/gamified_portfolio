@@ -383,7 +383,7 @@
 
 .hero-title {
   font-family: "Onest", -apple-system, sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   /* Onest sets about 40% wider than the condensed serif it replaced, so the
      scale comes down to keep the widest line (software + pill) near 71vw. */
   font-size: clamp(1.85rem, 4.9vw, 74px);
