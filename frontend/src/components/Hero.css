@@ -2804,6 +2804,12 @@ html.is-scroll-locked #smooth-wrapper {
   background: #ecebe3;
 }
 
+@media (max-width: 640px) {
+  .sjsu-frame {
+    aspect-ratio: 4 / 5;
+  }
+}
+
 .sjsu-shot {
   position: absolute;
   inset: 0;

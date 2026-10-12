@@ -9,8 +9,13 @@ const PLACEHOLDER_COUNT = 8;
 const FRAME_MS = 240;
 const GUTTER = 16;
 const MAX_WIDTH = 560;
-/** The frame is a wide rectangle. */
-const ASPECT = 10 / 16;
+/**
+ * Frame height over width: wide on desktop, tall on phones, where a wide
+ * frame would be a thin strip. The breakpoint matches the CSS.
+ */
+const WIDE = 10 / 16;
+const TALL = 5 / 4;
+const PHONE = "(max-width: 640px)";
 /** The white edge around the frame, for fitting the bubble on screen. */
 const BAR_HEIGHT = 12;
 
@@ -51,14 +56,15 @@ const SjsuLink = () => {
     // The bubble's height is the frame's plus its edge.
     const spaceAbove = r.top - 12 - GUTTER;
     const spaceBelow = vh - r.bottom - 12 - GUTTER;
+    const aspect = window.matchMedia(PHONE).matches ? TALL : WIDE;
     let width = Math.min(MAX_WIDTH, vw - GUTTER * 2);
     // Prefer above, like iOS; otherwise whichever side has room, shrinking
     // the bubble when neither does.
     const above =
-      spaceAbove >= width * ASPECT + BAR_HEIGHT || spaceAbove >= spaceBelow;
+      spaceAbove >= width * aspect + BAR_HEIGHT || spaceAbove >= spaceBelow;
     width = Math.max(
       240,
-      Math.min(width, ((above ? spaceAbove : spaceBelow) - BAR_HEIGHT) / ASPECT)
+      Math.min(width, ((above ? spaceAbove : spaceBelow) - BAR_HEIGHT) / aspect)
     );
     const center = r.left + r.width / 2;
     const left = Math.min(Math.max(center - width / 2, GUTTER), vw - GUTTER - width);
