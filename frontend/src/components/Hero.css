@@ -171,7 +171,7 @@
   align-items: flex-start;
   gap: 2rem;
   z-index: 3;
-  font-family: "Geist", -apple-system, sans-serif;
+  font-family: "Hanken Grotesk", "Onest", -apple-system, sans-serif;
   font-size: 13.6px;
   color: #3a4a16;
 }
@@ -184,7 +184,7 @@
   right: 26px;
   transform: translateY(-50%);
   z-index: 40;
-  font-family: "Geist", -apple-system, sans-serif;
+  font-family: "Hanken Grotesk", "Onest", -apple-system, sans-serif;
   font-size: 13.6px;
   color: #3a4a16;
 }
@@ -246,7 +246,7 @@
   align-items: center;
   gap: 4px;
   padding-top: 6px;
-  font-family: "Geist", -apple-system, sans-serif;
+  font-family: "Hanken Grotesk", "Onest", -apple-system, sans-serif;
   font-size: 13.6px;
   font-weight: 500;
   color: #3a4a16;
@@ -382,10 +382,14 @@
 /* --- headline --------------------------------------------------------- */
 
 .hero-title {
-  font-family: "Instrument Serif", Georgia, serif;
+  font-family: "Onest", -apple-system, sans-serif;
   font-weight: 400;
-  font-size: clamp(2.4rem, 6.4vw, 96px);
-  line-height: 1;
+  /* Onest sets about 40% wider than the condensed serif it replaced, so the
+     scale comes down to keep the widest line (software + pill) near 71vw. */
+  font-size: clamp(1.85rem, 4.9vw, 74px);
+  line-height: 1.05;
+  /* A geometric sans this large reads loose at default tracking. */
+  letter-spacing: -0.02em;
   color: #3a4a16;
   text-align: center;
   max-width: 26ch;
@@ -402,12 +406,12 @@
    push the words apart — the pill appears to open out from inside the line. */
 .hero-title-img {
   display: inline-block;
-  height: 5.05vw;
-  max-height: 75px;
+  height: 3.87vw;
+  max-height: 57px;
   border-radius: 999px;
-  /* Centred on the text's optical midline (~0.37em above the baseline for
-     Instrument Serif) rather than hanging below it. */
-  vertical-align: -0.01em;
+  /* Centred on the cap-height midline (~0.35em above the baseline for
+     Onest) rather than hanging below it. */
+  vertical-align: -0.04em;
   background-size: cover;
   background-position: center;
 
@@ -442,9 +446,9 @@
     opacity: 1;
   }
   to {
-    width: 6.6vw;
-    max-width: 96px;
-    margin-right: 0.7vw;
+    width: 5.05vw;
+    max-width: 74px;
+    margin-right: 0.54vw;
     opacity: 1;
     transform: scaleY(1);
   }
@@ -466,7 +470,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: "Geist", -apple-system, sans-serif;
+  font-family: "Hanken Grotesk", "Onest", -apple-system, sans-serif;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1;
@@ -584,7 +588,7 @@
      finished line keeps the same share of the width on any phone. */
   .hero-title {
     max-width: none;
-    font-size: min(10.4vw, 3.4rem);
+    font-size: min(8vw, 2.6rem);
     line-height: 1.08;
     white-space: nowrap;
   }
@@ -603,8 +607,8 @@
   /* The desktop height is a vw fraction tuned for a wide viewport; on a
      phone that leaves the pill far too short beside the headline. */
   .hero-title-img {
-    width: 13vw;
-    height: 8.4vw;
+    width: 10vw;
+    height: 6.5vw;
     max-height: none;
   }
 
@@ -616,9 +620,9 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-title-img {
     animation: none;
-    width: 6.6vw;
-    max-width: 96px;
-    margin-right: 0.7vw;
+    width: 5.05vw;
+    max-width: 74px;
+    margin-right: 0.54vw;
     opacity: 1;
     transform: none;
   }
@@ -816,7 +820,7 @@
    300; the reference sets small text at 400 and only the lead paragraph
    light, so restore the normal weight here. */
 .about-section {
-  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Hanken Grotesk", "Onest", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 400;
 }
 
@@ -840,7 +844,7 @@
 
 .fun-section {
   background: #ffffff;
-  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Hanken Grotesk", "Onest", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 400;
 }
 
@@ -983,9 +987,10 @@
 }
 
 .tl-year {
-  font-family: "Instrument Serif", Georgia, serif;
-  font-size: 40px;
+  font-family: "Onest", -apple-system, sans-serif;
+  font-size: 32px;
   line-height: 1;
+  letter-spacing: -0.02em;
   color: #171717;
 }
 
@@ -1205,8 +1210,8 @@ a.fun-cover {
   inset: 0;
   display: grid;
   place-items: center;
-  font-family: "Instrument Serif", Georgia, serif;
-  font-size: 40px;
+  font-family: "Onest", -apple-system, sans-serif;
+  font-size: 34px;
   color: #c8d2ad;
 }
 
@@ -1483,8 +1488,8 @@ a.fun-cover {
   inset: 0;
   display: grid;
   place-items: center;
-  font-family: "Instrument Serif", Georgia, serif;
-  font-size: 52px;
+  font-family: "Onest", -apple-system, sans-serif;
+  font-size: 44px;
   color: #c8d2ad;
 }
 
@@ -1525,7 +1530,7 @@ a.fun-cover {
    sans face used through the lower half of the page. */
 .site-footer {
   background: #ffffff;
-  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Hanken Grotesk", "Onest", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 400;
 }
 
@@ -1533,7 +1538,7 @@ a.fun-cover {
 
 .work-section {
   background: #ffffff;
-  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Hanken Grotesk", "Onest", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 400;
 }
 
@@ -1627,7 +1632,7 @@ html.is-scroll-locked #smooth-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Hanken Grotesk", "Onest", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .pm-scrim {
@@ -1873,9 +1878,12 @@ html.is-scroll-locked #smooth-wrapper {
 }
 
 .pm-title {
-  font-family: "Instrument Serif", Georgia, serif;
-  font-size: clamp(2.25rem, 5vw, 3.25rem);
-  line-height: 1.05;
+  /* Onest runs ~38% wider than the serif this was sized for; at the old
+     scale "Personal Portfolio Website" filled the whole column. */
+  font-family: "Onest", -apple-system, sans-serif;
+  font-size: clamp(1.9rem, 4.2vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   margin-bottom: 2rem;
 }
 
@@ -1928,8 +1936,11 @@ html.is-scroll-locked #smooth-wrapper {
 }
 
 .pm-section h2 {
-  font-family: "Instrument Serif", Georgia, serif;
-  font-size: 1.6rem;
+  font-family: "Onest", -apple-system, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   margin-bottom: 0.75rem;
 }
 
@@ -2088,9 +2099,10 @@ html.is-scroll-locked #smooth-wrapper {
 /* Scaled up for touch, but otherwise the site's own nav styling rather than
    the reference's uppercase treatment. */
 .hero-menu-link {
-  font-family: "Instrument Serif", Georgia, serif;
-  font-size: 40px;
-  line-height: 1.1;
+  font-family: "Onest", -apple-system, sans-serif;
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   font-weight: 400;
   color: #3a4a16;
   cursor: pointer;

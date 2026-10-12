@@ -12,6 +12,9 @@ const CELL = 11;
 const GAP = 3;
 const STEP = CELL + GAP;
 
+/** A year spans 53 week columns once the first is padded to a Sunday. */
+const YEAR_WEEKS = 53;
+
 /**
  * A year of GitHub contributions as a heat grid.
  *
@@ -59,8 +62,15 @@ const ContributionGraph = ({ username = "PranavReddyGaddam" }: { username?: stri
 
   // Pad the head of the run so the first column starts on a Sunday, keeping
   // the weekday rows aligned.
+  //
+  // Until the data arrives, draw a blank year instead. With no days the
+  // width came out negative (0 weeks × STEP − GAP), which the browser rejects
+  // as a viewBox, and the column would also change height once the grid
+  // loaded in.
   const offset = days.length ? new Date(days[0].date + "T00:00:00").getDay() : 0;
-  const cells: (Day | null)[] = [...Array<null>(offset).fill(null), ...days];
+  const cells: (Day | null)[] = days.length
+    ? [...Array<null>(offset).fill(null), ...days]
+    : Array<null>(YEAR_WEEKS * 7).fill(null);
   const weeks = Math.ceil(cells.length / 7);
 
   // Fixed commit-count thresholds rather than a scale relative to the busiest

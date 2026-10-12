@@ -222,7 +222,7 @@ export const projects: Project[] = [
       },
       {
         heading: "This version",
-        body: "Instrument Serif and Geist over a cream ground, GSAP ScrollSmoother driving the page, and project case studies that open in a modal which expands to full screen.",
+        body: "Onest and Hanken Grotesk over a cream ground, GSAP ScrollSmoother driving the page, and project case studies that open in a modal which expands to full screen.",
       },
     ],
     title: "Personal Portfolio Website",

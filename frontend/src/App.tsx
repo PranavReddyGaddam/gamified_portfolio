@@ -484,7 +484,7 @@ function App() {
           <div className="about-right">
             <p className="text-xl md:text-2xl font-light leading-relaxed text-neutral-900 mb-16 md:mb-24">
               Starting with side projects, I built a versatile skill set across{" "}
-              <span className="font-['Instrument_Serif'] italic underline decoration-1 underline-offset-4">
+              <span className="font-['Onest'] font-normal underline decoration-1 underline-offset-4">
                 full-stack engineering
               </span>
               , backend systems, and AI through hands-on work. After completing
@@ -615,10 +615,12 @@ function App() {
             <div className="bg-neutral-200 h-px w-full" />
 
             <div className="hidden md:grid gap-5 grid-cols-4 w-full">
-              {/* Name + local time */}
-              <div className="flex flex-col gap-0 items-start">
+              {/* Name + local time. Spans the empty second column: Onest sets
+                  the name about 320px wide at text-3xl, more than one quarter
+                  of the footer holds below ~1500px. */}
+              <div className="col-span-2 flex flex-col gap-0 items-start">
                 <a href="#home" className="flex gap-3 items-center transition-opacity hover:opacity-80">
-                  <p className="font-display text-3xl text-neutral-700">
+                  <p className="font-display text-2xl lg:text-3xl tracking-[-0.02em] whitespace-nowrap text-neutral-700">
                     Pranav Reddy Gaddam
                   </p>
                 </a>
@@ -626,8 +628,6 @@ function App() {
                   <LocalClock /> San Jose, CA
                 </p>
               </div>
-
-              <div />
 
               {/* Nav */}
               <div className="flex flex-col gap-2 items-start">
@@ -705,7 +705,7 @@ function App() {
             {/* Mobile: stacked */}
             <div className="md:hidden flex flex-col gap-6 w-full">
               <div>
-                <p className="font-display text-2xl text-neutral-700">
+                <p className="font-display text-2xl tracking-[-0.02em] text-neutral-700">
                   Pranav Reddy Gaddam
                 </p>
                 <p className="text-sm text-neutral-400 mt-1">

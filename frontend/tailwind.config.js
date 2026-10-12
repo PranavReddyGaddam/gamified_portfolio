@@ -11,8 +11,8 @@ module.exports = {
         'olive-deep': '#212e02',
       },
       fontFamily: {
-        'display': ['Instrument Serif', 'Georgia', 'serif'],
-        'geist': ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        'display': ['Onest', '-apple-system', 'sans-serif'],
+        'body': ['Hanken Grotesk', 'Onest', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         'taviraj': ['Taviraj', 'Georgia', 'serif'],
         'pressstart2p': ['PressStart2P', 'monospace'],
         'pixellari': ['Pixellari', 'monospace'],
