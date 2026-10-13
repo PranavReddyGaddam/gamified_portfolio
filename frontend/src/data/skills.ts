@@ -89,7 +89,7 @@ export const skillGroups: SkillGroup[] = [
     skills: [
       { name: "PyTorch", icon: SiPytorch },
       { name: "Agentic pipelines", icon: PiRobot },
-      { name: "LLMs (Gemma, Groq)", icon: PiTreeStructure },
+      { name: "LLMs", icon: PiTreeStructure },
       { name: "ChromaDB", icon: PiGraph },
       { name: "Speech (STT / TTS)", icon: PiWaveform },
     ],
