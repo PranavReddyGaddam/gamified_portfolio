@@ -5,14 +5,11 @@
  * It is decoded into Web Audio rather than played from an <audio> element
  * so the fades work everywhere; iOS ignores an element's volume.
  *
- * Browsers will not play sound until the visitor clicks, taps or presses a
- * key, so it starts on the first one anywhere on the page, fading in. The
- * file is fetched once the page has loaded, so it is usually ready by then.
- * A visitor who turns it off stays off on later visits.
+ * Off until the visitor turns it on with the sound button, and off again on
+ * every new visit. The file is only fetched on that first press.
  */
 
 const SRC = "/music/piano.mp3";
-const PREF = "ambient-off";
 /** Volume under the page; the file itself is mastered to about -19 LUFS. */
 const LEVEL = 0.55;
 /** Seconds of quiet between one play and the next. */
@@ -30,23 +27,6 @@ let loopTimer = 0;
 /** When, on the context's clock, the next play is due. */
 let nextAt = 0;
 let playing = false;
-
-const readOff = () => {
-  try {
-    return localStorage.getItem(PREF) === "1";
-  } catch {
-    return false;
-  }
-};
-
-const writeOff = (off: boolean) => {
-  try {
-    if (off) localStorage.setItem(PREF, "1");
-    else localStorage.removeItem(PREF);
-  } catch {
-    /* private mode: the choice lasts this visit only */
-  }
-};
 
 const emit = () => listeners.forEach((fn) => fn(playing));
 
@@ -136,45 +116,19 @@ export const ambient = {
       listeners.delete(fn);
     };
   },
-  /** The sound button: on and off, remembered for the next visit. */
+  /** The sound button. */
   toggle() {
-    if (playing) {
-      writeOff(true);
-      stop();
-    } else {
-      writeOff(false);
-      void start();
-    }
+    if (playing) stop();
+    else void start();
   },
 };
 
 let armed = false;
 
-/**
- * Starts the music on the visitor's first click, tap or key press, unless
- * they turned it off before. A press on the sound button itself is left to
- * the button, so that first press does not start the music and then
- * immediately stop it again.
- */
+/** Keeps the music quiet while the tab is in the background. */
 export const armAmbient = () => {
   if (armed || typeof window === "undefined") return;
   armed = true;
-
-  if (!readOff()) {
-    const prefetch = () => void fetchTrack().catch(() => (bytes = null));
-    if (document.readyState === "complete") prefetch();
-    else window.addEventListener("load", prefetch, { once: true });
-  }
-
-  const events = ["pointerdown", "keydown", "touchend"] as const;
-  const first = (e: Event) => {
-    if (e.target instanceof Element && e.target.closest("[data-sound-toggle]")) return;
-    events.forEach((t) => window.removeEventListener(t, first, true));
-    if (!readOff()) void start();
-  };
-  events.forEach((t) => window.addEventListener(t, first, { capture: true, passive: true }));
-
-  // Quiet while the tab is in the background, back when it returns.
   let paused = false;
   document.addEventListener("visibilitychange", () => {
     if (document.hidden && playing) {

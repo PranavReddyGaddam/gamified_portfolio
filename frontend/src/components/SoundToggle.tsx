@@ -22,7 +22,6 @@ const SoundToggle = ({ variant }: Props) => {
   return (
     <button
       type="button"
-      data-sound-toggle=""
       aria-label={label}
       aria-pressed={on}
       className={variant === "dock" ? `hero-dock-link hero-sound${on ? " is-on" : ""}` : "hero-sound-bar"}
