@@ -10,6 +10,7 @@ import {
   PiConfetti,
 } from "react-icons/pi";
 import type { IconType } from "react-icons";
+import SoundToggle from "./SoundToggle";
 
 export type NavItem = {
   label: string;
@@ -217,7 +218,11 @@ const HeroNav = ({ items, onNavigate, extraItems = [], onNameClick }: Props) => 
             </a>
           );
         })}
+        <span className="hero-dock-sep" aria-hidden="true" />
+        <SoundToggle variant="dock" />
       </nav>
+
+      <SoundToggle variant="bar" />
 
       <button
         type="button"

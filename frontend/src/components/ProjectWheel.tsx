@@ -26,6 +26,94 @@ const WHEEL = {
 };
 
 /**
+ * The bezel: a watch-style tick ring on the inner edge of the rim, between
+ * the cards and the panel, turning with the wheel. sub is the ticks per card
+ * (the long tick lines up with each card), gap the space from the centre
+ * card's edge, long and short the tick lengths, all in pixels.
+ */
+const DIAL = { sub: 5, gap: 6, long: 12, short: 6, span: 6 };
+
+const SVG = "http://www.w3.org/2000/svg";
+
+/**
+ * A short tap of the phone's haptic engine, one per card the wheel passes.
+ * Android takes navigator.vibrate. iOS has no vibrate, but Safari 18 and up
+ * taps the engine when a switch-style checkbox toggles, so a hidden one is
+ * toggled instead. Desktops get nothing.
+ */
+const makeHaptic = () => {
+  if (!window.matchMedia("(pointer: coarse)").matches) return () => {};
+  if (typeof navigator.vibrate === "function") {
+    return () => {
+      navigator.vibrate(6);
+    };
+  }
+  const label = document.createElement("label");
+  const input = document.createElement("input");
+  input.type = "checkbox";
+  input.setAttribute("switch", "");
+  label.setAttribute("aria-hidden", "true");
+  label.style.display = "none";
+  label.appendChild(input);
+  document.body.appendChild(label);
+  const tap = () => label.click();
+  tap.dispose = () => label.remove();
+  return tap;
+};
+
+/**
+ * The click of a watch crown, made on the fly with Web Audio: a few
+ * milliseconds of noise through a narrow band-pass, so there is no file to
+ * load. Browsers only start audio after a click, tap or key press, so the
+ * context is created on the first one anywhere on the page; until then
+ * scrolling the wheel is silent.
+ */
+const makeClick = () => {
+  let ctx: AudioContext | null = null;
+  let noise: AudioBuffer | null = null;
+  const unlock = () => {
+    if (!ctx) {
+      ctx = new AudioContext();
+      const len = Math.round(ctx.sampleRate * 0.03);
+      noise = ctx.createBuffer(1, len, ctx.sampleRate);
+      const data = noise.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+    }
+    if (ctx.state === "suspended") void ctx.resume();
+  };
+  const events = ["pointerdown", "keydown", "touchend"] as const;
+  events.forEach((t) => window.addEventListener(t, unlock, { passive: true }));
+
+  const click = () => {
+    if (!ctx || !noise || ctx.state !== "running") return;
+    const at = ctx.currentTime;
+    const src = ctx.createBufferSource();
+    src.buffer = noise;
+    // High-pass first so nothing below the click's band gives it body.
+    const high = ctx.createBiquadFilter();
+    high.type = "highpass";
+    high.frequency.value = 3200;
+    const band = ctx.createBiquadFilter();
+    band.type = "bandpass";
+    // A little variation from click to click, as a real detent has.
+    band.frequency.value = 4800 + Math.random() * 600;
+    band.Q.value = 5;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, at);
+    gain.gain.exponentialRampToValueAtTime(0.32, at + 0.0008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + 0.018);
+    src.connect(high).connect(band).connect(gain).connect(ctx.destination);
+    src.start(at);
+    src.stop(at + 0.022);
+  };
+  click.dispose = () => {
+    events.forEach((t) => window.removeEventListener(t, unlock));
+    void ctx?.close();
+  };
+  return click;
+};
+
+/**
  * Per-layout geometry. Desktop gets larger cards on a wider rim; phones use
  * the reference's own numbers, sized for a narrow column.
  */
@@ -63,6 +151,7 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
   const hostRef = useRef<HTMLDivElement | null>(null);
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const markRef = useRef<HTMLSpanElement | null>(null);
+  const dialRef = useRef<SVGSVGElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   // Card under the marker, updated as the wheel turns.
   const [current, setCurrent] = useState(initial);
@@ -93,6 +182,25 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
     let moved = false;
     let drag: { id: number; y: number; from: number; v: number; lastY: number; lastAt: number } | null =
       null;
+
+    // One line per tick, laid out again every frame round the current spot.
+    const dial = dialRef.current;
+    const half = DIAL.span * DIAL.sub;
+    const ticks: SVGLineElement[] = [];
+    const rim = document.createElementNS(SVG, "path");
+    rim.setAttribute("class", "pw-dial-rim");
+    if (dial) {
+      dial.replaceChildren(rim);
+      for (let i = -half; i <= half; i++) {
+        const line = document.createElementNS(SVG, "line");
+        dial.appendChild(line);
+        ticks.push(line);
+      }
+    }
+    const haptic: (() => void) & { dispose?: () => void } = makeHaptic();
+    const click = makeClick();
+    let detent = Math.round(initial);
+    let lastTap = 0;
 
     const wrap = (k: number) => ((Math.round(k) % n) + n) % n;
     const index = () => wrap(target);
@@ -133,9 +241,48 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
         card.style.zIndex = String(100 - Math.round(Math.abs(off) * 8));
       }
       if (markRef.current) {
-        markRef.current.style.transform = `translate(${(apex + bw / 2 + 10).toFixed(1)}px, ${(
-          cy - 7
-        ).toFixed(1)}px)`;
+        markRef.current.style.transform = `translate(${(
+          apex + bw / 2 + DIAL.gap * 2 + DIAL.long
+        ).toFixed(1)}px, ${(cy - 7).toFixed(1)}px)`;
+      }
+      // Ticks sit at fixed spots on the wheel, so they ride round with it.
+      const r = G.radius - bw / 2 - DIAL.gap;
+      const base = Math.floor(pos * DIAL.sub);
+      for (let i = 0; i < ticks.length; i++) {
+        const t = base + i - half;
+        const off = t / DIAL.sub - pos;
+        const a = Math.PI - off * G.step;
+        const far = Math.abs(off * G.step) / WHEEL.reach;
+        const line = ticks[i];
+        if (far > 1) {
+          line.setAttribute("opacity", "0");
+          continue;
+        }
+        const major = ((t % DIAL.sub) + DIAL.sub) % DIAL.sub === 0;
+        const len = major ? DIAL.long : DIAL.short;
+        const cos = Math.cos(a);
+        const sin = Math.sin(a);
+        line.setAttribute("x1", (cx + cos * r).toFixed(1));
+        line.setAttribute("y1", (cy + sin * r).toFixed(1));
+        line.setAttribute("x2", (cx + cos * (r - len)).toFixed(1));
+        line.setAttribute("y2", (cy + sin * (r - len)).toFixed(1));
+        line.setAttribute("opacity", (1 - far * far).toFixed(3));
+        line.setAttribute(
+          "class",
+          major ? (Math.abs(off) < 0.1 ? "pw-tick is-major is-on" : "pw-tick is-major") : "pw-tick"
+        );
+      }
+      // A tap and a click for every card that crosses the marker, however it
+      // got there.
+      const d = Math.round(pos);
+      if (d !== detent) {
+        detent = d;
+        const now = performance.now();
+        if (now - lastTap > 30) {
+          lastTap = now;
+          haptic();
+          click();
+        }
       }
     };
 
@@ -147,6 +294,11 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
       apex = bw / 2 + 8;
       cx = apex + G.radius;
       cy = H / 2;
+      // The bezel's edge, the arc the long and short ticks hang from.
+      const r = G.radius - bw / 2 - DIAL.gap;
+      const sweep = WHEEL.reach;
+      const p = (a: number) => `${(cx + Math.cos(a) * r).toFixed(1)} ${(cy + Math.sin(a) * r).toFixed(1)}`;
+      rim.setAttribute("d", `M ${p(Math.PI - sweep)} A ${r} ${r} 0 0 1 ${p(Math.PI + sweep)}`);
       place();
     };
 
@@ -286,6 +438,8 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
       host.removeEventListener("pointerup", onUp);
       host.removeEventListener("pointercancel", onUp);
       host.removeEventListener("click", onClickCapture, true);
+      haptic.dispose?.();
+      click.dispose();
       api.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -358,6 +512,7 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
             </button>
           );
         })}
+        <svg ref={dialRef} className="pw-dial" aria-hidden="true" />
         <span ref={markRef} className="pw-mark" aria-hidden="true" />
         <p className="pw-hint" aria-hidden="true">
           {compact ? "swipe · tap to open" : "scroll · drag the wheel"}

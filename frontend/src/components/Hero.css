@@ -332,6 +332,44 @@
     0 1px 3px rgba(58, 74, 22, 0.1);
 }
 
+/* The music button sits under a hairline, apart from the section links. */
+.hero-dock-sep {
+  width: 18px;
+  height: 1px;
+  margin: 2px 0;
+  background: rgba(58, 74, 22, 0.14);
+}
+
+.hero-sound {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.hero-sound.is-on {
+  opacity: 0.85;
+}
+
+/* Phones: beside the burger, since the dock is hidden there. */
+.hero-sound-bar {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #3a4a16;
+  cursor: pointer;
+}
+
+.hero-sound-bar svg {
+  width: 21px;
+  height: 21px;
+}
+
 /* Label slides out to the left on hover: the icons alone are guessable but
    not certain. */
 .hero-dock-tip {
@@ -2050,6 +2088,16 @@ html.is-scroll-locked #smooth-wrapper {
     display: none;
   }
 
+  .hero-navbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hero-sound-bar {
+    display: flex;
+  }
+
   .hero-burger {
     display: flex;
   }
@@ -2406,6 +2454,42 @@ html.is-scroll-locked #smooth-wrapper {
   border-bottom: 7px solid transparent;
   border-left: 11px solid #3b82f6;
   pointer-events: none;
+}
+
+/* The bezel. Drawn every frame from ProjectWheel in the wheel's own pixels;
+   the mask fades it out towards the top and bottom. */
+.pw-dial {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  overflow: visible;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent);
+  mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent);
+}
+
+.pw-dial-rim {
+  fill: none;
+  stroke: #e5e5e5;
+  stroke-width: 1;
+}
+
+.pw-tick {
+  stroke: #d4d4d4;
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+
+.pw-tick.is-major {
+  stroke: #a3a3a3;
+  stroke-width: 1.5;
+}
+
+.pw-tick.is-on {
+  stroke: #3b82f6;
+  stroke-width: 2;
 }
 
 .pw-hint {
