@@ -38,10 +38,16 @@ const NameModal = ({ closing, onClose }: Props) => (
     </p>
 
     <p className="pm-para">
-      In the Sanskrit grammatical tradition the word is read as the sound that
-      precedes everything else, the syllable from which the rest follows. It
-      is where the Telugu phrase oṃkāra nādaṃ comes from: oṃkāra being the
-      syllable itself, nādaṃ the sound or vibration of it.
+      The word is built from pra, forth, and nu, to sound or hum: the sound
+      sent out, the hum the rest of creation is said to follow. That is why
+      the Telugu phrase is oṃkāra nādaṃ, oṃkāra being the syllable itself and
+      nādaṃ the sound or vibration of it. Both words point at the same thing.
+    </p>
+
+    <p className="pm-para">
+      The Śiva Purāṇa reads it another way, splitting it into pra for prakṛti,
+      the world of things, and nava, a boat: the vessel that carries you across
+      it.
     </p>
 
     <p className="pm-para">
