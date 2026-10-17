@@ -11,6 +11,7 @@ import {
 } from "react-icons/pi";
 import type { IconType } from "react-icons";
 import SoundToggle from "./SoundToggle";
+import DockTip from "./DockTip";
 
 export type NavItem = {
   label: string;
@@ -214,12 +215,12 @@ const HeroNav = ({ items, onNavigate, extraItems = [], onNameClick }: Props) => 
               className={`hero-dock-link${isActive ? " is-active" : ""}`}
             >
               <Icon aria-hidden="true" />
-              <span className="hero-dock-tip">{item.label}</span>
             </a>
           );
         })}
         <span className="hero-dock-sep" aria-hidden="true" />
         <SoundToggle variant="dock" />
+        <DockTip dock={dockRef} />
       </nav>
 
       <SoundToggle variant="bar" />

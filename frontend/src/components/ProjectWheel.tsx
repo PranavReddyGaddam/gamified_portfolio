@@ -31,7 +31,15 @@ const WHEEL = {
  * (the long tick lines up with each card), gap the space from the centre
  * card's edge, long and short the tick lengths, all in pixels.
  */
-const DIAL = { sub: 5, gap: 6, long: 12, short: 6, span: 6 };
+const DIAL = { sub: 5, gap: 10, long: 12, short: 6, span: 6 };
+
+/**
+ * The focus brackets, after beui's arc picker: four corners held at the
+ * centre slot while the cards turn through it. They stand gap pixels off the
+ * card at rest, open by spread while the wheel moves, and close back in on
+ * the card it lands on. response is that spring's settle time in seconds.
+ */
+const FOCUS = { gap: 5, spread: 4, response: 0.16 };
 
 const SVG = "http://www.w3.org/2000/svg";
 
@@ -150,8 +158,8 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
   const n = projects.length;
   const hostRef = useRef<HTMLDivElement | null>(null);
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const markRef = useRef<HTMLSpanElement | null>(null);
   const dialRef = useRef<SVGSVGElement | null>(null);
+  const focusRef = useRef<HTMLSpanElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   // Card under the marker, updated as the wheel turns.
   const [current, setCurrent] = useState(initial);
@@ -179,6 +187,9 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
     let last = 0;
     let commitTimer = 0;
     let wheelAcc = 0;
+    // How far open the focus brackets are, 0 at rest to 1 while turning.
+    let open = 0;
+    let openVel = 0;
     let moved = false;
     let drag: { id: number; y: number; from: number; v: number; lastY: number; lastAt: number } | null =
       null;
@@ -240,10 +251,9 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
         );
         card.style.zIndex = String(100 - Math.round(Math.abs(off) * 8));
       }
-      if (markRef.current) {
-        markRef.current.style.transform = `translate(${(
-          apex + bw / 2 + DIAL.gap * 2 + DIAL.long
-        ).toFixed(1)}px, ${(cy - 7).toFixed(1)}px)`;
+      if (focusRef.current) {
+        focusRef.current.style.transform = `translate(${apex - bw / 2}px, ${(cy - bh / 2).toFixed(1)}px)`;
+        focusRef.current.style.setProperty("--gap", `${(FOCUS.gap + open * FOCUS.spread).toFixed(2)}px`);
       }
       // Ticks sit at fixed spots on the wheel, so they ride round with it.
       const r = G.radius - bw / 2 - DIAL.gap;
@@ -290,8 +300,9 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
       const rect = host.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
       H = rect.height;
-      // The centre card sits flush with the column's left edge.
-      apex = bw / 2 + 8;
+      // The centre card sits near the column's left edge, leaving room for
+      // the focus brackets to open.
+      apex = bw / 2 + 14;
       cx = apex + G.radius;
       cy = H / 2;
       // The bezel's edge, the arc the long and short ticks hang from.
@@ -315,8 +326,21 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
           vel = 0;
         }
       }
+      // The brackets open while anything moves and close once it rests.
+      // Small substeps keep this stiffer spring stable on a slow frame.
+      const goal = !reduced && (drag || pos !== target) ? 1 : 0;
+      const w = TAU / FOCUS.response;
+      for (let left = dt; left > 0; left -= 0.004) {
+        const h = Math.min(left, 0.004);
+        openVel += (w * w * (goal - open) - 2 * w * openVel) * h;
+        open += openVel * h;
+      }
+      if (Math.abs(goal - open) < 0.002 && Math.abs(openVel) < 0.01) {
+        open = goal;
+        openVel = 0;
+      }
       place();
-      if (drag || pos !== target) raf = requestAnimationFrame(frame);
+      if (drag || pos !== target || open !== 0) raf = requestAnimationFrame(frame);
       else last = 0;
     };
 
@@ -513,7 +537,12 @@ const ProjectWheel = ({ projects, initial = 0, compact = false, onOpen }: Props)
           );
         })}
         <svg ref={dialRef} className="pw-dial" aria-hidden="true" />
-        <span ref={markRef} className="pw-mark" aria-hidden="true" />
+        <span ref={focusRef} className="pw-focus" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <i />
+        </span>
         <p className="pw-hint" aria-hidden="true">
           {compact ? "swipe · tap to open" : "scroll · drag the wheel"}
         </p>

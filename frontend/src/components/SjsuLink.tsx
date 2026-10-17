@@ -191,7 +191,11 @@ const SjsuLink = () => {
                       aria-hidden={i !== frame}
                     >
                       {photo ? (
-                        <img src={photo.src} alt={photo.caption ?? ""} />
+                        <img
+                          src={photo.src}
+                          alt={photo.caption ?? ""}
+                          style={photo.focus ? { objectPosition: photo.focus } : undefined}
+                        />
                       ) : null}
                     </div>
                   ))}

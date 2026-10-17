@@ -58,7 +58,6 @@ const SoundToggle = ({ variant }: Props) => {
       onClick={() => ambient.toggle()}
     >
       <Icon aria-hidden="true" />
-      {variant === "dock" ? <span className="hero-dock-tip">{label}</span> : null}
       <span className={`sound-hint sound-hint--${variant}${hint ? " is-shown" : ""}`} aria-hidden="true">
         <PiMusicNotes />
         {verb} anywhere for sound

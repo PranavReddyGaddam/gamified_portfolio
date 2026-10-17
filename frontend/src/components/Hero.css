@@ -273,6 +273,7 @@
    cream, so the read comes from the blur plus a lit top edge and a soft
    drop shadow rather than from anything showing through. */
 .hero-dock {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -448,17 +449,16 @@
   height: 21px;
 }
 
-/* Label slides out to the left on hover: the icons alone are guessable but
-   not certain. */
-.hero-dock-tip {
+/* The hover label: one glass pill to the left of the dock shared by every
+   icon (DockTip). It glides between icons and stretches to each word, so the
+   icons alone, guessable but not certain, always have a name. */
+.dock-tip {
   position: absolute;
+  top: 0;
   right: calc(100% + 10px);
-  padding: 5px 10px;
+  height: 24px;
+  overflow: hidden;
   border-radius: 999px;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1;
-  white-space: nowrap;
   color: #3a4a16;
   background: rgba(255, 255, 255, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.7);
@@ -466,23 +466,52 @@
   -webkit-backdrop-filter: blur(10px) saturate(1.6);
   backdrop-filter: blur(10px) saturate(1.6);
   opacity: 0;
-  transform: translateX(6px);
+  scale: 0.94;
+  transform-origin: right center;
   pointer-events: none;
   transition:
-    opacity 0.32s ease,
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.22s ease,
+    scale 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.hero-dock-link:hover .hero-dock-tip,
-.hero-dock-link:focus-visible .hero-dock-tip {
+.dock-tip.is-shown {
   opacity: 1;
-  transform: translateX(0);
+  scale: 1;
+}
+
+/* Pinned to the pill's right edge and measured for its width; the pill
+   clips it while the width catches up. */
+.dock-tip-text {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  translate: 0 -50%;
+}
+
+.dock-tip-text.is-new {
+  animation: dock-tip-in 0.24s ease-out;
+}
+
+@keyframes dock-tip-in {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-dock-link,
-  .hero-dock-tip {
+  .dock-tip {
     transition: none;
+  }
+
+  .dock-tip-text.is-new {
+    animation: none;
   }
 
   .hero-dock-link:hover {
@@ -2522,16 +2551,68 @@ html.is-scroll-locked #smooth-wrapper {
   pointer-events: none;
 }
 
-/* Points from the centre card to the panel it is showing. */
-.pw-mark {
+/* The focus brackets: four corners at the centre slot, moved and spread by
+   ProjectWheel through --gap. Each corner's curve follows the card's own
+   6px radius out to where the bracket stands. */
+.pw-focus {
+  --gap: 5px;
+  --arm: 12px;
+  --line: 1.5px;
   position: absolute;
   left: 0;
   top: 0;
   z-index: 101;
-  border-top: 7px solid transparent;
-  border-bottom: 7px solid transparent;
-  border-left: 11px solid #3b82f6;
+  width: 190px;
+  height: 119px;
   pointer-events: none;
+}
+
+.pw--compact .pw-focus {
+  --arm: 10px;
+  width: 150px;
+  height: 94px;
+}
+
+.pw-focus i {
+  --out: calc(-1 * (var(--gap) + var(--line)));
+  --round: calc(6px + var(--gap) + var(--line));
+  position: absolute;
+  width: var(--arm);
+  height: var(--arm);
+  border: 0 solid #3b82f6;
+  opacity: 0.85;
+}
+
+.pw-focus i:nth-child(1) {
+  top: var(--out);
+  left: var(--out);
+  border-top-width: var(--line);
+  border-left-width: var(--line);
+  border-top-left-radius: var(--round);
+}
+
+.pw-focus i:nth-child(2) {
+  top: var(--out);
+  right: var(--out);
+  border-top-width: var(--line);
+  border-right-width: var(--line);
+  border-top-right-radius: var(--round);
+}
+
+.pw-focus i:nth-child(3) {
+  bottom: var(--out);
+  left: var(--out);
+  border-bottom-width: var(--line);
+  border-left-width: var(--line);
+  border-bottom-left-radius: var(--round);
+}
+
+.pw-focus i:nth-child(4) {
+  bottom: var(--out);
+  right: var(--out);
+  border-bottom-width: var(--line);
+  border-right-width: var(--line);
+  border-bottom-right-radius: var(--round);
 }
 
 /* The bezel. Drawn every frame from ProjectWheel in the wheel's own pixels;
@@ -2628,7 +2709,7 @@ html.is-scroll-locked #smooth-wrapper {
    vertical dial at its own card size. The wheel only takes swipes over its
    own column, so the summary beside it is where the page still scrolls. */
 .pw--compact {
-  /* Wide enough for the centre card and its marker; cards further round the
+  /* Wide enough for the centre card and its bezel; cards further round the
      rim are cut at the divider, which leaves the summary room on a phone. */
   grid-template-columns: 196px minmax(0, 1fr);
   gap: 14px;
