@@ -22,7 +22,7 @@ import HireMeStats from "./components/HireMeStats";
 import NameModal from "./components/NameModal";
 import SkillsModal from "./components/SkillsModal";
 import SjsuLink from "./components/SjsuLink";
-import { RiTwitterXFill } from "react-icons/ri";
+import { RiMailFill, RiTwitterXFill } from "react-icons/ri";
 import { FaLock, FaUnlock, FaLinkedin, FaGithub, FaInstagram } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
@@ -619,125 +619,53 @@ function App() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer id="contact" className="site-footer relative z-10 px-6 md:px-16 pt-8 pb-8">
-        <div className="flex flex-col">
-          <div className="flex flex-col gap-5 items-start w-full">
-            {/* Hairline rule */}
-            <div className="bg-neutral-200 h-px w-full" />
+      {/* Footer. The name is set as large as the page is wide and is the
+          last thing on it, with the links and contact as a small row above.
+          The sign-off under it is the ॐ mark again: it opens the same name
+          panel as the hero logo, so the page ends where it began. */}
+      <footer id="contact" className="site-footer relative z-10 px-6 md:px-16 pt-8 pb-6">
+        <div className="bg-neutral-200 h-px w-full" />
 
-            <div className="hidden md:grid gap-5 grid-cols-4 w-full">
-              {/* Name + local time. Spans the empty second column: Onest sets
-                  the name about 320px wide at text-3xl, more than one quarter
-                  of the footer holds below ~1500px. */}
-              <div className="col-span-2 flex flex-col gap-0 items-start">
-                <a href="#home" className="flex gap-3 items-center transition-opacity hover:opacity-80">
-                  <p className="font-display text-2xl lg:text-3xl tracking-[-0.02em] whitespace-nowrap text-neutral-700">
-                    Pranav Reddy Gaddam
-                  </p>
-                </a>
-                <p className="text-base text-neutral-400 mt-1">
-                  <LocalClock /> San Jose, CA
-                </p>
-              </div>
-
-              {/* Nav */}
-              <div className="flex flex-col gap-2 items-start">
-                {[
-                  { label: "Work", href: "#projects" },
-                  { label: "About", href: "#about" },
-                  { label: "For fun", href: "#fun" },
-                  { label: "Previous version", href: "/v1" },
-                ].map((l) => (
-                  <a
-                    key={l.label}
-                    href={l.href}
-                    className="text-base text-neutral-400 tracking-[0.01em] hover:text-neutral-900 transition-colors duration-200"
-                  >
-                    {l.label}
-                  </a>
-                ))}
-              </div>
-
-              {/* Contact + socials */}
-              <div className="flex flex-col gap-4 items-start">
-                <div>
-                  <p className="text-base text-neutral-400">
-                    Let&apos;s work together!
-                  </p>
-                  <a
-                    href="mailto:reddy.pranav.gaddam@gmail.com"
-                    className="text-base text-neutral-700 hover:text-neutral-900 transition-colors"
-                  >
-                    reddy.pranav.gaddam@gmail.com
-                  </a>
-                </div>
-
-                <div className="flex gap-4 items-center text-neutral-300">
-                  <a
-                    href="https://www.linkedin.com/in/pranav-reddy-gaddam"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="LinkedIn"
-                    className="hover:text-neutral-600 transition-colors"
-                  >
-                    <FaLinkedin size={20} />
-                  </a>
-                  <a
-                    href="https://github.com/PranavReddyGaddam"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="GitHub"
-                    className="hover:text-neutral-600 transition-colors"
-                  >
-                    <FaGithub size={20} />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/__pranav.reddy__"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram"
-                    className="hover:text-neutral-600 transition-colors"
-                  >
-                    <FaInstagram size={20} />
-                  </a>
-                  <a
-                    href="https://twitter.com/Pranav_2801"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="X"
-                    className="hover:text-neutral-600 transition-colors"
-                  >
-                    <RiTwitterXFill size={19} />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile: stacked */}
-            <div className="md:hidden flex flex-col gap-6 w-full">
-              <div>
-                <p className="font-display text-2xl tracking-[-0.02em] text-neutral-700">
-                  Pranav Reddy Gaddam
-                </p>
-                <p className="text-sm text-neutral-400 mt-1">
-                  <LocalClock /> San Jose, CA
-                </p>
-              </div>
-              <a
-                href="mailto:reddy.pranav.gaddam@gmail.com"
-                className="text-sm text-neutral-700"
-              >
-                reddy.pranav.gaddam@gmail.com
+        <div className="footer-top">
+          <nav className="footer-links" aria-label="Footer">
+            {[
+              { label: "Work", href: "#projects" },
+              { label: "About", href: "#about" },
+              { label: "For fun", href: "#fun" },
+              { label: "Previous version", href: "/v1" },
+            ].map((l) => (
+              <a key={l.label} href={l.href}>
+                {l.label}
               </a>
-              <div className="flex gap-4 items-center text-neutral-300">
-                <a href="https://www.linkedin.com/in/pranav-reddy-gaddam" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedin size={18} /></a>
-                <a href="https://github.com/PranavReddyGaddam" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><FaGithub size={18} /></a>
-                <a href="https://www.instagram.com/__pranav.reddy__" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram size={18} /></a>
-                <a href="https://twitter.com/Pranav_2801" target="_blank" rel="noopener noreferrer" aria-label="X"><RiTwitterXFill size={17} /></a>
-              </div>
-            </div>
+            ))}
+          </nav>
+
+          <div className="footer-social">
+            <a href="mailto:reddy.pranav.gaddam@gmail.com" aria-label="Email" title="reddy.pranav.gaddam@gmail.com"><RiMailFill size={20} /></a>
+            <a href="https://www.linkedin.com/in/pranav-reddy-gaddam" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedin size={19} /></a>
+            <a href="https://github.com/PranavReddyGaddam" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><FaGithub size={19} /></a>
+            <a href="https://www.instagram.com/__pranav.reddy__" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram size={19} /></a>
+            <a href="https://twitter.com/Pranav_2801" target="_blank" rel="noopener noreferrer" aria-label="X"><RiTwitterXFill size={18} /></a>
           </div>
+        </div>
+
+        <a href="#home" className="footer-name">
+          Pranav Reddy Gaddam
+        </a>
+
+        <div className="footer-sign">
+          <button
+            type="button"
+            className="footer-om"
+            aria-label="What the name means"
+            onClick={() => setNameOpen(true)}
+          >
+            <img src="/om-mark.svg" alt="" width="15" height="16" />
+            <span>praṇava · the sound sent forth</span>
+          </button>
+          <span className="footer-time">
+            <LocalClock /> in San Jose
+          </span>
         </div>
       </footer>
 

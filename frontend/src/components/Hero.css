@@ -1671,6 +1671,111 @@ a.fun-cover {
   background: #ffffff;
   font-family: "Hanken Grotesk", "Onest", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 400;
+  /* The name is sized against the footer's own width, padding excluded. */
+  container-type: inline-size;
+}
+
+/* Links and contact icons as one small row above the name. */
+.footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 32px;
+  padding: 24px 0 12px;
+  font-size: 15px;
+}
+
+/* The dock is fixed over the right edge from tablet up; keep the socials
+   clear of it. */
+@media (min-width: 768px) {
+  .footer-top {
+    padding-right: 64px;
+  }
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.footer-links a {
+  color: #a3a3a3;
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: #171717;
+}
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #d4d4d4;
+}
+
+.footer-social a {
+  transition: color 0.2s ease;
+}
+
+.footer-social a:hover {
+  color: #525252;
+}
+
+/* The name across the full width, on one line at every size: cqi scales it
+   with the footer, so it fills the row the same way on a phone and a wide
+   screen. Tight tracking and leading so the block reads as one mark. */
+.footer-name {
+  display: block;
+  font-family: "Onest", sans-serif;
+  font-weight: 500;
+  font-size: 10.2cqi;
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  /* Pale, so the page ends quietly; it takes the mark's olive on hover. */
+  color: #dcdcd8;
+  margin: 0.12em 0 0 -0.045em;
+  transition: color 0.4s ease;
+}
+
+.footer-name:hover {
+  color: #3a4a16;
+}
+
+.footer-sign {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #a3a3a3;
+}
+
+.footer-om {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.footer-om img {
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+.footer-om:hover {
+  color: #3a4a16;
+}
+
+.footer-om:hover img {
+  opacity: 1;
 }
 
 /* --- Work section ----------------------------------------------------- */
