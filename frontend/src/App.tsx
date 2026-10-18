@@ -176,13 +176,16 @@ function App() {
       return;
     }
 
+    const from = smoother.scrollTop();
+    // Clamped to the real end of the page: a target near the bottom (Uses,
+    // the last Fun row) cannot reach the top of the viewport, and the
+    // smoother would otherwise carry the page past the footer into blank space.
+    const to = Math.min(smoother.offset(el, "top top"), ScrollTrigger.maxScroll(window));
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      smoother.scrollTo(el, false, "top top");
+      smoother.scrollTop(to);
       return;
     }
-
-    const from = smoother.scrollTop();
-    const to = smoother.offset(el, "top top");
 
     // Scale the duration with the distance travelled, so a jump to the next
     // section and one across the whole page both feel deliberate rather than
