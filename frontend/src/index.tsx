@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -22,9 +23,11 @@ root.render(
         <Route path="*" element={<App />} />
       </Routes>
     </BrowserRouter>
-    {/* Vercel Web Analytics: unique visitors and page views, no cookies.
-        Only reports from the deployed site, not from localhost. */}
+    {/* Vercel Web Analytics (unique visitors and page views, no cookies) and
+        Speed Insights (Core Web Vitals from real visits). Both only report
+        from the deployed site, not from localhost. */}
     <Analytics />
+    <SpeedInsights />
   </React.StrictMode>
 );
 
