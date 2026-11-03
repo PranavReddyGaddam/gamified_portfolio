@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { sports, type Sport } from "../data/sports";
 import DetailModal from "./DetailModal";
+import PhotoSlider from "./PhotoSlider";
 
 /**
  * Sports followed — four cards, each opening a detail modal.
@@ -15,6 +16,16 @@ const SportRow = ({ openId, onOpened }: {
   onOpened?: () => void;
 } = {}) => {
   const [open, setOpen] = useState<Sport | null>(null);
+  // Photographs start folded away, so the story reads first; the slider
+  // lays them back in. Reset for each sport opened.
+  const [photos, setPhotos] = useState(false);
+  // Set on first touch of the slider, so the images are already arriving by
+  // the time they unfold rather than popping in mid-animation.
+  const [primed, setPrimed] = useState(false);
+  useEffect(() => {
+    setPhotos(false);
+    setPrimed(false);
+  }, [open]);
 
   // Opened from the contents rail. The cards sit in a single row, so scrolling
   // to one would not move the page; showing its write-up is the useful action.
@@ -106,49 +117,69 @@ const SportRow = ({ openId, onOpened }: {
               the piece come from the body blocks instead. */}
           {open.blurb ? <p className="pm-lede">{open.blurb}</p> : null}
 
+          {open.body?.some((b) => b.kind === "figure") ? (
+            <PhotoSlider
+              ball={open.id}
+              open={photos}
+              onChange={setPhotos}
+              onPrime={() => setPrimed(true)}
+            />
+          ) : null}
+
           {open.body?.map((block, i) =>
             block.kind === "text" ? (
               <p key={i} className="pm-para">
                 {block.text}
               </p>
             ) : (
-              <figure
+              // The wrapper animates open from nothing; the figure inside
+              // keeps its own spacing so that collapses with it.
+              <div
                 key={i}
-                className={`sp-figure${
-                  block.images.length > 1 ? " sp-figure--pair" : ""
-                }`}
+                className={`sp-reveal${photos ? " is-open" : ""}`}
+                inert={!photos}
               >
-                <span className="sp-figure-frames">
-                  {block.images.map((img) => (
-                    <span
-                      key={img.src}
-                      className={`sp-frame${
-                        block.focus === "top" ? " sp-frame--top" : ""
-                      }`}
-                    >
-                      <img src={img.src} alt={img.alt} loading="lazy" />
-                    </span>
-                  ))}
-                </span>
+                <figure
+                  className={`sp-figure${
+                    block.images.length > 1 ? " sp-figure--pair" : ""
+                  }`}
+                >
+                  <span className="sp-figure-frames">
+                    {block.images.map((img) => (
+                      <span
+                        key={img.src}
+                        className={`sp-frame${
+                          block.focus === "top" ? " sp-frame--top" : ""
+                        }`}
+                      >
+                        <img
+                          src={img.src}
+                          alt={img.alt}
+                          loading={primed ? "eager" : "lazy"}
+                        />
+                      </span>
+                    ))}
+                  </span>
 
-                {block.caption || block.credit ? (
-                  <figcaption>
-                    {block.caption}
-                    {block.credit ? (
-                      <>
-                        {" "}
-                        <a
-                          href={block.credit.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {block.credit.name}, {block.credit.licence}
-                        </a>
-                      </>
-                    ) : null}
-                  </figcaption>
-                ) : null}
-              </figure>
+                  {block.caption || block.credit ? (
+                    <figcaption>
+                      {block.caption}
+                      {block.credit ? (
+                        <>
+                          {" "}
+                          <a
+                            href={block.credit.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {block.credit.name}, {block.credit.licence}
+                          </a>
+                        </>
+                      ) : null}
+                    </figcaption>
+                  ) : null}
+                </figure>
+              </div>
             )
           )}
         </DetailModal>

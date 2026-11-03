@@ -1577,6 +1577,258 @@ a.fun-cover {
   }
 }
 
+/* --- photo slider in a sport write-up ---------------------------------- */
+
+/* Sits between the lede and the story: a quiet label over a hairline rule,
+   with the sport's own ball riding it. */
+.sp-slider {
+  margin: -1rem 0 1.75rem;
+}
+
+.sp-slider-label {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.9rem;
+  font-size: 14px;
+  color: #a3a3a3;
+  white-space: nowrap;
+}
+
+/* The suffix opens from zero width, so the label re-centres as it grows,
+   and its letters drop in one after another. */
+.sp-slider-suffix {
+  display: inline-grid;
+  grid-template-columns: 0fr;
+  transition: grid-template-columns 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sp-slider-suffix > span {
+  overflow: hidden;
+  min-width: 0;
+}
+
+.sp-slider-suffix > span > span {
+  display: inline-block;
+  color: #3a4a16;
+  opacity: 0;
+  transform: translateY(5px) rotate(-8deg);
+  transform-origin: 50% 85%;
+  transition:
+    opacity 0.2s ease,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sp-slider-suffix > span > span:nth-child(even) {
+  transform: translateY(5px) rotate(8deg);
+}
+
+.sp-slider-suffix.is-open {
+  grid-template-columns: 1fr;
+}
+
+.sp-slider-suffix.is-open > span > span {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i) * 22ms + 60ms);
+}
+
+.sp-slider-rule {
+  position: relative;
+  height: 1px;
+  background: #e5e5e5;
+}
+
+/* The real control: transparent, and taller than the rule so the ball is
+   easy to catch. pan-y keeps vertical scrolling working over it on touch. */
+.sp-slider-rule input {
+  appearance: none;
+  position: absolute;
+  z-index: 2;
+  left: -12px;
+  top: -21.5px;
+  width: calc(100% + 24px);
+  height: 44px;
+  margin: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: pan-y pinch-zoom;
+}
+
+.sp-slider-rule input:active {
+  cursor: grabbing;
+}
+
+.sp-slider-rule input:focus {
+  outline: none;
+}
+
+.sp-slider-rule input::-webkit-slider-runnable-track {
+  height: 44px;
+  background: transparent;
+}
+
+.sp-slider-rule input::-webkit-slider-thumb {
+  appearance: none;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 0;
+}
+
+.sp-slider-rule input::-moz-range-thumb {
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 0;
+}
+
+.sp-slider-pos {
+  position: absolute;
+  z-index: 1;
+  top: 0.5px;
+  left: calc(9px + (100% - 18px) * var(--pos, 0));
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  /* Rolls home on release; follows the finger exactly while dragging. */
+  transition: left 0.5s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+.sp-slider-rule.is-dragging .sp-slider-pos {
+  transition: none;
+}
+
+.sp-slider-rule input:focus-visible + .sp-slider-pos {
+  outline: 2px solid #9fb06b;
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+
+/* The ball itself. Each sport draws its own; the seam or panel lines sit in
+   ::after so the whole thing turns as one. */
+.sp-ball {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  transform: rotate(var(--turn, 0deg));
+  box-shadow:
+    inset -2px -3px 4px rgb(0 0 0 / 0.22),
+    0 1px 2px rgb(0 0 0 / 0.18);
+  transition: transform 0.5s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+.sp-slider-rule.is-dragging .sp-ball {
+  transition: none;
+}
+
+.sp-ball::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.sp-ball--cricket {
+  background: radial-gradient(circle at 35% 30%, #e2594f, #b0231b 55%, #7c1611);
+}
+
+/* The seam: two rows of stitching either side of a centre line. */
+.sp-ball--cricket::after {
+  left: 50%;
+  width: 4px;
+  margin-left: -2px;
+  background:
+    repeating-linear-gradient(to bottom, rgb(255 255 255 / 0.85) 0 1px, transparent 1px 2.5px) left / 1px 100% no-repeat,
+    repeating-linear-gradient(to bottom, rgb(255 255 255 / 0.85) 0 1px, transparent 1px 2.5px) right / 1px 100% no-repeat,
+    linear-gradient(rgb(255 255 255 / 0.35), rgb(255 255 255 / 0.35)) center / 1px 100% no-repeat;
+}
+
+.sp-ball--nba {
+  background: radial-gradient(circle at 35% 30%, #f39a4c, #d9661f 55%, #a44812);
+}
+
+.sp-ball--nba::after {
+  background:
+    linear-gradient(#3b1a08, #3b1a08) center / 1px 100% no-repeat,
+    linear-gradient(#3b1a08, #3b1a08) center / 100% 1px no-repeat;
+  border-left: 1px solid #3b1a08;
+  border-right: 1px solid #3b1a08;
+  border-radius: 50%;
+  inset: 0 3px;
+}
+
+.sp-ball--tennis {
+  background: radial-gradient(circle at 35% 30%, #e8f27a, #c6d93a 55%, #95a71f);
+}
+
+.sp-ball--tennis::after {
+  inset: -2px 8px -2px -8px;
+  border: 1.5px solid rgb(255 255 255 / 0.9);
+  border-radius: 50%;
+}
+
+.sp-ball--football {
+  background: radial-gradient(circle at 35% 30%, #ffffff, #eceae4 60%, #c9c6bd);
+}
+
+.sp-ball--football::after {
+  inset: 5px;
+  background: #2b2b2b;
+  clip-path: polygon(50% 0, 100% 38%, 81% 100%, 19% 100%, 0 38%);
+}
+
+/* A folded photograph: no height, no opacity. Opening it grows the row to
+   the figure's own height, so the text below is pushed rather than jumped. */
+.sp-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sp-reveal > .sp-figure {
+  min-height: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transition:
+    opacity 0.25s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sp-reveal.is-open {
+  grid-template-rows: 1fr;
+}
+
+.sp-reveal.is-open > .sp-figure {
+  padding: 2.5rem 0;
+  opacity: 1;
+  transform: none;
+  transition-delay: 0s, 0.08s, 0s;
+}
+
+@media (max-width: 640px) {
+  .sp-reveal.is-open > .sp-figure {
+    padding: 2rem 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-slider-suffix,
+  .sp-slider-suffix > span > span,
+  .sp-slider-pos,
+  .sp-ball,
+  .sp-reveal,
+  .sp-reveal > .sp-figure {
+    transition: none !important;
+  }
+}
+
 /* --- Sport cards ------------------------------------------------------ */
 
 /* Four wide cards rather than the five covers of the other rows: there is no
