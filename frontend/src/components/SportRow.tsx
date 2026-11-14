@@ -117,7 +117,9 @@ const SportRow = ({ openId, onOpened }: {
               the piece come from the body blocks instead. */}
           {open.blurb ? <p className="pm-lede">{open.blurb}</p> : null}
 
-          {open.body?.some((b) => b.kind === "figure") ? (
+          {/* Every sport gets the slider, photographs or not yet: sliding it
+              on a story with none simply changes nothing until they land. */}
+          {open.body?.length ? (
             <PhotoSlider
               ball={open.id}
               open={photos}
