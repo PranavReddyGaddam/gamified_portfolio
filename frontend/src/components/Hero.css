@@ -1641,7 +1641,13 @@ a.fun-cover {
 /* The real control: transparent, and taller than the rule so the ball is
    easy to catch. pan-y keeps vertical scrolling working over it on touch. */
 .sp-slider-rule input {
+  -webkit-appearance: none;
   appearance: none;
+  /* iOS Safari still paints its own thumb (a white square with a shadow)
+     over a transparent range input, so the native control is hidden
+     outright; it stays fully interactive. */
+  opacity: 0;
+  -webkit-tap-highlight-color: transparent;
   position: absolute;
   z-index: 2;
   left: -12px;
@@ -1668,7 +1674,9 @@ a.fun-cover {
 }
 
 .sp-slider-rule input::-webkit-slider-thumb {
+  -webkit-appearance: none;
   appearance: none;
+  box-shadow: none;
   width: 44px;
   height: 44px;
   background: transparent;
