@@ -30,6 +30,25 @@ const apply = () => {
 };
 
 export const scrollLock = {
+  /** The page's real scroll position, even while a modal has it pinned. */
+  position(): number {
+    if (depth > 0) return savedY;
+    return smoother ? smoother.scrollTop() : window.scrollY;
+  },
+
+  /**
+   * Moves the page to `y`. While a modal holds the lock the page is pinned,
+   * so the position is queued for the release instead.
+   */
+  restoreTo(y: number) {
+    if (depth > 0) {
+      savedY = y;
+      return;
+    }
+    if (smoother) smoother.scrollTop(y);
+    else window.scrollTo(0, y);
+  },
+
   /** Called by App as the smoother is created and destroyed. */
   register(instance: ScrollSmoother | null) {
     smoother = instance;

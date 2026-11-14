@@ -30,6 +30,10 @@ body {
   /* Sections use semi-transparent gradients; with ScrollSmoother the app's
      bg-white div only covers the first viewport, so the page itself must be white */
   background-color: #f0efe9;
+  /* ScrollSmoother moves the content by transform, so the browser's scroll
+     anchoring has nothing real to hold on to; left on, it nudges the page
+     while it lays out and throws a restored position off by a section. */
+  overflow-anchor: none;
 }
 
 body {

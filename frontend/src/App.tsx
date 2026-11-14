@@ -10,6 +10,7 @@ import GameInstructionsModal from "./components/GameInstructionsModal";
 import CodeRequestModal from "./components/CodeRequestModal";
 import "./components/Hero.css";
 import { scrollLock } from "./lib/scrollLock";
+import { startScrollMemory } from "./lib/scrollMemory";
 import ContributionGraph from "./components/ContributionGraph";
 import ExperienceRows from "./components/ExperienceRows";
 import FunWall from "./components/FunWall";
@@ -153,7 +154,10 @@ function App() {
     // behind them. body{overflow:hidden} cannot do it: ScrollSmoother never
     // scrolls the body, it transforms #smooth-content.
     scrollLock.register(smoother);
+    // Put the reader back where they were on a refresh.
+    const stopScrollMemory = startScrollMemory();
     return () => {
+      stopScrollMemory();
       scrollLock.register(null);
       smoother.kill();
       smootherRef.current = null;
