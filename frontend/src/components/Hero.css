@@ -215,6 +215,11 @@
 }
 
 .hero-logo:focus-visible {
+  outline: none;
+}
+
+/* The button spans the column, so the keyboard ring hugs the mark instead. */
+.hero-logo:focus-visible img {
   outline: 2px solid #3a4a16;
   outline-offset: 6px;
   border-radius: 4px;

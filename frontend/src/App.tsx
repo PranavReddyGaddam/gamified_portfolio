@@ -386,7 +386,12 @@ function App() {
             type="button"
             className="hero-logo"
             aria-label="Pranav Reddy Gaddam — what the name means"
-            onClick={() => setNameOpen(true)}
+            onClick={(e) => {
+              // A mouse click shouldn't leave focus on the mark, or closing
+              // the modal with Esc lights up a focus ring around it.
+              if (e.detail > 0) e.currentTarget.blur();
+              setNameOpen(true);
+            }}
           >
             <img src="/om-mark.svg" alt="" width="33" height="34" />
           </button>
@@ -668,7 +673,10 @@ function App() {
             type="button"
             className="footer-om"
             aria-label="What the name means"
-            onClick={() => setNameOpen(true)}
+            onClick={(e) => {
+              if (e.detail > 0) e.currentTarget.blur();
+              setNameOpen(true);
+            }}
           >
             <img src="/om-mark.svg" alt="" width="15" height="16" />
             <span>praṇava · the sound sent forth</span>
