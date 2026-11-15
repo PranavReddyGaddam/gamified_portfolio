@@ -131,13 +131,12 @@ const SjsuLink = () => {
         aria-expanded={Boolean(place)}
         onClick={open}
       >
-        <svg className="org-chip-logo" viewBox="0 0 16 16" aria-hidden="true">
-          <rect width="16" height="16" rx="3.5" fill="#0055a2" />
-          <path
-            d="M10.9 5.1c-.6-.7-1.6-1.1-2.7-1.1-1.6 0-2.8.9-2.8 2.2 0 1.3 1 1.8 2.5 2.1 1.1.2 1.5.5 1.5 1 0 .6-.6.9-1.4.9-.9 0-1.6-.4-2.1-1l-1 1.1c.7.8 1.8 1.3 3.1 1.3 1.8 0 3-.9 3-2.4 0-1.3-.9-1.8-2.5-2.1-1.1-.2-1.5-.4-1.5-.9 0-.5.5-.8 1.2-.8.7 0 1.3.3 1.7.8z"
-            fill="#e5a823"
-          />
-        </svg>
+        <img
+          className="org-chip-logo"
+          src="/sjsu-logo.png"
+          alt=""
+          aria-hidden="true"
+        />
         San Jose State University
         <span className="sjsu-hint" aria-hidden="true">
           <span className="sjsu-hint-icon">

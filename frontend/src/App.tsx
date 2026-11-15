@@ -520,20 +520,12 @@ function App() {
                 rel="noopener noreferrer"
                 className="org-chip org-chip--salesforce"
               >
-                <svg
+                <img
                   className="org-chip-logo org-chip-logo--wide"
-                  viewBox="0 0 24 16"
+                  src="/salesforce-logo.png"
+                  alt=""
                   aria-hidden="true"
-                >
-                  <g fill="#00a1e0">
-                    <circle cx="7" cy="9" r="4.6" />
-                    <circle cx="11.6" cy="6.2" r="5" />
-                    <circle cx="17.2" cy="7.6" r="4.6" />
-                    <circle cx="12.4" cy="10.6" r="4.4" />
-                    <circle cx="4.6" cy="10.8" r="3.4" />
-                    <circle cx="19.6" cy="10.8" r="3.6" />
-                  </g>
-                </svg>
+                />
                 Salesforce
               </a>
               .

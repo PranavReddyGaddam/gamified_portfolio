@@ -3244,13 +3244,13 @@ html.is-scroll-locked #smooth-wrapper {
 
 .org-chip-logo {
   flex: none;
-  width: 0.85em;
-  height: 0.85em;
+  width: auto;
+  height: 1em;
+  object-fit: contain;
 }
 
 .org-chip-logo--wide {
-  width: 1.15em;
-  height: 0.8em;
+  height: 0.95em;
 }
 
 .org-chip--salesforce {
