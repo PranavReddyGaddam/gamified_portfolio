@@ -518,8 +518,22 @@ function App() {
                 href="https://www.salesforce.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline decoration-1 underline-offset-4"
+                className="org-chip org-chip--salesforce"
               >
+                <svg
+                  className="org-chip-logo org-chip-logo--wide"
+                  viewBox="0 0 24 16"
+                  aria-hidden="true"
+                >
+                  <g fill="#00a1e0">
+                    <circle cx="7" cy="9" r="4.6" />
+                    <circle cx="11.6" cy="6.2" r="5" />
+                    <circle cx="17.2" cy="7.6" r="4.6" />
+                    <circle cx="12.4" cy="10.6" r="4.4" />
+                    <circle cx="4.6" cy="10.8" r="3.4" />
+                    <circle cx="19.6" cy="10.8" r="3.6" />
+                  </g>
+                </svg>
                 Salesforce
               </a>
               .

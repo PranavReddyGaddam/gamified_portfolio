@@ -3208,28 +3208,72 @@ html.is-scroll-locked #smooth-wrapper {
   }
 }
 
+/* ---- Organisation chips in the About paragraph ----------------------- */
+
+/* Salesforce and SJSU read as tinted chips in their own colours, each with a
+   small mark, instead of plain underlined links. The darker inset edge along
+   the bottom gives them a little weight without a border. */
+.org-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0 0.38em;
+  border-radius: 7px;
+  font: inherit;
+  font-family: "Onest", -apple-system, sans-serif;
+  font-weight: 400;
+  line-height: 1.35;
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: baseline;
+  cursor: pointer;
+  background: var(--chip-bg);
+  color: var(--chip-ink);
+  box-shadow: inset 0 -2px 0 var(--chip-edge);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.org-chip:hover {
+  background: var(--chip-bg-hover);
+}
+
+.org-chip:focus-visible {
+  outline: 2px solid var(--chip-ink);
+  outline-offset: 3px;
+}
+
+.org-chip-logo {
+  flex: none;
+  width: 0.85em;
+  height: 0.85em;
+}
+
+.org-chip-logo--wide {
+  width: 1.15em;
+  height: 0.8em;
+}
+
+.org-chip--salesforce {
+  --chip-bg: rgb(0 161 224 / 0.12);
+  --chip-bg-hover: rgb(0 161 224 / 0.2);
+  --chip-ink: #0b5cab;
+  --chip-edge: rgb(0 161 224 / 0.35);
+}
+
+/* SJSU blue, edged in the school's gold. */
+.org-chip--sjsu {
+  --chip-bg: rgb(0 85 162 / 0.09);
+  --chip-bg-hover: rgb(0 85 162 / 0.16);
+  --chip-ink: #0055a2;
+  --chip-edge: rgb(229 168 35 / 0.7);
+}
+
 /* ---- SJSU preview ------------------------------------------------------ */
 
 .sjsu-link {
   position: relative;
-  font: inherit;
-  color: inherit;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-  cursor: pointer;
-  transition: color 0.2s ease;
 }
 
-.sjsu-link:hover {
-  color: #3a4a16;
-}
-
-.sjsu-link:focus-visible {
-  outline: 2px solid #3a4a16;
-  outline-offset: 4px;
-  border-radius: 4px;
-}
 
 /* The hover hint: a black tooltip with a play button, rising out of the
    link after a short pause so passing the mouse over the paragraph does not
