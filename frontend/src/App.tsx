@@ -541,7 +541,7 @@ function App() {
                   year: "26–",
                   period: "Oct 2026 – Present",
                   detail:
-                    "Building on the Platform Radio team, working on the infrastructure that Salesforce products are built on.",
+                    "Building on the Platform Radio team, working on the infrastructure that Salesforce products depend on.",
                   points: ["Distributed systems and platform services"],
                 },
                 {
